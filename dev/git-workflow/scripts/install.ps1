@@ -60,9 +60,30 @@ function Test-GhInstalled {
     }
     catch {
         Write-Warning "[WARN] GitHub CLI (gh) is not installed."
-        Write-Host "  Install: https://cli.github.com/"
         return $false
     }
+}
+
+function Install-Gh {
+    Write-Info "Installing GitHub CLI..."
+
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        winget install --id GitHub.cli -e --source winget
+    }
+    elseif (Get-Command choco -ErrorAction SilentlyContinue) {
+        choco install gh -y
+    }
+    elseif (Get-Command scoop -ErrorAction SilentlyContinue) {
+        scoop install gh
+    }
+    else {
+        Write-ErrorMsg "Error: No supported package manager found (winget, chocolatey, scoop)."
+        Write-Host "Please install GitHub CLI manually: https://github.com/cli/cli#installation"
+        exit 1
+    }
+
+    # Refresh PATH so gh is available in this session
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 }
 
 function Get-SystemTargetDirs {
@@ -372,7 +393,17 @@ function Main {
 
     Write-Info "Detected OS: Windows"
     Write-Host ""
-    Test-GhInstalled | Out-Null
+
+    if (-not (Test-GhInstalled)) {
+        $response = Read-Host "Install GitHub CLI (gh) now? (y/N)"
+        if ($response -match "^[Yy]$") {
+            Install-Gh
+        }
+        else {
+            Write-Warning "Skipping gh installation. Some features may not work."
+        }
+    }
+
     Write-Host ""
 
     if ($System) {

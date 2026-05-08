@@ -82,9 +82,57 @@ check_gh() {
         return 0
     else
         echo -e "${YELLOW}[WARN]${NC} GitHub CLI (gh) is not installed."
-        echo "  Install: https://cli.github.com/"
         return 1
     fi
+}
+
+detect_os() {
+    case "$(uname -s)" in
+        Darwin*) echo "macos" ;;
+        Linux*)  echo "linux" ;;
+        *)       echo "unknown" ;;
+    esac
+}
+
+install_gh() {
+    local os="$1"
+    echo -e "${BLUE}Installing GitHub CLI...${NC}"
+    case "$os" in
+        macos)
+            if command -v brew &>/dev/null; then
+                brew install gh
+            else
+                echo -e "${RED}Error: Homebrew is required to install gh on macOS.${NC}" >&2
+                echo "Please install Homebrew first: https://brew.sh" >&2
+                exit 1
+            fi
+            ;;
+        linux)
+            if command -v apt-get &>/dev/null; then
+                # Debian/Ubuntu
+                sudo apt-get update
+                sudo apt-get install -y gh
+            elif command -v dnf &>/dev/null; then
+                # Fedora/RHEL
+                sudo dnf install -y gh
+            elif command -v pacman &>/dev/null; then
+                # Arch
+                sudo pacman -S --noconfirm github-cli
+            elif command -v zypper &>/dev/null; then
+                # openSUSE
+                sudo zypper install -y gh
+            else
+                echo -e "${RED}Error: Unable to auto-install gh. Please install manually:${NC}" >&2
+                echo "  https://github.com/cli/cli#installation" >&2
+                exit 1
+            fi
+            ;;
+        *)
+            echo -e "${RED}Error: Unsupported OS. Please install gh manually:${NC}" >&2
+            echo "  https://github.com/cli/cli#installation" >&2
+            exit 1
+            ;;
+    esac
 }
 
 get_system_target_dirs() {
@@ -370,9 +418,21 @@ main() {
         exit 1
     fi
 
-    echo -e "${BLUE}Detected OS: $(uname -s)${NC}"
+    local os
+    os=$(detect_os)
+    echo -e "${BLUE}Detected OS: $os${NC}"
     echo ""
-    check_gh || true
+
+    if ! check_gh; then
+        read -p "Install GitHub CLI (gh) now? (y/N) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            install_gh "$os"
+        else
+            echo -e "${YELLOW}Skipping gh installation. Some features may not work.${NC}"
+        fi
+    fi
+
     echo ""
 
     case "$INSTALL_MODE" in

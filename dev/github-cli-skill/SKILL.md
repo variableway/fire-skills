@@ -70,6 +70,30 @@ gh issue reopen 123
 
 ## Python 脚本集成
 
+### 独立脚本：create_issue.py
+
+```bash
+# 创建 Issue（inline body）
+python scripts/create_issue.py --title "标题" --body "内容" --labels "bug,enhancement"
+
+# 从文件创建 Issue
+python scripts/create_issue.py --title "标题" --body-file ./issue-body.md --labels "task"
+
+# 指定仓库
+python scripts/create_issue.py --title "标题" --body "内容" --repo owner/repo
+```
+
+| 参数 | 说明 |
+|------|------|
+| `--title` | Issue 标题（必填） |
+| `--body` | Issue 内容（与 --body-file 二选一） |
+| `--body-file` | 文件路径作为 Issue 内容（与 --body 二选一） |
+| `--labels` | 逗号分隔的标签 |
+| `--repo` | 仓库 owner/repo，不填则自动检测 |
+| `--remote` | git remote 名称，默认 origin |
+
+### 代码片段
+
 ```python
 import subprocess
 

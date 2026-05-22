@@ -1,6 +1,10 @@
 ---
 name: scanning-for-secrets
 description: Use when about to commit or push code, or when GitHub push protection blocks a push. Scans staged files for accidentally included secrets, tokens, API keys, and credentials.
+tags:
+  - security
+  - git
+  - dev-workflow
 ---
 
 # Scanning for Secrets

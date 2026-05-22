@@ -18,6 +18,11 @@ triggers:
   - pattern: "Task\\s*\\d+"
   - pattern: "@tasks[/\\\\]"
   - pattern: "完成任务"
+tags:
+  - github
+  - workflow
+  - issue
+  - dev-workflow
 ---
 
 # Git Workflow

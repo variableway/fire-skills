@@ -1,7 +1,0 @@
-{
-  "issue": 52,
-  "repo": "variableway/spark-skills",
-  "first_comment_id": 4506800158,
-  "description": "Task 3: Local Workflow \u6d4b\u8bd5\u5b89\u88c5\u5230\u672c\u9879\u76ee\u786e\u8ba4\u53ef\u4ee5\u751f\u6548\uff0c\u9a8c\u8bc1 local-workflow skill \u53ef\u4ee5\u6b63\u5e38\u5de5\u4f5c\u3002\u9700\u8981\u6d4b\u8bd5 local-workflow \u7684 init\u3001implement\u3001finish \u6d41\u7a0b\u662f\u5426\u6b63\u5e38\u8fd0\u884c\u3002",
-  "title": "Local Workflow \u9a8c\u8bc1\uff1a\u786e\u8ba4 local-workflow skill \u53ef\u4ee5\u6b63\u5e38\u5de5\u4f5c"
-}

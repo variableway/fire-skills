@@ -7,6 +7,10 @@ supported_agents:
   - kimi
   - codex
   - opencode
+tags:
+  - workflow
+  - local
+  - dev-workflow
 ---
 
 # Local Task Workflow

@@ -7,6 +7,9 @@ supported_agents:
   - kimi
   - codex
   - opencode
+tags:
+  - ai
+  - config
 ---
 
 # AI Config Skill

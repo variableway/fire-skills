@@ -7,6 +7,10 @@ supported_agents:
   - kimi
   - codex
   - opencode
+tags:
+  - github
+  - cli
+  - dev-workflow
 ---
 
 # GitHub CLI Skill

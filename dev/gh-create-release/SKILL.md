@@ -1,6 +1,10 @@
 ---
 name: gh-create-release
 description: Create GitHub releases using the gh CLI tool. Use when the user wants to (1) create a new GitHub release for a tag, (2) draft or publish a release with notes, (3) upload release assets/binaries, (4) create a prerelease, (5) generate release notes automatically, or (6) extract release notes from a CHANGELOG.md file. Covers workflows from simple tag-based releases to complex releases with multiple assets and custom notes.
+tags:
+  - github
+  - release
+  - dev-workflow
 ---
 
 # GitHub Release Creation Skill

@@ -12,6 +12,10 @@ supported_agents:
   - kimi
   - codex
   - opencode
+tags:
+  - research
+  - web
+  - dev-workflow
 triggers:
   - pattern: "^/(research|analyze|调研|分析)"
   - pattern: "(搜索|查找|调研).*(解决方案|最佳实践|对比)"

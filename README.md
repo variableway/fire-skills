@@ -66,6 +66,26 @@
 - 自动创建 `.kimi/KIMI.md` 项目配置
 - 自动创建 `tasks/` 目录
 
+### 按 Tag 安装（install-by-tag）
+
+`install-by-tag.sh` / `install-by-tag.ps1` 根据 SKILL.md frontmatter 中的 `tags` 字段批量安装。默认扫描 `dev/`、`analysis/`、`fe-skills/`、`backend-skills/`、`product/` 五个分类目录：
+
+```bash
+# 安装所有带 analysis 标签的 skill（含 repo-analyzer）
+./install-by-tag.sh analysis --system
+
+# 安装所有 dev-workflow 标签 skill 到 Claude Code
+./install-by-tag.sh dev-workflow --system --agent claude-code
+
+# 仅扫描指定目录（可重复传 --dir）
+./install-by-tag.sh repo --system --dir ./analysis
+
+# Windows
+.\install-by-tag.ps1 -Tag analysis -System
+```
+
+常用 tag：`dev-workflow` · `github` · `workflow` · `analysis` · `codegraph` · `repo` · `research` · `security` · `ai`
+
 ### 清理已安装的 Skills
 
 ```bash
@@ -105,6 +125,14 @@ ln -s $(pwd)/dev/git-workflow ~/.claude/skills/git-workflow
 | **awesome-analyzer** | 代码/项目分析工具 | 项目结构分析 |
 
 安装：`./install.sh --system --folder dev --all`
+
+### `analysis/` — 代码分析 Skills
+
+| Skill | 说明 | 核心能力 |
+|-------|------|---------|
+| **repo-analyzer** | 代码仓库语义分析（基于 [CodeGraph](https://github.com/colbymchenry/codegraph)） | 克隆/扫描仓库 → 生成结构化分析报告，归档到 `~/innate-revisit/analysis/repo/<repo-name>/` |
+
+安装（按 tag）：`./install-by-tag.sh analysis --system`
 
 ### `fe-skills/` — 前端开发 Skills
 
@@ -154,7 +182,9 @@ fire-skills/
 │   ├── spark-task-init-skill/         #   任务目录初始化
 │   ├── scanning-for-secrets/          #   安全扫描
 │   ├── tech-research/                 #   技术调研
-│   └── awesome-analyzer/              #   项目分析
+│   └── awesome-analyzer/              #   awesome list 解析
+├── analysis/                          # 代码分析 Skills (1 个)
+│   └── repo-analyzer/                 #   代码仓库语义分析（CodeGraph 集成）
 ├── fe-skills/                         # 前端开发 Skills (2 个)
 │   ├── innate-frontend/               #   Web 前端开发（@innate/ui）
 │   └── desktop-app/                   #   桌面应用开发（Tauri + Next.js）
@@ -173,9 +203,24 @@ fire-skills/
     └── analysis/                      #   分析任务
 ```
 
+## 文档站点
+
+完整文档发布在 GitHub Pages：**<https://variableway.github.io/fire-skills>**
+
+本地预览 / 构建：
+
+```bash
+npm run docs:dev    # 本地开发服务器
+npm run docs:build  # 构建到 site/
+```
+
+文档由 [docmd](https://github.com/docmd-io/docmd) 生成，源文件位于 `docs/`，CI 通过 `.github/workflows/docs.yml` 自动部署。
+
+> **首次启用 Pages**：在 GitHub 仓库 `Settings → Pages → Build and deployment → Source` 选择 **GitHub Actions**，然后推送 main 分支触发工作流。
+
 ## 添加新 Skill
 
-1. 在对应分类目录下（`dev/`、`fe-skills/`、`backend-skills/`、`product/`）创建新文件夹
+1. 在对应分类目录下（`dev/`、`analysis/`、`fe-skills/`、`backend-skills/`、`product/`）创建新文件夹
 2. 编写 `SKILL.md`，包含标准的 YAML frontmatter：
 
 ```yaml
@@ -197,7 +242,7 @@ supported_agents:
 ## 设计原则
 
 - **单一入口**：每个 skill 只有一个 `SKILL.md`，降低维护成本
-- **分类组织**：Skills 按功能分目录（dev/fe-skills/backend-skills/product），支持 `--folder` 选择安装
+- **分类组织**：Skills 按功能分目录（dev/analysis/fe-skills/backend-skills/product），支持 `--folder` 选择安装
 - **无外部强依赖**：优先使用标准库或系统自带工具
 - **脚本自解释**：所有 Python 脚本均内置 `--help`
 - **配置分层**：支持 CLI > 环境变量 > 项目配置 > 全局配置的优先级链

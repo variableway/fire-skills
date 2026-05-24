@@ -9,6 +9,17 @@
 - [支持的 Agent 工具](./Agents.md) - Claude Code、Codex CLI、Kimi CLI、OpenCode 等
 - [AI 编程工具配置指南](./ai-coding-tools-guide.md) - 详细配置教程
 - [前端技能安装指南](./usage/install-frontend-skills.md) - Web 和桌面应用技能安装与使用
+- [按 Tag 安装 Skills](./usage/install-by-tag.md) - 跨分类目录批量安装
+
+### 🗂 Skill 分类
+
+| 分类目录 | 内容 | 安装命令 |
+|---------|------|---------|
+| `dev/` | 开发工作流（git / GitHub / 安全 / AI 配置 / 调研） | `./install-by-tag.sh dev-workflow --system` |
+| `analysis/` | 代码仓库语义分析（含 CodeGraph 集成） | `./install-by-tag.sh analysis --system` |
+| `fe-skills/` | 前端开发（@innate/ui · Tauri + Next.js） | `./install.sh --system --folder fe-skills --all` |
+| `backend-skills/` | 后端开发（Go CLI 等） | `./install.sh --system --folder backend-skills --all` |
+| `product/` | 产品设计（PRD / 项目分析） | `./install.sh --system --folder product --all` |
 
 ### 🚀 快速开始
 
@@ -74,7 +85,9 @@ docs/
 ├── Agents.md                   # Agent 工具介绍
 ├── ai-coding-tools-guide.md    # 配置指南
 └── usage/
-    └── install-frontend-skills.md  # 前端技能安装指南
+    ├── install-frontend-skills.md  # 前端技能安装指南
+    ├── install-by-tag.md           # 按 Tag 批量安装指南
+    └── fe-skills-reference-guide.md
 ```
 
 ---

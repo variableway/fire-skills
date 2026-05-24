@@ -7,3 +7,7 @@ tracing/
 .local-workflow.state.json
 .github-task-workflow.state.json
 .github-task-workflow.active-issue
+
+# Build artifacts
+site/
+node_modules/

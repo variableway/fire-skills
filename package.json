@@ -1,29 +1,32 @@
 {
-  "name": "spark-skills",
+  "name": "fire-skills",
   "version": "1.0.0",
   "description": "个人习惯的 AI Agent Skill 仓库，统一收集、管理和分发适配多种 AI 编程助手的 Skills。",
-  "main": "docmd.config.js",
+  "main": "docmd.config.mjs",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "docs:dev": "docmd dev --config docmd.config.mjs",
+    "docs:build": "docmd build --config docmd.config.mjs",
     "install:fe-skills": "./install.sh --system --folder fe-skills --all",
     "install:fe-skills:kimi": "./install.sh --system --agent kimi --folder fe-skills --all",
     "install:fe-skills:project": "./install.sh --project --folder fe-skills --all",
+    "install:analysis": "./install-by-tag.sh analysis --system",
     "list:folders": "./install.sh --list-folders",
     "list:fe-skills": "./install.sh --folder fe-skills --list",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/variableway/spark-skills.git"
+    "url": "git+https://github.com/variableway/fire-skills.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/variableway/spark-skills/issues"
+    "url": "https://github.com/variableway/fire-skills/issues"
   },
-  "homepage": "https://github.com/variableway/spark-skills#readme"
+  "homepage": "https://variableway.github.io/fire-skills"
 }

@@ -1,7 +1,7 @@
 // docmd.config.js
 export default defineConfig({
-  title: 'spark-skills',
-  url: 'https://variableway.github.io/spark-skills',
+  title: 'fire-skills',
+  url: 'https://variableway.github.io/fire-skills',
 
   src: 'docs',
   out: 'site',
@@ -16,7 +16,7 @@ export default defineConfig({
     },
     footer: {
       style: 'minimal',
-      content: '© ' + new Date().getFullYear() + ' spark-skills',
+      content: '© ' + new Date().getFullYear() + ' fire-skills',
       branding: true,
     },
   },
@@ -39,7 +39,7 @@ export default defineConfig({
 
   plugins: {
     seo: {
-      defaultDescription: 'spark-skills documentation',
+      defaultDescription: 'fire-skills documentation',
       openGraph: { defaultImage: '' },
       twitter: { cardType: 'summary_large_image' },
     },

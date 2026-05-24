@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 # Tag-Based Skill Installer (macOS / Linux)
-# Scans skill directories for matching tags and installs them.
+# Scans skill category directories for matching tags and installs them.
 #
-# Usage: ./install-by-tag.sh <tag> [--system | --project] [--agent <name>] [--dir <skills-dir>]
+# Usage: ./install-by-tag.sh <tag> [--system | --project] [--agent <name>] [--dir <skills-dir>]...
 #
 # Options:
-#   <tag>           Tag to match (e.g., dev-workflow, github, workflow)
+#   <tag>           Tag to match (e.g., dev-workflow, github, workflow, analysis)
 #   --system        Install to system skill directories
 #   --project       Install to current project directory
 #   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
-#   --dir <path>    Custom skills directory to scan (default: ./dev)
+#   --dir <path>    Skills category directory to scan (repeatable;
+#                   defaults: ./dev ./analysis ./fe-skills ./backend-skills ./product)
 #   -h, --help      Show this help message
 #
 # Examples:
 #   ./install-by-tag.sh dev-workflow --system
+#   ./install-by-tag.sh analysis --system
 #   ./install-by-tag.sh github --project
 #   ./install-by-tag.sh workflow --system --agent kimi
-#   ./install-by-tag.sh dev-workflow --project --dir ./skills
+#   ./install-by-tag.sh repo --system --dir ./analysis
 
 set -euo pipefail
 
@@ -24,7 +26,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TAG=""
 INSTALL_MODE=""
 TARGET_AGENT=""
-SCAN_DIR="$SCRIPT_DIR/dev"
+SCAN_DIRS=()
+DEFAULT_SCAN_DIRS=(
+    "$SCRIPT_DIR/dev"
+    "$SCRIPT_DIR/analysis"
+    "$SCRIPT_DIR/fe-skills"
+    "$SCRIPT_DIR/backend-skills"
+    "$SCRIPT_DIR/product"
+)
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -38,27 +47,33 @@ usage() {
 Tag-Based Skill Installer (macOS / Linux)
 Scans SKILL.md frontmatter for matching 'tags' field and installs matching skills.
 
-Usage: ./install-by-tag.sh <tag> [--system | --project] [--agent <name>] [--dir <path>]
+Usage: ./install-by-tag.sh <tag> [--system | --project] [--agent <name>] [--dir <path>]...
 
 Options:
-  <tag>           Tag to match in skill frontmatter (e.g., dev-workflow, github)
-  --system        Install to system directories (~/.config/agents/skills/)
+  <tag>           Tag to match in skill frontmatter (e.g., dev-workflow, github, analysis)
+  --system        Install to system directories (~/.claude/skills/, etc.)
   --project       Install to current project directory (./.agents/skills/)
   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
-  --dir <path>    Custom skills directory to scan (default: ./dev)
+  --dir <path>    Skills category directory to scan (repeatable; defaults:
+                  ./dev ./analysis ./fe-skills ./backend-skills ./product)
   -h, --help      Show this help message
 
 Examples:
   ./install-by-tag.sh dev-workflow --system
+  ./install-by-tag.sh analysis --system
   ./install-by-tag.sh github --project
   ./install-by-tag.sh workflow --system --agent kimi
+  ./install-by-tag.sh repo --system --dir ./analysis
 
-Tag values (from skill frontmatter):
-  dev-workflow  - All dev workflow related skills
-  github        - GitHub-related skills (CLI, releases, issues)
-  workflow      - Task/workflow automation skills
-  research      - Research and analysis skills
-  security      - Security-related skills
+Common tag values (from skill frontmatter):
+  dev-workflow  - Dev workflow skills (under ./dev)
+  github        - GitHub-related skills
+  workflow      - Task/workflow automation
+  research      - Research skills
+  analysis      - Code repo / project analysis (under ./analysis)
+  codegraph     - CodeGraph-aware skills
+  repo          - Repo-level analyzers
+  security      - Security skills
   ai            - AI configuration skills
 EOF
 }
@@ -79,7 +94,7 @@ parse_args() {
                 shift 2
                 ;;
             --dir)
-                SCAN_DIR="$2"
+                SCAN_DIRS+=("$2")
                 shift 2
                 ;;
             -h|--help)
@@ -114,6 +129,10 @@ parse_args() {
         echo -e "${RED}Error: Must specify --system or --project${NC}" >&2
         usage
         exit 1
+    fi
+
+    if [ "${#SCAN_DIRS[@]}" -eq 0 ]; then
+        SCAN_DIRS=("${DEFAULT_SCAN_DIRS[@]}")
     fi
 }
 
@@ -185,27 +204,30 @@ get_skill_name() {
     basename "$(dirname "$skill_md")"
 }
 
-# Scan directory for skills matching the tag
+# Scan one or more directories for skills matching the tag
 find_matching_skills() {
-    local scan_dir="$1"
-    local target_tag="$2"
+    local target_tag="$1"
+    shift
     local matches=()
 
-    for skill_md in "$scan_dir"/*/SKILL.md; do
-        [ -f "$skill_md" ] || continue
+    for scan_dir in "$@"; do
+        [ -d "$scan_dir" ] || continue
+        for skill_md in "$scan_dir"/*/SKILL.md; do
+            [ -f "$skill_md" ] || continue
 
-        local tags
-        tags=$(get_skill_tags "$skill_md")
+            local tags
+            tags=$(get_skill_tags "$skill_md")
 
-        for tag in $tags; do
-            if [[ "$tag" == "$target_tag" ]]; then
-                local skill_root
-                skill_root="$(dirname "$skill_md")"
-                local skill_name
-                skill_name="$(basename "$skill_root")"
-                matches+=("$skill_name:$skill_root")
-                break
-            fi
+            for tag in $tags; do
+                if [[ "$tag" == "$target_tag" ]]; then
+                    local skill_root
+                    skill_root="$(dirname "$skill_md")"
+                    local skill_name
+                    skill_name="$(basename "$skill_root")"
+                    matches+=("$skill_name:$skill_root")
+                    break
+                fi
+            done
         done
     done
 
@@ -301,26 +323,36 @@ main() {
     parse_args "$@"
 
     echo -e "${BLUE}Scanning for skills with tag: ${CYAN}$TAG${NC}"
-    echo -e "${BLUE}Scan directory: $SCAN_DIR${NC}"
+    echo -e "${BLUE}Scan directories:${NC}"
+    for d in "${SCAN_DIRS[@]}"; do
+        if [ -d "$d" ]; then
+            echo -e "  - $d"
+        else
+            echo -e "  - $d ${YELLOW}(missing, skipped)${NC}"
+        fi
+    done
     echo ""
 
-    # Find matching skills
+    # Find matching skills across all scan dirs
     local matches
-    matches=$(find_matching_skills "$SCAN_DIR" "$TAG")
+    matches=$(find_matching_skills "$TAG" "${SCAN_DIRS[@]}")
 
     if [ -z "$matches" ]; then
         echo -e "${YELLOW}No skills found with tag '$TAG'${NC}"
         echo ""
-        echo "Available tags in $SCAN_DIR:"
-        for skill_md in "$SCAN_DIR"/*/SKILL.md; do
-            [ -f "$skill_md" ] || continue
-            local name
-            name=$(get_skill_name "$skill_md")
-            local tags
-            tags=$(get_skill_tags "$skill_md")
-            if [ -n "$tags" ]; then
-                echo -e "  ${CYAN}$name${NC}: $tags"
-            fi
+        echo "Available skills and tags:"
+        for scan_dir in "${SCAN_DIRS[@]}"; do
+            [ -d "$scan_dir" ] || continue
+            for skill_md in "$scan_dir"/*/SKILL.md; do
+                [ -f "$skill_md" ] || continue
+                local name
+                name=$(get_skill_name "$skill_md")
+                local tags
+                tags=$(get_skill_tags "$skill_md")
+                if [ -n "$tags" ]; then
+                    echo -e "  ${CYAN}$name${NC} ($(basename "$scan_dir")): $tags"
+                fi
+            done
         done
         exit 1
     fi

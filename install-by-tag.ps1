@@ -20,11 +20,16 @@
     Target specific agent (claude-code, kimi, codex, opencode)
 
 .PARAMETER Dir
-    Custom skills directory to scan (default: script directory)
+    Skills category directory to scan. Pass a comma-separated list or multiple values.
+    Defaults to: ./dev, ./analysis, ./fe-skills, ./backend-skills, ./product
 
 .EXAMPLE
     .\install-by-tag.ps1 -Tag dev-workflow -System
     Install all dev-workflow tagged skills to system directories
+
+.EXAMPLE
+    .\install-by-tag.ps1 -Tag analysis -System
+    Install all analysis tagged skills (from the analysis/ category)
 
 .EXAMPLE
     .\install-by-tag.ps1 -Tag github -Project
@@ -41,12 +46,20 @@ param(
     [switch]$System,
     [switch]$Project,
     [string]$Agent = "",
-    [string]$Dir = ""
+    [string[]]$Dir = @()
 )
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-if ([string]::IsNullOrEmpty($Dir)) { $Dir = Join-Path $ScriptDir "dev" }
+if ($Dir.Count -eq 0) {
+    $Dir = @(
+        (Join-Path $ScriptDir "dev"),
+        (Join-Path $ScriptDir "analysis"),
+        (Join-Path $ScriptDir "fe-skills"),
+        (Join-Path $ScriptDir "backend-skills"),
+        (Join-Path $ScriptDir "product")
+    )
+}
 
 function Write-ColorOutput {
     param([string]$Message, [string]$Color = "White")
@@ -95,18 +108,21 @@ function Get-SkillName {
 }
 
 function Find-MatchingSkills {
-    param([string]$ScanDir, [string]$TargetTag)
+    param([string[]]$ScanDirs, [string]$TargetTag)
     $matches = @()
 
-    $skillFiles = Get-ChildItem -Path $ScanDir -Filter "SKILL.md" -Recurse -Depth 2
-    foreach ($file in $skillFiles) {
-        $tags = Get-SkillTags -SkillMdPath $file.FullName
-        if ($tags -contains $TargetTag) {
-            $skillRoot = $file.DirectoryName
-            $skillName = Split-Path $skillRoot -Leaf
-            $matches += [PSCustomObject]@{
-                Name = $skillName
-                Root = $skillRoot
+    foreach ($scanDir in $ScanDirs) {
+        if (-not (Test-Path $scanDir)) { continue }
+        $skillFiles = Get-ChildItem -Path $scanDir -Filter "SKILL.md" -Recurse -Depth 2
+        foreach ($file in $skillFiles) {
+            $tags = Get-SkillTags -SkillMdPath $file.FullName
+            if ($tags -contains $TargetTag) {
+                $skillRoot = $file.DirectoryName
+                $skillName = Split-Path $skillRoot -Leaf
+                $matches += [PSCustomObject]@{
+                    Name = $skillName
+                    Root = $skillRoot
+                }
             }
         }
     }
@@ -203,21 +219,31 @@ function Main {
     }
 
     Write-Info "Scanning for skills with tag: $Tag"
-    Write-Info "Scan directory: $Dir"
+    Write-Info "Scan directories:"
+    foreach ($d in $Dir) {
+        if (Test-Path $d) {
+            Write-Host "  - $d"
+        } else {
+            Write-Warning "  - $d (missing, skipped)"
+        }
+    }
     Write-Host ""
 
-    $matchingSkills = Find-MatchingSkills -ScanDir $Dir -TargetTag $Tag
+    $matchingSkills = Find-MatchingSkills -ScanDirs $Dir -TargetTag $Tag
 
     if ($matchingSkills.Count -eq 0) {
         Write-Warning "No skills found with tag '$Tag'"
         Write-Host ""
-        Write-Host "Available tags:"
-        $allSkills = Get-ChildItem -Path $Dir -Filter "SKILL.md" -Recurse -Depth 2
-        foreach ($file in $allSkills) {
-            $name = Get-SkillName -SkillMdPath $file.FullName
-            $tags = Get-SkillTags -SkillMdPath $file.FullName
-            if ($tags.Count -gt 0) {
-                Write-Host "  $name : $($tags -join ', ')"
+        Write-Host "Available skills and tags:"
+        foreach ($scanDir in $Dir) {
+            if (-not (Test-Path $scanDir)) { continue }
+            $allSkills = Get-ChildItem -Path $scanDir -Filter "SKILL.md" -Recurse -Depth 2
+            foreach ($file in $allSkills) {
+                $name = Get-SkillName -SkillMdPath $file.FullName
+                $tags = Get-SkillTags -SkillMdPath $file.FullName
+                if ($tags.Count -gt 0) {
+                    Write-Host "  $name ($(Split-Path $scanDir -Leaf)): $($tags -join ', ')"
+                }
             }
         }
         exit 1

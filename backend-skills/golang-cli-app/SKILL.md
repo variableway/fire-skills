@@ -7,6 +7,9 @@ supported_agents:
   - kimi
   - codex
   - opencode
+  - trae
+  - trae-solo
+  - workbuddy
 ---
 
 # Golang CLI App Skill

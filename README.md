@@ -12,6 +12,9 @@
 | **Kimi CLI** | `~/.kimi/skills/` 或 Kimi 内置 skills | 通过 `SKILL.md` 自动识别 |
 | **Codex** | `~/.codex/skills/` (或项目目录) | 通过 `SKILL.md` 自动识别 |
 | **OpenCode** | `~/.opencode/skills/` (或项目目录) | 通过 `SKILL.md` 自动识别 |
+| **Trae** | `~/.trae/skills/` (系统级) 或 `.trae/skills/` (项目级) | 通过 `SKILL.md` 自动识别 |
+| **Trae Solo** | `~/.trae/skills/` | Trae Solo 模式，与 Trae 使用相同目录 |
+| **WorkBuddy** | `~/.workbuddy/skills/` (系统级) 或 `.workbuddy/skills/` (项目级) | 通过 `SKILL.md` 自动识别 |
 
 > 所有 Skill 均以标准 `SKILL.md` 作为入口，并辅以 Python 脚本和参考文档。
 
@@ -58,11 +61,15 @@
 - `~/.kimi/skills/` (Kimi CLI)
 - `~/.codex/skills/` (Codex)
 - `~/.opencode/skills/` (OpenCode)
+- `~/.trae/skills/` (Trae / Trae Solo)
+- `~/.workbuddy/skills/` (WorkBuddy)
 
 **项目级别安装位置**：
 - `./.agents/skills/` (通用)
 - `./.kimi/skills/` (Kimi CLI)
 - `./.claude/skills/` (Claude Code)
+- `./.trae/skills/` (Trae / Trae Solo)
+- `./.workbuddy/skills/` (WorkBuddy)
 - 自动创建 `.kimi/KIMI.md` 项目配置
 - 自动创建 `tasks/` 目录
 
@@ -232,6 +239,9 @@ supported_agents:
   - kimi
   - codex
   - opencode
+  - trae
+  - trae-solo
+  - workbuddy
 ---
 ```
 

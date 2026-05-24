@@ -51,7 +51,7 @@
 | `<tag>` | `-Tag <name>` | 要匹配的 frontmatter tag | 必填 |
 | `--system` | `-System` | 安装到系统目录（`~/.claude/skills/` 等） | — |
 | `--project` | `-Project` | 安装到当前项目（`./.claude/skills/` 等） | — |
-| `--agent <name>` | `-Agent <name>` | 仅安装到指定 Agent（claude-code/kimi/codex/opencode） | 全部 |
+| `--agent <name>` | `-Agent <name>` | 仅安装到指定 Agent（claude-code/kimi/codex/opencode/trae/trae-solo/workbuddy） | 全部 |
 | `--dir <path>` | `-Dir <paths>` | 自定义扫描目录（可重复） | 五个默认分类目录 |
 
 ## 常用 Tag

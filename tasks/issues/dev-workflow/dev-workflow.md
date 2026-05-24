@@ -28,3 +28,12 @@
 
 1. 为了方便安装skill，把skill安装by tag的脚本放到的根目录
  
+## Task 5: 测试安装的Trae/Trae Solo的Skill
+
+1. 测试安装的skill在Trae/Trae Solo下可以使用
+2. 测试workbuddy也可以使用这些skill
+
+## Task 6: 请更新所有的文档
+
+1. 请更新当前项目的docs文件
+2. 同时检查github pages 工作正常

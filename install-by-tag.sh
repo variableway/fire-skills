@@ -8,7 +8,7 @@
 #   <tag>           Tag to match (e.g., dev-workflow, github, workflow, analysis)
 #   --system        Install to system skill directories
 #   --project       Install to current project directory
-#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
+#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo, workbuddy)
 #   --dir <path>    Skills category directory to scan (repeatable;
 #                   defaults: ./dev ./analysis ./fe-skills ./backend-skills ./product)
 #   -h, --help      Show this help message
@@ -19,6 +19,8 @@
 #   ./install-by-tag.sh github --project
 #   ./install-by-tag.sh workflow --system --agent kimi
 #   ./install-by-tag.sh repo --system --dir ./analysis
+#   ./install-by-tag.sh github --system --agent trae
+#   ./install-by-tag.sh dev-workflow --project --agent workbuddy
 
 set -euo pipefail
 
@@ -52,8 +54,8 @@ Usage: ./install-by-tag.sh <tag> [--system | --project] [--agent <name>] [--dir 
 Options:
   <tag>           Tag to match in skill frontmatter (e.g., dev-workflow, github, analysis)
   --system        Install to system directories (~/.claude/skills/, etc.)
-  --project       Install to current project directory (./.agents/skills/)
-  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
+  --project       Install to current project directory (./.trae/skills/, ./.workbuddy/skills/, etc.)
+  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo, workbuddy)
   --dir <path>    Skills category directory to scan (repeatable; defaults:
                   ./dev ./analysis ./fe-skills ./backend-skills ./product)
   -h, --help      Show this help message
@@ -64,6 +66,17 @@ Examples:
   ./install-by-tag.sh github --project
   ./install-by-tag.sh workflow --system --agent kimi
   ./install-by-tag.sh repo --system --dir ./analysis
+  ./install-by-tag.sh github --system --agent trae
+  ./install-by-tag.sh dev-workflow --project --agent workbuddy
+
+Supported agents:
+  claude-code  - Claude Code (~/.claude/skills/)
+  kimi         - Kimi CLI (~/.kimi/skills/)
+  codex        - Codex (~/.codex/skills/)
+  opencode     - OpenCode (~/.opencode/skills/)
+  trae         - Trae IDE (~/.trae/skills/)
+  trae-solo    - Trae Solo mode (~/.trae/skills/)
+  workbuddy    - WorkBuddy (~/.workbuddy/skills/)
 
 Common tag values (from skill frontmatter):
   dev-workflow  - Dev workflow skills (under ./dev)
@@ -234,6 +247,7 @@ find_matching_skills() {
     echo "${matches[@]}"
 }
 
+# Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo
 get_system_target_dirs() {
     local dirs=()
     case "$TARGET_AGENT" in
@@ -243,6 +257,8 @@ get_system_target_dirs() {
             dirs+=("$HOME/.kimi/skills")
             dirs+=("$HOME/.codex/skills")
             dirs+=("$HOME/.opencode/skills")
+            dirs+=("$HOME/.trae/skills")
+            dirs+=("$HOME/.workbuddy/skills")
             ;;
         claude-code)
             dirs+=("$HOME/.claude/skills")
@@ -257,9 +273,18 @@ get_system_target_dirs() {
         opencode)
             dirs+=("$HOME/.opencode/skills")
             ;;
+        trae)
+            dirs+=("$HOME/.trae/skills")
+            ;;
+        trae-solo)
+            dirs+=("$HOME/.trae/skills")
+            ;;
+        workbuddy)
+            dirs+=("$HOME/.workbuddy/skills")
+            ;;
         *)
             echo -e "${RED}Error: Unknown agent '$TARGET_AGENT'${NC}" >&2
-            echo "Supported agents: claude-code, kimi, codex, opencode" >&2
+            echo "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo, workbuddy" >&2
             exit 1
             ;;
     esac
@@ -271,6 +296,8 @@ get_project_target_dirs() {
     dirs+=("./.agents/skills")
     dirs+=("./.kimi/skills")
     dirs+=("./.claude/skills")
+    dirs+=("./.trae/skills")
+    dirs+=("./.workbuddy/skills")
     echo "${dirs[@]}"
 }
 

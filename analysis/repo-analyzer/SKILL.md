@@ -12,6 +12,9 @@ supported_agents:
   - codex
   - cursor
   - opencode
+  - trae
+  - trae-solo
+  - workbuddy
 tags:
   - analysis
   - codegraph

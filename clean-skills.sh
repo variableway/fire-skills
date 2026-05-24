@@ -4,7 +4,7 @@
 #
 # Options:
 #   --all           Clean all agent skills (default)
-#   --agent <name>  Clean specific agent (claude-code, kimi, codex, opencode)
+#   --agent <name>  Clean specific agent (claude-code, kimi, codex, opencode, trae, trae-solo, workbuddy)
 #   --dry-run       Show what would be deleted without actually deleting
 #   --list          List all skill directories that would be cleaned
 #   -h, --help      Show this help message
@@ -89,6 +89,14 @@ get_opencode_skills_dir() {
     echo "$HOME/.opencode/skills"
 }
 
+get_trae_skills_dir() {
+    echo "$HOME/.trae/skills"
+}
+
+get_workbuddy_skills_dir() {
+    echo "$HOME/.workbuddy/skills"
+}
+
 get_common_skills_dir() {
     echo "$HOME/.config/agents/skills"
 }
@@ -166,6 +174,8 @@ list_skills() {
     list_skills_in_dir "$(get_kimi_skills_dir)" "Kimi CLI"
     list_skills_in_dir "$(get_codex_skills_dir)" "Codex CLI"
     list_skills_in_dir "$(get_opencode_skills_dir)" "OpenCode"
+    list_skills_in_dir "$(get_trae_skills_dir)" "Trae"
+    list_skills_in_dir "$(get_workbuddy_skills_dir)" "WorkBuddy"
     list_skills_in_dir "$(get_common_skills_dir)" "Common"
 }
 
@@ -187,9 +197,18 @@ clean_agent() {
         opencode)
             skills_dir=$(get_opencode_skills_dir)
             ;;
+        trae)
+            skills_dir=$(get_trae_skills_dir)
+            ;;
+        trae-solo)
+            skills_dir=$(get_trae_skills_dir)
+            ;;
+        workbuddy)
+            skills_dir=$(get_workbuddy_skills_dir)
+            ;;
         *)
             echo -e "${RED}Error: Unknown agent '$agent_name'${NC}" >&2
-            echo "Supported agents: claude-code, kimi, codex, opencode" >&2
+            echo "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo, workbuddy" >&2
             return 1
             ;;
     esac
@@ -217,6 +236,14 @@ clean_all() {
 
     echo -e "${BLUE}OpenCode:${NC}"
     clean_skills_in_dir "$(get_opencode_skills_dir)" "OpenCode"
+    echo ""
+
+    echo -e "${BLUE}Trae:${NC}"
+    clean_skills_in_dir "$(get_trae_skills_dir)" "Trae"
+    echo ""
+
+    echo -e "${BLUE}WorkBuddy:${NC}"
+    clean_skills_in_dir "$(get_workbuddy_skills_dir)" "WorkBuddy"
     echo ""
 
     echo -e "${BLUE}Common:${NC}"

@@ -6,7 +6,7 @@
 
 ### 📚 文档
 
-- [支持的 Agent 工具](./Agents.md) - Claude Code、Codex CLI、Kimi CLI、OpenCode 等
+- [支持的 Agent 工具](./Agents.md) - Claude Code、Codex CLI、Kimi CLI、OpenCode、Trae、WorkBuddy 等
 - [AI 编程工具配置指南](./ai-coding-tools-guide.md) - 详细配置教程
 - [前端技能安装指南](./usage/install-frontend-skills.md) - Web 和桌面应用技能安装与使用
 - [按 Tag 安装 Skills](./usage/install-by-tag.md) - 跨分类目录批量安装
@@ -29,7 +29,7 @@ git clone https://github.com/your-username/spark-skills.git
 cd spark-skills
 
 # 安装 skills 到你的 Agent
-./install.sh claude-code  # 或 kimi / codex / opencode
+./install.sh claude-code  # 或 kimi / codex / opencode / trae / workbuddy
 ```
 
 ### 🛠 推荐配置

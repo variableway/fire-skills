@@ -10,6 +10,9 @@
 | **Kimi CLI** | `~/.kimi/` | `~/.kimi/skills/` | 月之暗面出品的 CLI 工具 |
 | **Codex CLI** | `~/.codex/` | `~/.codex/skills/` | OpenAI 出品的 CLI 工具 |
 | **OpenCode** | `~/.opencode/` | `~/.opencode/skills/` | 开源多模型 CLI 工具 |
+| **Trae** | `~/.trae/` | `~/.trae/skills/` | 字节跳动 AI IDE，支持 SOLO 模式 |
+| **Trae Solo** | `~/.trae/` | `~/.trae/skills/` | Trae 独立开发模式 |
+| **WorkBuddy** | `~/.workbuddy/` | `~/.workbuddy/skills/` | 腾讯云 AI 编程工具 |
 
 ## Agent 详细说明
 
@@ -166,16 +169,97 @@ opencode
 
 ---
 
+### Trae IDE
+
+字节跳动推出的 AI 编程 IDE，基于 VS Code，支持多种模型和 SOLO 模式。
+
+**特点**：
+- 支持 Claude、Gemini、Kimi K2 等多种模型
+- SOLO 模式提供端到端软件工程能力
+- 内置 MCP 支持和 Web 搜索
+- 支持自定义 Agent
+
+**安装**：
+从 [trae.ai](https://trae.ai/) 下载安装
+
+**使用多种模型**：
+```bash
+# 在 Settings 中配置 Provider
+# 支持 OpenAI、Anthropic、Google Gemini、月之暗面 Kimi K2 等
+```
+
+**Skills 安装**：
+```bash
+# 系统级安装
+./install-by-tag.sh dev-workflow --system --agent trae
+
+# 项目级安装
+./install-by-tag.sh github --project --agent trae
+```
+
+---
+
+### Trae Solo
+
+Trae IDE 的独立开发模式，提供更聚焦的开发体验。
+
+**特点**：
+- 专注于 SOLO 开发场景
+- 与 Trae 使用相同的 skills 目录
+- 支持 Web 应用一键部署到 Vercel
+
+**Skills 安装**：
+```bash
+# 与 Trae 共享 skills 目录
+./install-by-tag.sh dev-workflow --system --agent trae-solo
+```
+
+---
+
+### WorkBuddy
+
+腾讯云推出的 AI 编程工具，支持多种模型配置。
+
+**特点**：
+- 支持通过 `models.json` 配置多种模型
+- 支持 Evolink 等 API 集成
+- 支持自定义 Provider
+
+**配置文件**：`~/.workbuddy/models.json`
+
+**使用 Evolink**：
+```json
+{
+  "models": [
+    {
+      "id": "evolink/auto",
+      "name": "Evolink Auto (Smart Routing)",
+      "vendor": "Evolink",
+      "apiKey": "sk-your-api-key-here",
+      "url": "https://direct.evolink.ai/v1/chat/completions"
+    }
+  ]
+}
+```
+
+**Skills 安装**：
+```bash
+./install-by-tag.sh dev-workflow --system --agent workbuddy
+```
+
+---
+
 ## 快速对比
 
-| 特性 | Claude Code | Codex CLI | Kimi CLI | OpenCode |
-|------|-------------|-----------|----------|----------|
-| 最新模型 | GLM-5.1 / Claude Opus 4.6 | GLM-5.1 / GPT-5.4 | Kimi | GLM-5.1 |
-| GLM Coding Plan | ✅ | ✅ | ❌ | ✅ |
-| OpenRouter | ❌ | ✅ | ❌ | ❌ |
-| 国内可用 | GLM 原生 | GLM 原生 | 原生支持 | GLM 原生 |
-| 自定义 Provider | GLM only | 完全支持 | 有限 | 内置 |
-| 开源 | 否 | 否 | 否 | 是 |
+| 特性 | Claude Code | Codex CLI | Kimi CLI | OpenCode | Trae | WorkBuddy |
+|------|-------------|-----------|----------|----------|----------|------|-----------|
+| 最新模型 | GLM-5.1 / Claude Opus 4.6 | GLM-5.1 / GPT-5.4 | Kimi | GLM-5.1 | Claude 4.6 / Gemini 2.5 | 多种 |
+| GLM Coding Plan | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ |
+| OpenRouter | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| 国内可用 | GLM 原生 | GLM 原生 | 原生支持 | GLM 原生 | 良好 | 良好 |
+| 自定义 Provider | GLM only | 完全支持 | 有限 | 内置 | 多Provider | 完全支持 |
+| 开源 | 否 | 否 | 否 | 是 | 否 | 否 |
+| IDE 界面 | CLI | CLI | CLI | CLI | VS Code 风格 | VS Code 风格 |
 
 ## 选择建议
 
@@ -183,7 +267,9 @@ opencode
 - **灵活切换模型** → Codex CLI
 - **轻量终端工具** → OpenCode + GLM
 - **中文场景** → Kimi CLI
+- **VS Code 风格 IDE** → Trae / Trae Solo
 - **预算有限** → Codex CLI + GLM Coding Plan Lite
+- **腾讯云集成** → WorkBuddy
 
 ## 更多信息
 

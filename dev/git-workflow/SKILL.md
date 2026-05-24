@@ -12,6 +12,9 @@ supported_agents:
   - kimi
   - codex
   - opencode
+  - trae
+  - trae-solo
+  - workbuddy
 triggers:
   - pattern: "(execute|run|implement|complete|do)\\s*task"
   - pattern: "执行(任务|Task)"

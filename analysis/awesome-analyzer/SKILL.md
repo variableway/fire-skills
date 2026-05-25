@@ -1,3 +1,28 @@
+---
+name: awesome-analyzer
+description: |
+  分析 awesome 列表仓库，提取工具并生成结构化评估报告。
+  自动克隆仓库、解析 README 结构、提取分类和工具列表，支持导出为 Markdown、JSON、Skill 格式。
+  TRIGGER: When user asks to "/awesome-analyze", "分析 awesome", "分析工具列表", "解析 awesome list", or wants to extract tools from an awesome list repository.
+type: skill
+supported_agents:
+  - claude-code
+  - kimi
+  - codex
+  - opencode
+  - trae
+  - trae-solo
+  - workbuddy
+tags:
+  - analysis
+  - awesome-list
+  - research
+  - dev-workflow
+triggers:
+  - pattern: "^/(awesome-analyze|analyze-awesome|分析awesome)"
+  - pattern: "(分析|解析|提取).*(awesome|工具列表|tool.list)"
+---
+
 # Awesome List Analyzer Skill
 
 > 分析 awesome 列表仓库，提取工具并生成结构化评估报告

@@ -1,11 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Dev Workflow Combined Installer for Windows.
-    Installs all dev-workflow related skills.
+    Repo Analyzer Skill Installer for Windows.
 
 .DESCRIPTION
-    Installs: github-cli-skill, gh-create-release, git-workflow, local-workflow
+    Installs the repo-analyzer skill to system or project agent skill directories.
 
 .PARAMETER System
     Install to system directories
@@ -14,45 +13,31 @@
     Install to current project directory
 
 .PARAMETER Agent
-    Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
-
-.PARAMETER Hooks
-    Also install git hooks (git-workflow only)
+    Target specific agent (claude-code, kimi, codex, opencode)
 
 .EXAMPLE
-    .\dev-workflow-install.ps1 -System
+    .\install.ps1 -System
     Install to all system agent directories
 
 .EXAMPLE
-    .\dev-workflow-install.ps1 -System -Agent kimi
+    .\install.ps1 -System -Agent kimi
     Install to kimi system directory only
 
 .EXAMPLE
-    .\dev-workflow-install.ps1 -System -Agent trae
-    Install to Trae system directory only
-
-.EXAMPLE
-    .\dev-workflow-install.ps1 -Project
+    .\install.ps1 -Project
     Install to current project
 #>
 
 param(
     [switch]$System,
     [switch]$Project,
-    [string]$Agent = "",
-    [switch]$Hooks
+    [string]$Agent = ""
 )
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-# Skills to install (relative to ScriptDir)
-$Skills = @(
-    "github-cli-skill"
-    "gh-create-release"
-    "git-workflow"
-    "local-workflow"
-)
+$SkillRoot = Split-Path -Parent $ScriptDir
+$SkillName = Split-Path -Leaf $SkillRoot
 
 function Write-ColorOutput {
     param([string]$Message, [string]$Color = "White")
@@ -63,16 +48,16 @@ function Write-Warning { param([string]$Message) Write-ColorOutput $Message "Yel
 function Write-ErrorMsg { param([string]$Message) Write-ColorOutput $Message "Red" }
 function Write-Info { param([string]$Message) Write-ColorOutput $Message "Cyan" }
 
-function Test-GhInstalled {
+function Test-PythonDeps {
+    Write-Info "Checking Python dependencies..."
+
     try {
-        $version = gh --version | Select-Object -First 1
-        Write-Success "[OK] GitHub CLI found: $version"
-        return $true
+        python --version 2>$null | Out-Null
+        Write-Success "[OK] Python available (no external dependencies required)"
     }
     catch {
-        Write-Warning "[WARN] GitHub CLI (gh) is not installed."
-        Write-Host "  Install: https://cli.github.com/"
-        return $false
+        Write-ErrorMsg "Error: Python not found. Please install Python 3.8+"
+        exit 1
     }
 }
 
@@ -87,7 +72,6 @@ function Get-SystemTargetDirs {
             $dirs += Join-Path $homePath ".kimi\skills"
             $dirs += Join-Path $homePath ".codex\skills"
             $dirs += Join-Path $homePath ".opencode\skills"
-            $dirs += Join-Path $homePath ".trae\skills"
         }
         "claude-code" {
             $dirs += Join-Path $homePath ".claude\skills"
@@ -102,12 +86,9 @@ function Get-SystemTargetDirs {
         "opencode" {
             $dirs += Join-Path $homePath ".opencode\skills"
         }
-        { $_ -in "trae", "trae-solo" } {
-            $dirs += Join-Path $homePath ".trae\skills"
-        }
         default {
             Write-ErrorMsg "Error: Unknown agent '$Agent'"
-            Write-Host "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo"
+            Write-Host "Supported agents: claude-code, kimi, codex, opencode"
             exit 1
         }
     }
@@ -138,7 +119,7 @@ function Test-SymlinkCapability {
 }
 
 function New-SkillLink {
-    param([string]$SkillName, [string]$SkillRoot, [string]$TargetDir)
+    param([string]$TargetDir)
     $linkPath = Join-Path $TargetDir $SkillName
 
     if ((Test-Path $linkPath) -or (Get-Item $linkPath -ErrorAction SilentlyContinue)) {
@@ -158,7 +139,7 @@ function New-SkillLink {
             return $true
         }
         catch {
-            # fall through
+            # fall through to junction
         }
     }
 
@@ -173,29 +154,15 @@ function New-SkillLink {
     }
 }
 
-function Install-Skill {
-    param([string]$SkillName)
-    $skillRoot = Join-Path $ScriptDir $SkillName
-
-    if (-not (Test-Path $skillRoot)) {
-        Write-ErrorMsg "  [ERROR] Skill directory not found: $skillRoot"
-        return
-    }
-
-    Write-Info "Installing $SkillName..."
-
-    if ($System) {
-        $targetDirs = Get-SystemTargetDirs
-    }
-    else {
-        $targetDirs = Get-ProjectTargetDirs
-    }
-
+function Install-System {
+    Write-Info "Installing $SkillName to system directories..."
+    $targetDirs = Get-SystemTargetDirs
     $installed = 0
     $skipped = 0
 
     foreach ($targetDir in $targetDirs) {
-        if (New-SkillLink -SkillName $SkillName -SkillRoot $skillRoot -TargetDir $targetDir) {
+        $result = New-SkillLink -TargetDir $targetDir
+        if ($result) {
             $installed++
         }
         else {
@@ -203,39 +170,41 @@ function Install-Skill {
         }
     }
 
-    Write-Success "  Installed: $installed, Skipped: $skipped"
+    Write-Host ""
+    Write-Success "System installation complete."
+    Write-Host "  Installed: $installed"
+    Write-Host "  Skipped: $skipped"
 }
 
-function Install-GitHooks {
-    $gitWorkflowRoot = Join-Path $ScriptDir "git-workflow"
-    $hooksDir = Join-Path $gitWorkflowRoot "hooks"
+function Install-Project {
+    Write-Info "Installing $SkillName to project directories..."
 
-    if (-not (Test-Path $hooksDir)) {
-        Write-Warning "  [SKIP] git-workflow hooks not found"
-        return
-    }
-
-    Write-Info "Installing git hooks..."
-
-    $gitHooksDir = ".git\hooks"
-    if (-not (Test-Path $gitHooksDir)) {
-        Write-Warning "Warning: Not a git repository or .git\hooks not found."
-        return
-    }
-
-    foreach ($hook in @("prepare-commit-msg", "post-commit")) {
-        $src = Join-Path $hooksDir $hook
-        $dst = Join-Path $gitHooksDir $hook
-        if (Test-Path $src) {
-            if ((Test-Path $dst) -and -not (Get-Item $dst -ErrorAction SilentlyContinue).LinkType) {
-                Write-Warning "  [SKIP] $dst already exists (not overwriting)"
-            }
-            else {
-                Copy-Item $src $dst -Force
-                Write-Success "  [OK]   $dst"
-            }
+    if (-not (Test-Path ".git")) {
+        Write-Warning "Warning: Current directory is not a git repository."
+        $response = Read-Host "Continue anyway? (y/N)"
+        if ($response -notmatch "^[Yy]$") {
+            exit 1
         }
     }
+
+    $targetDirs = Get-ProjectTargetDirs
+    $installed = 0
+    $skipped = 0
+
+    foreach ($targetDir in $targetDirs) {
+        $result = New-SkillLink -TargetDir $targetDir
+        if ($result) {
+            $installed++
+        }
+        else {
+            $skipped++
+        }
+    }
+
+    Write-Host ""
+    Write-Success "Project installation complete."
+    Write-Host "  Installed: $installed"
+    Write-Host "  Skipped: $skipped"
 }
 
 function Main {
@@ -243,32 +212,30 @@ function Main {
         Write-ErrorMsg "Error: Must specify -System or -Project"
         Write-Host ""
         Write-Host "Usage:"
-        Write-Host "  .\dev-workflow-install.ps1 -System"
-        Write-Host "  .\dev-workflow-install.ps1 -System -Agent kimi"
-        Write-Host "  .\dev-workflow-install.ps1 -System -Agent trae"
-        Write-Host "  .\dev-workflow-install.ps1 -Project"
+        Write-Host "  .\install.ps1 -System"
+        Write-Host "  .\install.ps1 -System -Agent kimi"
+        Write-Host "  .\install.ps1 -Project"
         exit 1
     }
 
     Write-Info "Detected OS: Windows"
-    Write-Info "Skills to install: $($Skills -join ', ')"
     Write-Host ""
 
-    Test-GhInstalled | Out-Null
+    Test-PythonDeps
     Write-Host ""
 
-    foreach ($skill in $Skills) {
-        Install-Skill -SkillName $skill
-        Write-Host ""
+    if ($System) {
+        Install-System
+    }
+    elseif ($Project) {
+        Install-Project
     }
 
-    if ($Hooks -and $Project) {
-        Install-GitHooks
-        Write-Host ""
-    }
-
-    Write-Success "Dev workflow installation complete!"
-    Write-Host "Skills installed: $($Skills -join ', ')"
+    Write-Host ""
+    Write-Host "Skill installed: $SkillName"
+    Write-Host ""
+    Write-Host "Usage:"
+    Write-Host "  python $SkillRoot\scripts\analyze_repo.py https://github.com/user/repo"
 }
 
 Main

@@ -7,13 +7,14 @@
 # Options:
 #   --system        Install to system skill directories (default: ~/.config/agents/skills/)
 #   --project       Install to current project directory (./.agents/skills/)
-#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
+#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
 #   --hooks         Also install git hooks (git-workflow only)
 #   -h, --help      Show this help message
 #
 # Examples:
 #   ./dev-workflow-install.sh --system
 #   ./dev-workflow-install.sh --system --agent kimi
+#   ./dev-workflow-install.sh --system --agent trae
 #   ./dev-workflow-install.sh --project
 
 set -euo pipefail
@@ -47,13 +48,14 @@ Usage: ./dev-workflow-install.sh [--system | --project] [--agent <name>] [--hook
 Options:
   --system        Install to system directories (~/.config/agents/skills/)
   --project       Install to current project directory (./.agents/skills/)
-  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode)
+  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
   --hooks         Also install git hooks (git-workflow only)
   -h, --help      Show this help message
 
 Examples:
   ./dev-workflow-install.sh --system
   ./dev-workflow-install.sh --system --agent kimi
+  ./dev-workflow-install.sh --system --agent trae
   ./dev-workflow-install.sh --project
 EOF
 }
@@ -156,6 +158,7 @@ get_system_target_dirs() {
             dirs+=("$HOME/.kimi/skills")
             dirs+=("$HOME/.codex/skills")
             dirs+=("$HOME/.opencode/skills")
+            dirs+=("$HOME/.trae/skills")
             ;;
         claude-code)
             dirs+=("$HOME/.claude/skills")
@@ -170,9 +173,12 @@ get_system_target_dirs() {
         opencode)
             dirs+=("$HOME/.opencode/skills")
             ;;
+        trae|trae-solo)
+            dirs+=("$HOME/.trae/skills")
+            ;;
         *)
             echo -e "${RED}Error: Unknown agent '$TARGET_AGENT'${NC}" >&2
-            echo "Supported agents: claude-code, kimi, codex, opencode" >&2
+            echo "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo" >&2
             exit 1
             ;;
     esac

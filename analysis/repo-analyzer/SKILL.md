@@ -196,6 +196,38 @@ $ python .claude/skills/repo-analyzer/scripts/analyze_repo.py https://github.com
 ℹ Cached analysis at ~/innate-revisit/analysis/repo/codegraph/ (use --force to re-run)
 ```
 
+## 安装
+
+### 项目级安装
+
+```bash
+# macOS / Linux
+./scripts/install.sh --project
+
+# Windows PowerShell
+.\scripts\install.ps1 -Project
+```
+
+### 系统级安装
+
+```bash
+# macOS / Linux
+./scripts/install.sh --system
+
+# Windows PowerShell
+.\scripts\install.ps1 -System
+```
+
+### 指定 Agent
+
+```bash
+# 仅安装到 kimi
+./scripts/install.sh --system --agent kimi
+
+# Windows
+.\scripts\install.ps1 -System -Agent kimi
+```
+
 ## 参考
 
 - [CodeGraph](https://github.com/colbymchenry/codegraph) — 本 Skill 的底层语义索引引擎

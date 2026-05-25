@@ -37,3 +37,12 @@
 
 1. 请更新当前项目的docs文件
 2. 同时检查github pages 工作正常
+
+## Task 7: Please Refine the analysis skills
+
+1. 把[分析](../../../analysis) skill都标准化，遵照Agent Skill的规范
+
+## Task 8: 按照github workflow给Trae/Trae Solo 
+
+1. 安装dev-workflow 相关的SKILL给Trae和Trae Solo
+2. 对这些SKill进行测试，确认生效

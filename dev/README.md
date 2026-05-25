@@ -10,12 +10,6 @@
 | **github-cli-skill** | 简化版 GitHub CLI 工具（仓库创建、Issue 管理） |
 | **local-workflow** | 本地任务工作流（无需 GitHub，本地追踪记录） |
 | **gh-create-release** | GitHub Release 创建工具 |
-| **spark-task-init-skill** | 任务目录结构初始化 |
-| **ai-config** | AI Agent Provider 一键配置 |
 | **scanning-for-secrets** | 代码安全扫描 |
 
-## 安装
 
-```bash
-./install.sh --system --folder dev --all
-```

@@ -1,6 +1,6 @@
 # 支持的 AI Agent 工具
 
-本文档介绍 Spark Skills 仓库支持的 AI Agent 工具及其配置方式。
+本文档介绍 Fire Skills 仓库支持的 AI Agent 工具及其配置方式。
 
 ## 支持的 Agent 列表
 
@@ -45,7 +45,7 @@ npx @z_ai/coding-helper
 
 **Skills 安装**：
 ```bash
-./install.sh claude-code
+./install-by-tag.sh dev-workflow --system --agent claude-code
 ```
 
 **模型映射**：
@@ -112,7 +112,7 @@ wire_api = "chat"
 
 **Skills 安装**：
 ```bash
-./install.sh codex
+./install-by-tag.sh dev-workflow --system --agent codex
 ```
 
 ---
@@ -134,7 +134,7 @@ kimi login
 
 **Skills 安装**：
 ```bash
-./install.sh kimi
+./install-by-tag.sh dev-workflow --system --agent kimi
 ```
 
 ---
@@ -164,7 +164,7 @@ opencode
 
 **Skills 安装**：
 ```bash
-./install.sh opencode
+./install-by-tag.sh dev-workflow --system --agent opencode
 ```
 
 ---

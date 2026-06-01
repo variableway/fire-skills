@@ -1,6 +1,6 @@
-# Spark Skills 文档
+# Fire Skills 文档
 
-欢迎来到 Spark Skills 文档中心。本目录包含项目相关的详细文档和指南。
+欢迎来到 Fire Skills 文档中心。本目录包含项目相关的详细文档和指南。
 
 ## 文档索引
 
@@ -8,9 +8,12 @@
 
 | 文档 | 说明 |
 |------|------|
+| [index.md](./index.md) | 文档首页（含快速开始和技能分类） |
 | [Agents.md](./Agents.md) | 支持的 AI Agent 工具介绍和配置说明 |
 | [ai-coding-tools-guide.md](./ai-coding-tools-guide.md) | AI 编程工具配置指南（Claude Code、Codex、OpenCode、GLM） |
-| [usage/install-frontend-skills.md](./usage/install-frontend-skills.md) | 前端技能安装指南（Web + 桌面应用） |
+| [usage/install-by-tag.md](./usage/install-by-tag.md) | 按 Tag 批量安装 Skills 指南 |
+| [usage/install-frontend-skills.md](./usage/install-frontend-skills.md) | 前端技能安装指南 |
+| [usage/fe-skills-reference-guide.md](./usage/fe-skills-reference-guide.md) | 前端技能参考指南 |
 
 ### 规范文档
 
@@ -19,6 +22,9 @@
 | [spec/auto-doc-update-proposal.md](./spec/auto-doc-update-proposal.md) | 任务完成后自动文档更新方案设计 |
 | [spec/ai-agent-protocol.md](./spec/ai-agent-protocol.md) | AI Agent 通用协议定义 |
 | [spec/agent-communication-protocols.md](./spec/agent-communication-protocols.md) | Agent 间通信协议 |
+| [spec/agent-output-template.md](./spec/agent-output-template.md) | Agent 输出模板规范 |
+| [spec/system-prompt-integration.md](./spec/system-prompt-integration.md) | System Prompt 集成方案 |
+| [validation/workflow-validation.md](./validation/workflow-validation.md) | 工作流验证文档 |
 
 ### 快速导航
 
@@ -40,7 +46,8 @@
 ## 项目主文档
 
 - [项目 README](../README.md) - 项目概览和快速开始
-- [SETUP.md](../SETUP.md) - 仓库构建过程文档
+- [安装脚本](../install-by-tag.sh) - 按 Tag 批量安装 Skills（macOS/Linux）
+- [清理脚本](../clean-skills.sh) - 清理已安装 Skills
 
 ## 贡献文档
 

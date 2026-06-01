@@ -20,78 +20,29 @@
 
 ## 快速安装
 
-### Linux/macOS 安装 (install.sh)
+### 按 Tag 安装（推荐 — install-by-tag）
 
-统一支持**系统级别**和**项目级别**安装，支持按文件夹选择安装：
-
-```bash
-# 查看可用 skills
-./install.sh --list
-
-# 查看可用 skill 文件夹
-./install.sh --list-folders
-
-# ========== 系统级别安装 ==========
-# 安装所有 skills 到系统目录（所有 Agent）
-./install.sh --system --all
-
-# 安装所有 skills 到特定 Agent（如 Kimi）
-./install.sh --system --agent kimi --all
-
-# 从特定文件夹安装（如 dev）
-./install.sh --system --folder dev --all
-
-# 安装指定 skills 到系统
-./install.sh --system github-task-workflow local-workflow
-
-# ========== 项目级别安装 ==========
-# 安装所有 skills 到当前项目
-./install.sh --project --all
-
-# 从特定文件夹安装到当前项目
-./install.sh --project --folder dev --all
-
-# 安装指定 skills 到当前项目
-./install.sh --project github-task-workflow
-```
-
-**系统级别安装位置**：
-- `~/.config/agents/skills/` (通用)
-- `~/.claude/skills/` (Claude Code)
-- `~/.kimi/skills/` (Kimi CLI)
-- `~/.codex/skills/` (Codex)
-- `~/.opencode/skills/` (OpenCode)
-- `~/.trae/skills/` (Trae / Trae Solo)
-- `~/.workbuddy/skills/` (WorkBuddy)
-
-**项目级别安装位置**：
-- `./.agents/skills/` (通用)
-- `./.kimi/skills/` (Kimi CLI)
-- `./.claude/skills/` (Claude Code)
-- `./.trae/skills/` (Trae / Trae Solo)
-- `./.workbuddy/skills/` (WorkBuddy)
-- 自动创建 `.kimi/KIMI.md` 项目配置
-- 自动创建 `tasks/` 目录
-
-### 按 Tag 安装（install-by-tag）
-
-`install-by-tag.sh` / `install-by-tag.ps1` 根据 SKILL.md frontmatter 中的 `tags` 字段批量安装。默认扫描 `dev/`、`analysis/`、`fe-skills/`、`backend-skills/`、`product/` 五个分类目录：
+`install-by-tag.sh` / `install-by-tag.ps1` 根据 SKILL.md frontmatter 中的 `tags` 字段批量安装。默认扫描 `dev/`、`analysis/`、`office-skills/` 以及 `references/skills-pool/` 下的所有分类目录：
 
 ```bash
-# 安装所有带 analysis 标签的 skill（含 repo-analyzer）
+# 安装所有带 analysis 标签的 skill（含 repo-analyzer、tech-research 等）
 ./install-by-tag.sh analysis --system
 
 # 安装所有 dev-workflow 标签 skill 到 Claude Code
 ./install-by-tag.sh dev-workflow --system --agent claude-code
 
+# 安装 office 类技能（markdown-converter、python-uv-env）
+./install-by-tag.sh office --system
+
 # 仅扫描指定目录（可重复传 --dir）
 ./install-by-tag.sh repo --system --dir ./analysis
+./install-by-tag.sh research --system --dir ./dev --dir ./analysis
 
 # Windows
 .\install-by-tag.ps1 -Tag analysis -System
 ```
 
-常用 tag：`dev-workflow` · `github` · `workflow` · `analysis` · `codegraph` · `repo` · `research` · `security` · `ai`
+常用 tag：`dev-workflow` · `github` · `workflow` · `analysis` · `codegraph` · `repo` · `research` · `security` · `ai` · `office` · `python`
 
 ### 清理已安装的 Skills
 
@@ -125,88 +76,87 @@ ln -s $(pwd)/dev/git-workflow ~/.claude/skills/git-workflow
 | **local-workflow** | 纯本地任务追踪，无需 GitHub | 本地 tracing、AI Agent Protocol 输出捕获、编排器 |
 | **github-cli-skill** | GitHub CLI (`gh`) 快速参考 | 仓库管理、Issue CRUD、Python 集成示例 |
 | **gh-create-release** | GitHub Release 创建工具 | 一键创建 Release + 上传 Assets |
-| **ai-config** | 一键配置 AI Provider 到编程工具 | GLM/OpenRouter/OpenAI/Anthropic 模板，支持 Claude Code/Codex/OpenCode/Cline/OpenClaw |
-| **spark-task-init-skill** | 初始化 spark-cli 任务目录结构 | 创建 tasks/features/ 等标准目录 |
 | **scanning-for-secrets** | 提交前扫描敏感信息 | 9 种 Token 模式检测 + Pre-commit Hook |
-| **tech-research** | 技术问题解决方案搜索与分析 | Web 搜索、结构化分析报告、技术成熟度评估 |
-| **awesome-analyzer** | 代码/项目分析工具 | 项目结构分析 |
+| **understand-anything** | 交互式代码知识图谱 | 将代码库转为可搜索、可探索的交互式知识图谱 |
 
-安装：`./install.sh --system --folder dev --all`
+安装：`./install-by-tag.sh dev-workflow --system`
 
 ### `analysis/` — 代码分析 Skills
 
 | Skill | 说明 | 核心能力 |
 |-------|------|---------|
 | **repo-analyzer** | 代码仓库语义分析（基于 [CodeGraph](https://github.com/colbymchenry/codegraph)） | 克隆/扫描仓库 → 生成结构化分析报告，归档到 `~/innate-revisit/analysis/repo/<repo-name>/` |
+| **tech-research** | 技术问题解决方案搜索与分析 | Web 搜索、结构化分析报告、技术成熟度评估 |
+| **awesome-analyzer** | Awesome List 解析与项目分析 | Awesome List 项目信息提取与结构分析 |
 
 安装（按 tag）：`./install-by-tag.sh analysis --system`
 
-### `fe-skills/` — 前端开发 Skills
+### `office-skills/` — 办公效率 Skills
 
 | Skill | 说明 | 核心能力 |
 |-------|------|---------|
-| **innate-frontend** | Web 前端开发，基于 `@innate/ui` 组件库 | 57+ UI 组件、7 个 Landing 区块、Auth/Mail/Chat 业务区块、OKLCH 主题系统 |
-| **desktop-app** | Tauri 2 + Next.js 跨平台桌面/Web 应用 | 完整 monorepo 模板、侧边栏布局、Tauri IPC 通信、可选 PTY 终端 |
+| **markdown-converter** | 文档转 Markdown（基于 markitdown） | 支持 PDF/Word/PPT/Excel/HTML/图片/音频/ZIP/YouTube → Markdown |
+| **python-uv-env** | Python 项目脚手架（基于 uv） | 一键创建 CLI/FastAPI/Django/Library 项目，自动配置 ruff/mypy/pytest |
 
-安装：`./install.sh --system --folder fe-skills --all`
+安装（按 tag）：`./install-by-tag.sh office --system`
 
-### `backend-skills/` — 后端开发 Skills
+### `references/skills-pool/` — 更多分类 Skills
 
-| Skill | 说明 |
-|-------|------|
-| **golang-cli-app** | Go CLI 应用开发指南 |
+| 子目录 | 说明 | 包含 Skill |
+|--------|------|-----------|
+| **fe-skills/** | 前端开发 | innate-frontend（Web 前端，@innate/ui + Next.js 16） |
+| **backend-skills/** | 后端开发 | golang-cli-app（Go CLI 应用开发指南） |
+| **product/** | 产品设计 | prd-writer-skill、project-analysis-skill |
+| **ai-config/** | AI Provider 配置 | 一键配置 GLM/OpenRouter/OpenAI/Anthropic 到编程工具 |
 
-安装：`./install.sh --system --folder backend-skills --all`
-
-### `product/` — 产品设计 Skills
-
-| Skill | 说明 |
-|-------|------|
-| **prd-writer-skill** | PRD 撰写 |
-| **project-analysis-skill** | 项目分析设计 |
-
-安装：`./install.sh --system --folder product --all`
+安装（按 tag）：`./install-by-tag.sh <tag> --system --dir ./references/skills-pool/<subdir>`
 
 ## 仓库结构
 
 ```
 fire-skills/
 ├── README.md                          # 本文件
-├── install.sh                         # 统一安装脚本（支持 --folder/--system/--project）
+├── CLAUDE.md                          # Claude Code 项目指令
+├── install-by-tag.sh                  # 按 Tag 批量安装脚本（macOS/Linux）
+├── install-by-tag.ps1                 # 按 Tag 批量安装脚本（Windows）
 ├── clean-skills.sh                    # 清理已安装 Skills 的脚本
+├── package.json                       # 文档站点构建（docmd）
+├── docmd.config.mjs                   # 文档站点配置
 ├── docs/                              # 详细文档
-│   ├── README.md                      # 文档索引
-│   ├── Agents.md                      # 支持的 AI Agent 工具介绍
-│   ├── ai-coding-tools-guide.md       # AI 编程工具配置指南
-│   ├── spec/                          # 协议和规范定义
-│   └── usage/                         # 使用指南
-├── dev/                               # 开发工作流 Skills (10 个)
+│   ├── README.md                      #   文档索引
+│   ├── index.md                       #   文档首页
+│   ├── Agents.md                      #   支持的 AI Agent 工具介绍
+│   ├── ai-coding-tools-guide.md       #   AI 编程工具配置指南
+│   ├── spec/                          #   协议和规范定义
+│   ├── usage/                         #   使用指南
+│   └── validation/                    #   验证文档
+├── dev/                               # 开发工作流 Skills (6 个)
 │   ├── git-workflow/                  #   GitHub Issue 任务工作流
 │   ├── local-workflow/                #   本地任务工作流
 │   ├── github-cli-skill/              #   GitHub CLI 工具
 │   ├── gh-create-release/             #   GitHub Release 创建
-│   ├── ai-config/                     #   AI Provider 一键配置
-│   ├── spark-task-init-skill/         #   任务目录初始化
 │   ├── scanning-for-secrets/          #   安全扫描
+│   └── understand-anything/           #   交互式代码知识图谱
+├── analysis/                          # 代码分析 Skills (3 个)
+│   ├── repo-analyzer/                 #   代码仓库语义分析（CodeGraph 集成）
 │   ├── tech-research/                 #   技术调研
-│   └── awesome-analyzer/              #   awesome list 解析
-├── analysis/                          # 代码分析 Skills (1 个)
-│   └── repo-analyzer/                 #   代码仓库语义分析（CodeGraph 集成）
-├── fe-skills/                         # 前端开发 Skills (2 个)
-│   ├── innate-frontend/               #   Web 前端开发（@innate/ui）
-│   └── desktop-app/                   #   桌面应用开发（Tauri + Next.js）
-├── backend-skills/                    # 后端开发 Skills (1 个)
-│   └── golang-cli-app/                #   Go CLI 应用开发
-├── product/                           # 产品设计 Skills (2 个)
-│   ├── prd-writer-skill/              #   PRD 撰写
-│   └── project-analysis-skill/        #   项目分析设计
+│   └── awesome-analyzer/              #   Awesome List 解析
+├── office-skills/                     # 办公效率 Skills (2 个)
+│   ├── markdown-converter/            #   文档转 Markdown
+│   └── python-uv-env/                 #   Python 项目脚手架（uv）
 ├── references/                        # 参考资料
+│   ├── skills-pool/                   #   更多 Skills 池
+│   │   ├── fe-skills/                 #     前端开发（innate-frontend）
+│   │   ├── backend-skills/            #     后端开发（golang-cli-app）
+│   │   ├── product/                   #     产品设计
+│   │   ├── ai-config/                 #     AI Provider 配置
+│   │   └── ...                        #     更多分类
 │   ├── composio/                      #   Composio SDK 参考实现
-│   ├── mattprocock-skills/            #   社区 Skills 参考
-│   └── skills-pool/                   #   Superpowers 等 Skills 池
+│   └── mattprocock-skills/            #   社区 Skills 参考
+├── python-skills-runtime/             # Python Skills 运行时环境
 └── tasks/                             # 任务管理目录
     ├── issues/                        #   任务定义文件
-    ├── features/                      #   功能特性任务
+    ├── tracing/                       #   本地执行追踪
     └── analysis/                      #   分析任务
 ```
 
@@ -227,7 +177,7 @@ npm run docs:build  # 构建到 site/
 
 ## 添加新 Skill
 
-1. 在对应分类目录下（`dev/`、`analysis/`、`fe-skills/`、`backend-skills/`、`product/`）创建新文件夹
+1. 在对应分类目录下（`dev/`、`analysis/`、`office-skills/` 或 `references/skills-pool/<subdir>/`）创建新文件夹
 2. 编写 `SKILL.md`，包含标准的 YAML frontmatter：
 
 ```yaml
@@ -242,17 +192,19 @@ supported_agents:
   - trae
   - trae-solo
   - workbuddy
+tags:
+  - your-tag
 ---
 ```
 
 3. 在 `SKILL.md` 同级目录下按需创建 `scripts/`、`references/` 等子目录
 4. 更新本 README 的 Skill 列表
-5. 运行 `./install.sh --system --folder <folder> --all` 安装
+5. 运行 `./install-by-tag.sh <your-tag> --system` 安装
 
 ## 设计原则
 
 - **单一入口**：每个 skill 只有一个 `SKILL.md`，降低维护成本
-- **分类组织**：Skills 按功能分目录（dev/analysis/fe-skills/backend-skills/product），支持 `--folder` 选择安装
+- **Tag 分类**：Skills 按 frontmatter `tags` 字段分类，支持跨目录按主题批量安装
 - **无外部强依赖**：优先使用标准库或系统自带工具
 - **脚本自解释**：所有 Python 脚本均内置 `--help`
 - **配置分层**：支持 CLI > 环境变量 > 项目配置 > 全局配置的优先级链

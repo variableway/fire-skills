@@ -7,6 +7,8 @@
 | Skill | 说明 |
 |-------|------|
 | **repo-analyzer** | 代码仓库语义分析。克隆任意 GitHub / 本地仓库，集成 [CodeGraph](https://github.com/colbymchenry/codegraph) 构建索引（可选），生成结构化分析报告（技术栈 / 架构 / 入口点 / 路由表），归档到 `~/innate-revisit/analysis/repo/<repo-name>/`。 |
+| **tech-research** | 技术问题解决方案搜索与分析。Web 搜索 + 结构化分析报告 + 技术成熟度评估。 |
+| **awesome-analyzer** | Awesome List 解析与项目分析。从 Awesome List 中提取项目信息并做结构化分析。 |
 
 ## 安装
 

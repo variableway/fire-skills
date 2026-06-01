@@ -1,15 +1,17 @@
 # 按 Tag 批量安装 Skills
 
-`install-by-tag.sh` / `install-by-tag.ps1` 根据 SKILL.md frontmatter 中的 `tags` 字段批量安装 skill。**默认扫描所有分类目录**（`dev/`、`analysis/`、`fe-skills/`、`backend-skills/`、`product/`），匹配到的 skill 会被符号链接到目标 Agent 的 skills 目录。
+`install-by-tag.sh` / `install-by-tag.ps1` 根据 SKILL.md frontmatter 中的 `tags` 字段批量安装 skill。**默认扫描所有分类目录**（`dev/`、`analysis/`、`office-skills/` 以及 `references/skills-pool/` 下的子目录），匹配到的 skill 会被符号链接到目标 Agent 的 skills 目录。
 
 ## 默认扫描目录
 
 ```
 ./dev/                  # 开发工作流
-./analysis/             # 代码分析（含 repo-analyzer + CodeGraph）
-./fe-skills/            # 前端
-./backend-skills/       # 后端
-./product/              # 产品设计
+./analysis/             # 代码分析（repo-analyzer + tech-research + awesome-analyzer）
+./office-skills/        # 办公效率（markdown-converter + python-uv-env）
+./references/skills-pool/fe-skills/       # 前端
+./references/skills-pool/backend-skills/  # 后端
+./references/skills-pool/product/         # 产品设计
+./references/skills-pool/ai-config/       # AI Provider 配置
 ```
 
 任一目录不存在会被跳过，不报错。
@@ -52,7 +54,7 @@
 | `--system` | `-System` | 安装到系统目录（`~/.claude/skills/` 等） | — |
 | `--project` | `-Project` | 安装到当前项目（`./.claude/skills/` 等） | — |
 | `--agent <name>` | `-Agent <name>` | 仅安装到指定 Agent（claude-code/kimi/codex/opencode/trae/trae-solo/workbuddy） | 全部 |
-| `--dir <path>` | `-Dir <paths>` | 自定义扫描目录（可重复） | 五个默认分类目录 |
+| `--dir <path>` | `-Dir <paths>` | 自定义扫描目录（可重复） | dev/, analysis/, office-skills/, references/skills-pool/* |
 
 ## 常用 Tag
 
@@ -61,20 +63,19 @@
 | `dev-workflow` | 开发工作流 | git-workflow, local-workflow, github-cli-skill, ... |
 | `github` | GitHub 相关 | github-cli-skill, gh-create-release |
 | `workflow` | 任务自动化 | git-workflow, local-workflow |
-| `analysis` | 代码 / 项目分析 | repo-analyzer |
+| `analysis` | 代码 / 项目分析 | repo-analyzer, tech-research, awesome-analyzer |
 | `codegraph` | CodeGraph 集成 | repo-analyzer |
 | `repo` | 仓库级分析 | repo-analyzer |
 | `research` | 调研类 | tech-research |
 | `security` | 安全 | scanning-for-secrets |
 | `ai` | AI 配置 | ai-config |
+| `office` | 办公效率 | markdown-converter |
+| `python` | Python 开发 | python-uv-env |
+| `code-analysis` | 代码分析 | understand-anything |
 
-## 与 `install.sh` 的区别
+## 原理说明
 
-| 维度 | `install.sh` | `install-by-tag.sh` |
-|------|-------------|---------------------|
-| 选择方式 | 按 **目录** (`--folder dev`) 或显式 skill 名 | 按 **tag**（跨目录） |
-| 默认扫描 | 单目录 | 所有 5 个分类目录 |
-| 适用场景 | 知道 skill 名或所属分类 | 跨分类按主题批量安装 |
+`install-by-tag.sh` 会扫描默认目录中所有 `SKILL.md` 的 frontmatter `tags` 字段，匹配到的 skill 通过符号链接安装到目标 Agent。不依赖独立的文件夹级安装脚本，以 `SKILL.md` 为唯一入口。
 
 ## 安装后验证
 

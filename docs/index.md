@@ -1,4 +1,4 @@
-# Spark Skills 文档中心
+# Fire Skills 文档中心
 
 > 个人习惯的 AI Agent Skill 仓库，统一收集、管理和分发适配多种 AI 编程助手的 Skills。
 
@@ -15,21 +15,20 @@
 
 | 分类目录 | 内容 | 安装命令 |
 |---------|------|---------|
-| `dev/` | 开发工作流（git / GitHub / 安全 / AI 配置 / 调研） | `./install-by-tag.sh dev-workflow --system` |
-| `analysis/` | 代码仓库语义分析（含 CodeGraph 集成） | `./install-by-tag.sh analysis --system` |
-| `fe-skills/` | 前端开发（@innate/ui · Tauri + Next.js） | `./install.sh --system --folder fe-skills --all` |
-| `backend-skills/` | 后端开发（Go CLI 等） | `./install.sh --system --folder backend-skills --all` |
-| `product/` | 产品设计（PRD / 项目分析） | `./install.sh --system --folder product --all` |
+| `dev/` | 开发工作流（git / GitHub / 安全 / 知识图谱） | `./install-by-tag.sh dev-workflow --system` |
+| `analysis/` | 代码分析（CodeGraph 集成 / 技术调研 / 项目分析） | `./install-by-tag.sh analysis --system` |
+| `office-skills/` | 办公效率（Markdown 转换 / Python 项目脚手架） | `./install-by-tag.sh office --system` |
+| `references/skills-pool/` | 更多分类（前端 / 后端 / 产品 / AI 配置） | `./install-by-tag.sh <tag> --system --dir ./references/skills-pool/<subdir>` |
 
 ### 🚀 快速开始
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/spark-skills.git
-cd spark-skills
+git clone https://github.com/variableway/fire-skills.git
+cd fire-skills
 
 # 安装 skills 到你的 Agent
-./install.sh claude-code  # 或 kimi / codex / opencode / trae / workbuddy
+./install-by-tag.sh dev-workflow --system --agent claude-code  # 或 kimi / codex / opencode / trae / workbuddy
 ```
 
 ### 🛠 推荐配置
@@ -80,14 +79,23 @@ claude login
 
 ```
 docs/
-├── index.md                    # 本文件（文档首页）
-├── README.md                   # 文档索引
-├── Agents.md                   # Agent 工具介绍
-├── ai-coding-tools-guide.md    # 配置指南
-└── usage/
-    ├── install-frontend-skills.md  # 前端技能安装指南
-    ├── install-by-tag.md           # 按 Tag 批量安装指南
-    └── fe-skills-reference-guide.md
+├── index.md                         # 本文件（文档首页）
+├── README.md                        # 文档索引
+├── Agents.md                        # Agent 工具介绍
+├── ai-coding-tools-guide.md         # 配置指南
+├── architecture-output-flow.mmd     # 架构输出流程图
+├── spec/                            # 协议和规范定义
+│   ├── agent-communication-protocols.md
+│   ├── agent-output-template.md
+│   ├── ai-agent-protocol.md
+│   ├── auto-doc-update-proposal.md
+│   └── system-prompt-integration.md
+├── usage/                           # 使用指南
+│   ├── install-frontend-skills.md
+│   ├── install-by-tag.md
+│   └── fe-skills-reference-guide.md
+└── validation/                      # 验证文档
+    └── workflow-validation.md
 ```
 
 ---

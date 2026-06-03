@@ -1,25 +1,38 @@
 {
-  "name": "fire-skills",
-  "version": "1.0.0",
-  "description": "个人习惯的 AI Agent Skill 仓库，统一收集、管理和分发适配多种 AI 编程助手的 Skills。",
-  "main": "docmd.config.mjs",
-  "directories": {
-    "doc": "docs"
+  "name": "skill-spark",
+  "version": "0.1.0",
+  "description": "Universal skill manager for AI coding agents - merge of Fire-Skill and Flins",
+  "type": "module",
+  "bin": {
+    "skill-spark": "./src/index.ts"
   },
   "scripts": {
-    "docs:dev": "docmd dev --config docmd.config.mjs",
-    "docs:build": "docmd build --config docmd.config.mjs"
+    "build": "bun build src/index.ts --outdir dist --target node --minify",
+    "dev": "bun src/index.ts",
+    "typecheck": "tsgo --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/variableway/fire-skills.git"
+  "keywords": [
+    "skills",
+    "ai",
+    "agents",
+    "meta-skill",
+    "claude",
+    "gemini"
+  ],
+  "author": "SkillSpark Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^1.5.0",
+    "commander": "^15.0.0",
+    "picocolors": "^1.1.1",
+    "tar-stream": "^3.2.0",
+    "yauzl": "^3.3.2"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/variableway/fire-skills/issues"
-  },
-  "homepage": "https://variableway.github.io/fire-skills"
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.9.1",
+    "@types/tar-stream": "^3.1.4",
+    "@types/yauzl": "^2.10.3",
+    "bun-types": "^1.3.14"
+  }
 }

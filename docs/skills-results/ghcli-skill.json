@@ -1,0 +1,32 @@
+{
+  "query": "gh cli skill",
+  "registry": 1,
+  "directory": 0,
+  "total": 1,
+  "skills": [
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-gh-cli-skill",
+      "name": "Gh Cli Skill",
+      "description": "Use this skill when the user asks to work with GitHub from the command line using gh CLI. This includes managing repositories, issues, pull requests, releases, authentication, codespaces, actions, and any other GitHub operations. Use this skill for phrases like \"create a PR\", \"manage issues\", \"clone a repo\", \"check gh status\", or any GitHub CLI workflow.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "go",
+        "shell",
+        "bash",
+        "refactoring",
+        "git",
+        "api",
+        "database",
+        "ci/cd",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    }
+  ]
+}

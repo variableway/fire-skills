@@ -1,0 +1,709 @@
+{
+  "query": "github workflow",
+  "registry": 32,
+  "directory": 0,
+  "total": 32,
+  "skills": [
+    {
+      "schemaVersion": "1",
+      "slug": "diegosouzapw-github",
+      "name": "Github",
+      "description": "Integrate with GitHub for repository management and collaboration. Use when you need to: (1) manage repositories, issues, and pull requests, (2) search code and repositories, (3) manage collaborators and teams, or (4) automate GitHub workflows.",
+      "repository": "diegosouzapw/awesome-omni-skill",
+      "verified": false,
+      "stars": 42,
+      "tags": [
+        "bash",
+        "git"
+      ],
+      "author": {
+        "name": "diegosouzapw"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "diegosouzapw-github-workflows",
+      "name": "Github Workflows",
+      "description": "Initialize or update GitHub Actions workflows for Go projects with comprehensive CI/CD pipelines including linting, testing, coverage, snapshot builds, and releases. Use when setting up GitHub Actions automation for Go projects. Trigger with \"setup github actions\", \"add github workflows\", or \"configure ci/cd\".",
+      "repository": "diegosouzapw/awesome-omni-skill",
+      "verified": false,
+      "stars": 42,
+      "tags": [
+        "go",
+        "bash",
+        "docker",
+        "testing",
+        "git",
+        "ci/cd",
+        "security",
+        "documentation"
+      ],
+      "author": {
+        "name": "diegosouzapw"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "diegosouzapw-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "Automates GitHub workflows including batch issue creation from JSON/CSV, PR creation with issue linking, pre-PR testing, and WordPress-specific validation (PHP linting, WPCS). Use when creating multiple issues, automating PR workflows, or validating WordPress code before commits.",
+      "repository": "diegosouzapw/awesome-omni-skill",
+      "verified": false,
+      "stars": 42,
+      "tags": [
+        "python",
+        "php",
+        "bash",
+        "testing",
+        "git",
+        "ci/cd",
+        "documentation"
+      ],
+      "author": {
+        "name": "diegosouzapw"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "dvcrn-codesmith",
+      "name": "Codesmith",
+      "description": "CodeSmith — senior engineering agent configuration. Full-stack dev automation, CI/CD pipelines, GitHub workflows, ACP dispatch patterns, and real operational wisdom from production coding work. For OpenClaw agents that ship code.",
+      "repository": "dvcrn/openclaw-skills-marketplace",
+      "verified": false,
+      "stars": 15,
+      "tags": [
+        "rust",
+        "debugging",
+        "git",
+        "api",
+        "ci/cd"
+      ],
+      "author": {
+        "name": "dvcrn"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "ratnesh-maurya-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "Automate GitHub workflows with AI assistance. Includes PR reviews, issue triage, CI/CD integration, and Git operations. Use when automating GitHub workflows, setting up PR review automation, creati...",
+      "repository": "ratnesh-maurya/cursor-claude-personas",
+      "verified": false,
+      "stars": 7,
+      "tags": [
+        "javascript",
+        "typescript",
+        "go",
+        "java",
+        "docker",
+        "terraform",
+        "testing",
+        "git",
+        "api",
+        "database"
+      ],
+      "author": {
+        "name": "ratnesh-maurya"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "kodik-ai-github",
+      "name": "Github",
+      "description": "Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow.",
+      "repository": "Kodik-AI/kodik",
+      "verified": false,
+      "stars": 2,
+      "tags": [
+        "go",
+        "react",
+        "debugging",
+        "git"
+      ],
+      "author": {
+        "name": "Kodik-AI"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "decentraland-github-workflow",
+      "name": "Github Workflow",
+      "description": "GitHub workflow — creating PRs, issues, and bug reports using gh CLI. Use when creating pull requests, opening issues (bugs, feature requests, tech debt, performance), or interacting with GitHub via gh commands.",
+      "repository": "decentraland/unity-explorer",
+      "verified": false,
+      "stars": 22,
+      "tags": [
+        "bash",
+        "testing",
+        "git",
+        "performance",
+        "documentation"
+      ],
+      "author": {
+        "name": "decentraland"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "ruvnet-github-automation",
+      "name": "Github Automation",
+      "description": "GitHub workflow automation, PR management, issue tracking, and code review coordination. Integrates with GitHub Actions and repository management. Use when: PR creation, code review, issue management, release automation, workflow setup. Skip when: local-only changes, non-GitHub repositories.",
+      "repository": "ruvnet/ruflo",
+      "verified": false,
+      "stars": 55216,
+      "tags": [
+        "bash",
+        "code-review",
+        "git",
+        "ci/cd"
+      ],
+      "author": {
+        "name": "ruvnet"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "community-access-github-workflow-standards",
+      "name": "Github Workflow Standards",
+      "description": "Core standards for all GitHub workflow agents. Covers authentication, smart defaults, repository discovery, dual MD+HTML output, screen-reader-compliant HTML accessibility standards, safety rules, progress announcements, parallel execution, and output quality. Apply when building any GitHub workflow agent - issues, PRs, briefings, analytics, community reports, team management.",
+      "repository": "Community-Access/accessibility-agents",
+      "verified": false,
+      "stars": 283,
+      "tags": [
+        "go",
+        "react",
+        "git",
+        "api",
+        "security"
+      ],
+      "author": {
+        "name": "Community-Access"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "community-access-github-analytics-scoring",
+      "name": "Github Analytics Scoring",
+      "description": "Scoring formulas and analytical frameworks for GitHub workflow agents. Covers repository health scoring (0-100, A-F grades), priority scoring for issues/PRs/discussions, confidence levels for analytics findings, delta tracking (Fixed/New/Persistent/Regressed), velocity metrics, contributor metrics, bottleneck detection, and trend classification. Use when computing scores, tracking remediation progress, building prioritized dashboards, or detecting workflow bottlenecks.",
+      "repository": "Community-Access/accessibility-agents",
+      "verified": false,
+      "stars": 283,
+      "tags": [
+        "go",
+        "react",
+        "git",
+        "security"
+      ],
+      "author": {
+        "name": "Community-Access"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "frankxai-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "Advanced GitHub Actions workflow automation with AI swarm coordination, intelligent CI/CD pipelines, and comprehensive repository management",
+      "repository": "frankxai/agentic-creator-os",
+      "verified": false,
+      "stars": 4,
+      "tags": [
+        "javascript",
+        "go",
+        "java",
+        "bash",
+        "node",
+        "aws",
+        "testing",
+        "debugging",
+        "code-review",
+        "git"
+      ],
+      "author": {
+        "name": "frankxai"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "github-github-workflows-query",
+      "name": "Github Workflows Query",
+      "description": "List GitHub Actions workflows with per_page pagination support.",
+      "repository": "github/gh-aw",
+      "verified": false,
+      "stars": 4523,
+      "tags": [
+        "bash",
+        "node",
+        "git",
+        "api"
+      ],
+      "author": {
+        "name": "github"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "spencermarx-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "Advanced GitHub Actions workflow automation with AI swarm coordination, intelligent CI/CD pipelines, and comprehensive repository management",
+      "repository": "spencermarx/open-code-review",
+      "verified": false,
+      "stars": 189,
+      "tags": [
+        "javascript",
+        "go",
+        "java",
+        "bash",
+        "node",
+        "aws",
+        "testing",
+        "debugging",
+        "code-review",
+        "git"
+      ],
+      "author": {
+        "name": "spencermarx"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "kromiose-git-github-workflow",
+      "name": "Git Github Workflow",
+      "description": "处理基于 git 和 GitHub 的真实协作工作流。当任务涉及仓库同步、分支管理、修复 bug、提交代码、创建或更新 PR、处理 review、解决冲突、检查 GitHub 认证与权限、或需要通过 fork 与用户仓库协作时使用，强调安全、干净、可审计的协作流程。**必须在需要时使用该 Skill 并严格遵守相关规范!!!**",
+      "repository": "KroMiose/nekro-agent",
+      "verified": false,
+      "stars": 859,
+      "tags": [
+        "bash",
+        "git",
+        "api"
+      ],
+      "author": {
+        "name": "KroMiose"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "mindrally-github-workflow",
+      "name": "Github Workflow",
+      "description": "GitHub best practices for pull requests, code reviews, issues, Actions workflows, and repository management",
+      "repository": "Mindrally/skills",
+      "verified": false,
+      "stars": 8,
+      "tags": [
+        "go",
+        "sql",
+        "node",
+        "testing",
+        "git",
+        "api",
+        "frontend",
+        "backend",
+        "ci/cd",
+        "security"
+      ],
+      "author": {
+        "name": "Mindrally"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "yaakaito-github-workflow",
+      "name": "Github Workflow",
+      "description": "Write and edit GitHub Actions workflow files. Use when creating new workflows, editing existing .github/workflows/*.yml files, or setting up CI/CD pipelines. Triggers on requests like \"create a workflow\", \"add GitHub Actions\", \"set up CI\", or \"edit the workflow file\".",
+      "repository": "yaakaito/env",
+      "verified": false,
+      "stars": 3,
+      "tags": [
+        "go",
+        "shell",
+        "node",
+        "git",
+        "ci/cd"
+      ],
+      "author": {
+        "name": "yaakaito"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflows",
+      "name": "Github Workflows",
+      "description": "Diagnose, fix, and optimize GitHub Actions workflows for Rust projects. Use when setting up CI/CD, troubleshooting workflow failures, optimizing build times with caching, or ensuring best practices for testing, linting, and releases.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "rust",
+        "go",
+        "bash",
+        "testing",
+        "debugging",
+        "git",
+        "ci/cd",
+        "security",
+        "performance",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflow",
+      "name": "Github Workflow",
+      "description": "This skill should be used when the user asks to \"design a feature\", \"create UI mockup\", \"create a PR\", \"address review comments\", \"resolve review threads\", \"retrigger Q review\", \"/q review\", \"respond to Amazon Q\", \"/codex review\", \"respond to Codex\", \"handle reviewer findings\", \"merge PR\", \"push changes\", \"check CI status\", or mentions design canvas, Pencil tool, PR workflow, code review, reviewer bots, or GitHub Actions checks.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "bash",
+        "node",
+        "git",
+        "api",
+        "security",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflow-skill",
+      "name": "Github Workflow Skill",
+      "description": "GitHub workflow patterns for Orchestrator AI. Branch naming, PR process, code review, CI/CD. CRITICAL: Use conventional branch names (feature/, fix/, chore/). PRs require quality gates to pass. Use GitHub Actions for CI/CD.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "typescript",
+        "go",
+        "bash",
+        "node",
+        "testing",
+        "refactoring",
+        "git",
+        "api",
+        "ci/cd",
+        "security"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflow-fixer",
+      "name": "Github Workflow Fixer",
+      "description": "Analyze and fix GitHub Actions workflow failures. Use when workflows fail, CI/CD issues occur, or when debugging GitHub Actions runs. Triggers on requests like \"fix workflow\", \"why did the build fail\", \"check CI status\", \"debug GitHub Actions\", or \"workflow failed\".",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "bash",
+        "debugging",
+        "git",
+        "ci/cd"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflow-best-practices",
+      "name": "Github Workflow Best Practices",
+      "description": "Master GitHub workflows including branching strategies, commit standards, PR processes, issue triage, sprint management, and git worktree usage. Activate when planning GitHub workflows, managing sprints, or establishing team conventions.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "go",
+        "bash",
+        "testing",
+        "refactoring",
+        "code-review",
+        "git",
+        "api",
+        "database",
+        "ci/cd",
+        "security"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-workflow-authoring",
+      "name": "Github Workflow Authoring",
+      "description": "This skill should be used when creating or improving GitHub Actions CI/CD workflows for Breenix kernel development. Use for authoring new test workflows, optimizing existing CI pipelines, adding new test types, fixing workflow configuration issues, or adapting workflows for new kernel features.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "rust",
+        "go",
+        "bash",
+        "docker",
+        "testing",
+        "debugging",
+        "git",
+        "ci/cd",
+        "performance"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-ops-leon30083-wenjing-aigc",
+      "name": "Github Ops Leon30083 Wenjing Aigc",
+      "description": "Provides comprehensive GitHub operations using gh CLI and GitHub API. Activates when working with pull requests, issues, repositories, workflows, or GitHub API operations including creating/viewing/merging PRs, managing issues, querying API endpoints, and handling GitHub workflows in enterprise or public GitHub environments.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "shell",
+        "bash",
+        "debugging",
+        "git",
+        "api",
+        "ci/cd",
+        "performance",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-github-flow-for-claude-on-web",
+      "name": "Github Flow For Claude On Web",
+      "description": "Complete GitHub workflow for Claude Code on the web. ALL GitHub operations MUST use REST API (never gh CLI). Includes branch naming (claude/*-sessionId), push retry logic, PR/issue management via API, and complete workflows. Use for all GitHub interactions in Claude Code web environment.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "go",
+        "bash",
+        "testing",
+        "debugging",
+        "git",
+        "api",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-git-pr-workflow",
+      "name": "Git Pr Workflow",
+      "description": "Complete GitHub workflow from commit to PR including conventional commits, branch management, pre-push quality checks, PR creation with gh CLI, and wiki synchronization. Use when creating commits, ...",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "shell",
+        "bash",
+        "git",
+        "api",
+        "ci/cd",
+        "security",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-gh",
+      "name": "Gh",
+      "description": "This skill should be used when working with GitHub CLI (gh) for pull requests, issues, releases, and GitHub automation. Use when users mention gh commands, GitHub workflows, PR operations, issue management, or GitHub API access. Essential for understanding gh's mental model, command structure, and integration with git workflows.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "go",
+        "shell",
+        "react",
+        "git",
+        "api",
+        "ci/cd",
+        "performance",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "majiayu000-gh-dagster-io-erk",
+      "name": "Gh Dagster Io Erk",
+      "description": "This skill should be used when working with GitHub CLI (gh) for pull requests, issues, releases, and GitHub automation. Use when users mention gh commands, GitHub workflows, PR operations, issue management, or GitHub API access. Essential for understanding gh's mental model, command structure, and integration with git workflows.",
+      "repository": "majiayu000/claude-skill-registry",
+      "verified": false,
+      "stars": 76,
+      "tags": [
+        "go",
+        "shell",
+        "react",
+        "git",
+        "api",
+        "backend",
+        "ci/cd",
+        "performance",
+        "documentation"
+      ],
+      "author": {
+        "name": "majiayu000"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "laurigates-claude-code-github-workflows",
+      "name": "Claude Code Github Workflows",
+      "description": "Claude Code workflow design and automation patterns for PR reviews, issue triage, and CI/CD integration. Use when creating or modifying GitHub Actions workflows that integrate Claude Code.",
+      "repository": "laurigates/claude-plugins",
+      "verified": false,
+      "stars": 7,
+      "tags": [
+        "typescript",
+        "bash",
+        "testing",
+        "refactoring",
+        "git",
+        "api",
+        "database",
+        "backend",
+        "ci/cd",
+        "security"
+      ],
+      "author": {
+        "name": "laurigates"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "partme-ai-github-actions",
+      "name": "Github Actions",
+      "description": "Provides comprehensive guidance for GitHub Actions including workflow creation, actions, secrets, and automation. Use when the user asks about GitHub Actions, needs to create GitHub workflows, automate GitHub processes, or configure CI/CD with GitHub Actions.",
+      "repository": "partme-ai/full-stack-skills",
+      "verified": false,
+      "stars": 51,
+      "tags": [
+        "git",
+        "ci/cd"
+      ],
+      "author": {
+        "name": "partme-ai"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "akaszubski-github-workflow",
+      "name": "Github Workflow",
+      "description": "GitHub-first workflow - Issues, PRs, milestones, auto-tracking for solo developer productivity. Includes PR description templates, issue templates, automation patterns, and webhook security.",
+      "repository": "akaszubski/autonomous-dev",
+      "verified": false,
+      "stars": 7,
+      "tags": [
+        "go",
+        "bash",
+        "git",
+        "api",
+        "security",
+        "documentation"
+      ],
+      "author": {
+        "name": "akaszubski"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "jeremylongshore-gh-actions-validator",
+      "name": "Gh Actions Validator",
+      "description": "Automatically validates and enforces GitHub Actions best practices for Vertex AI and Google Cloud deployments.\nExpert in Workload Identity Federation (WIF), Vertex AI Agent Engine deployment pipelines, security validation, and CI/CD automation.\nTriggers: \"create github actions\", \"deploy vertex ai\", \"setup wif\", \"validate github workflow\", \"gcp deployment pipeline\"",
+      "repository": "jeremylongshore/claude-code-plugins-plus",
+      "verified": false,
+      "stars": 689,
+      "tags": [
+        "python",
+        "go",
+        "bash",
+        "gcp",
+        "terraform",
+        "git",
+        "ci/cd",
+        "security",
+        "performance"
+      ],
+      "author": {
+        "name": "jeremylongshore"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "ruvnet-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "Advanced GitHub Actions workflow automation with AI swarm coordination, intelligent CI/CD pipelines, and comprehensive repository management",
+      "repository": "ruvnet/claude-flow",
+      "verified": false,
+      "stars": 10716,
+      "tags": [
+        "javascript",
+        "go",
+        "java",
+        "bash",
+        "node",
+        "aws",
+        "testing",
+        "debugging",
+        "code-review",
+        "git"
+      ],
+      "author": {
+        "name": "ruvnet"
+      },
+      "signals": {}
+    }
+  ]
+}

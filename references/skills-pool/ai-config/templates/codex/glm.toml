@@ -1,8 +1,0 @@
-model = "GLM-5.1"
-model_provider = "glm"
-
-[model_providers.glm]
-name = "GLM"
-base_url = "https://open.bigmodel.cn/api/coding/paas/v4"
-env_key = "GLM_API_KEY"
-wire_api = "chat"

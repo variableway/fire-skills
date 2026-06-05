@@ -1,0 +1,77 @@
+{
+  "version": "1",
+  "skills": {
+    "skill:agent-browser": {
+      "name": "agent-browser",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:control-flow": {
+      "name": "control-flow",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:dev": {
+      "name": "dev",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:maintain": {
+      "name": "maintain",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:metrics-graphana": {
+      "name": "metrics-graphana",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:office-hours": {
+      "name": "office-hours",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:release": {
+      "name": "release",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:sessions": {
+      "name": "sessions",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    },
+    "skill:terminal-emulator": {
+      "name": "terminal-emulator",
+      "type": "skill",
+      "scope": "project",
+      "url": "https://github.com/slopus/happy.git",
+      "branch": "main",
+      "commit": "e10e51979143f4ffa9ead16c210af72c9864ac80"
+    }
+  }
+}

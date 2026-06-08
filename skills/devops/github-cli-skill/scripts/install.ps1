@@ -1,0 +1,296 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    GitHub CLI Skill Installer for Windows.
+
+.DESCRIPTION
+    Installs the github-cli-skill to system or project agent skill directories.
+    Optionally installs the GitHub CLI (gh) if not present.
+
+.PARAMETER System
+    Install to system directories (default: ~/.config/agents/skills/)
+
+.PARAMETER Project
+    Install to current project directory (./.agents/skills/)
+
+.PARAMETER Agent
+    Target specific agent (claude-code, kimi, codex, opencode)
+
+.EXAMPLE
+    .\install.ps1 -System
+    Install to all system agent directories
+
+.EXAMPLE
+    .\install.ps1 -System -Agent kimi
+    Install to kimi system directory only
+
+.EXAMPLE
+    .\install.ps1 -Project
+    Install to current project
+#>
+
+param(
+    [switch]$System,
+    [switch]$Project,
+    [string]$Agent = ""
+)
+
+$ErrorActionPreference = "Stop"
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$SkillRoot = Split-Path -Parent $ScriptDir
+$SkillName = Split-Path -Leaf $SkillRoot
+$SkillSparkHome = if ($env:SKILL_SPARK_HOME) { $env:SKILL_SPARK_HOME } else { Join-Path $env:USERPROFILE ".skill-spark" }
+$CanonicalDir = Join-Path $SkillSparkHome ".agents\skills"
+
+function Write-ColorOutput {
+    param([string]$Message, [string]$Color = "White")
+    Write-Host $Message -ForegroundColor $Color
+}
+function Write-Success { param([string]$Message) Write-ColorOutput $Message "Green" }
+function Write-Warning { param([string]$Message) Write-ColorOutput $Message "Yellow" }
+function Write-ErrorMsg { param([string]$Message) Write-ColorOutput $Message "Red" }
+function Write-Info { param([string]$Message) Write-ColorOutput $Message "Cyan" }
+
+function Test-GhInstalled {
+    try {
+        $version = gh --version | Select-Object -First 1
+        Write-Success "[OK] GitHub CLI found: $version"
+        return $true
+    }
+    catch {
+        Write-Warning "[WARN] GitHub CLI (gh) is not installed."
+        return $false
+    }
+}
+
+function Install-Gh {
+    Write-Info "Installing GitHub CLI..."
+
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        winget install --id GitHub.cli -e --source winget
+    }
+    elseif (Get-Command choco -ErrorAction SilentlyContinue) {
+        choco install gh -y
+    }
+    elseif (Get-Command scoop -ErrorAction SilentlyContinue) {
+        scoop install gh
+    }
+    else {
+        Write-ErrorMsg "Error: No supported package manager found (winget, chocolatey, scoop)."
+        Write-Host "Please install GitHub CLI manually: https://github.com/cli/cli#installation"
+        exit 1
+    }
+
+    # Refresh PATH so gh is available in this session
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+}
+
+function Get-SystemTargetDirs {
+    $dirs = @()
+    $homePath = $env:USERPROFILE
+
+    switch ($Agent) {
+        "" {
+            $dirs += Join-Path $homePath ".config\agents\skills"
+            $dirs += Join-Path $homePath ".claude\skills"
+            $dirs += Join-Path $homePath ".kimi\skills"
+            $dirs += Join-Path $homePath ".codex\skills"
+            $dirs += Join-Path $homePath ".opencode\skills"
+        }
+        "claude-code" {
+            $dirs += Join-Path $homePath ".claude\skills"
+        }
+        "kimi" {
+            $dirs += Join-Path $homePath ".kimi\skills"
+            $dirs += Join-Path $homePath ".config\agents\skills"
+        }
+        "codex" {
+            $dirs += Join-Path $homePath ".codex\skills"
+        }
+        "opencode" {
+            $dirs += Join-Path $homePath ".opencode\skills"
+        }
+        default {
+            Write-ErrorMsg "Error: Unknown agent '$Agent'"
+            Write-Host "Supported agents: claude-code, kimi, codex, opencode"
+            exit 1
+        }
+    }
+    return $dirs
+}
+
+function Get-ProjectTargetDirs {
+    $dirs = @()
+    $dirs += Join-Path $PWD ".agents\skills"
+    $dirs += Join-Path $PWD ".kimi\skills"
+    $dirs += Join-Path $PWD ".claude\skills"
+    return $dirs
+}
+
+function Test-SymlinkCapability {
+    $testPath = Join-Path $env:TEMP "symlink_test_$(Get-Random)"
+    $testTarget = Join-Path $env:TEMP "symlink_test_target_$(Get-Random)"
+    try {
+        New-Item -ItemType Directory -Path $testTarget -Force | Out-Null
+        New-Item -ItemType SymbolicLink -Path $testPath -Target $testTarget -Force | Out-Null
+        Remove-Item $testPath -Force
+        Remove-Item $testTarget -Force
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Copy-ToCanonical {
+    param([string]$SourcePath, [string]$Name)
+    $target = Join-Path $CanonicalDir $Name
+
+    if (Test-Path $target) {
+        Remove-Item $target -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $target -Force | Out-Null
+
+    $excluded = @(".git", "node_modules", "__pycache__", ".DS_Store", ".env", ".env.local")
+    Get-ChildItem -Path $SourcePath -Force | Where-Object {
+        $excluded -notcontains $_.Name
+    } | ForEach-Object {
+        $dest = Join-Path $target $_.Name
+        if ($_.PSIsContainer) {
+            Copy-Item $_.FullName -Destination $dest -Recurse -Force
+        } else {
+            Copy-Item $_.FullName -Destination $dest -Force
+        }
+    }
+}
+
+function New-SkillLink {
+    param([string]$TargetDir)
+    $linkPath = Join-Path $TargetDir $SkillName
+
+    if ((Test-Path $linkPath) -or (Get-Item $linkPath -ErrorAction SilentlyContinue)) {
+        Write-Warning "  [SKIP] $SkillName already exists at $linkPath"
+        return $false
+    }
+
+    $parentDir = Split-Path -Parent $linkPath
+    if (-not (Test-Path $parentDir)) {
+        New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
+    }
+
+    # Copy to canonical storage first, then symlink from there
+    Copy-ToCanonical -SourcePath $SkillRoot -Name $SkillName
+    $canonicalPath = Join-Path $CanonicalDir $SkillName
+
+    if (Test-SymlinkCapability) {
+        try {
+            New-Item -ItemType SymbolicLink -Path $linkPath -Target $canonicalPath -Force | Out-Null
+            Write-Success "  [OK]   $SkillName -> $linkPath"
+            return $true
+        }
+        catch {
+            # fall through to junction
+        }
+    }
+
+    try {
+        New-Item -ItemType Junction -Path $linkPath -Target $canonicalPath -Force | Out-Null
+        Write-Success "  [OK]   $SkillName -> $linkPath (junction)"
+        return $true
+    }
+    catch {
+        Write-ErrorMsg "  [ERROR] Failed to create link: $_"
+        return $false
+    }
+}
+
+function Install-System {
+    Write-Info "Installing $SkillName to system directories..."
+    $targetDirs = Get-SystemTargetDirs
+    $installed = 0
+    $skipped = 0
+
+    foreach ($targetDir in $targetDirs) {
+        $result = New-SkillLink -TargetDir $targetDir
+        if ($result) {
+            $installed++
+        }
+        else {
+            $skipped++
+        }
+    }
+
+    Write-Host ""
+    Write-Success "System installation complete."
+    Write-Host "  Installed: $installed"
+    Write-Host "  Skipped: $skipped"
+}
+
+function Install-Project {
+    Write-Info "Installing $SkillName to project directories..."
+
+    if (-not (Test-Path ".git")) {
+        Write-Warning "Warning: Current directory is not a git repository."
+        $response = Read-Host "Continue anyway? (y/N)"
+        if ($response -notmatch "^[Yy]$") {
+            exit 1
+        }
+    }
+
+    $targetDirs = Get-ProjectTargetDirs
+    $installed = 0
+    $skipped = 0
+
+    foreach ($targetDir in $targetDirs) {
+        $result = New-SkillLink -TargetDir $targetDir
+        if ($result) {
+            $installed++
+        }
+        else {
+            $skipped++
+        }
+    }
+
+    Write-Host ""
+    Write-Success "Project installation complete."
+    Write-Host "  Installed: $installed"
+    Write-Host "  Skipped: $skipped"
+}
+
+function Main {
+    if (-not $System -and -not $Project) {
+        Write-ErrorMsg "Error: Must specify -System or -Project"
+        Write-Host ""
+        Write-Host "Usage:"
+        Write-Host "  .\install.ps1 -System                # Install to all system agent dirs"
+        Write-Host "  .\install.ps1 -System -Agent kimi    # Install to kimi system dir only"
+        Write-Host "  .\install.ps1 -Project               # Install to current project"
+        exit 1
+    }
+
+    Write-Info "Detected OS: Windows"
+    Write-Host ""
+
+    if (-not (Test-GhInstalled)) {
+        $response = Read-Host "Install GitHub CLI (gh) now? (y/N)"
+        if ($response -match "^[Yy]$") {
+            Install-Gh
+        }
+        else {
+            Write-Warning "Skipping gh installation. Some features may not work."
+        }
+    }
+
+    Write-Host ""
+    if ($System) {
+        Install-System
+    }
+    elseif ($Project) {
+        Install-Project
+    }
+
+    Write-Host ""
+    Write-Host "Skill installed: $SkillName"
+}
+
+Main

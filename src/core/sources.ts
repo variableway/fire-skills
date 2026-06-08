@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, dirname, join, posix } from "node:path";
+import { basename, dirname, join, posix, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { gunzipSync } from "node:zlib";
 import * as tar from "tar-stream";
@@ -45,7 +45,7 @@ export interface ParsedGitSource {
 }
 
 export interface SourceBundle {
-  kind: "git" | "well-known";
+  kind: "git" | "well-known" | "local";
   label: string;
   url: string;
   branch: string;
@@ -547,14 +547,15 @@ async function downloadWellKnownIndex(index: WellKnownSkillIndex): Promise<Sourc
   };
 }
 
-async function downloadGitSource(source: string): Promise<SourceBundle> {
+async function downloadGitSource(source: string, branchOverride?: string): Promise<SourceBundle> {
   const parsed = parseGitSource(source);
   const root = mkdtempSync(join(tmpdir(), "skill-spark-git-"));
-  const branch = parsed.branch ?? "main";
+  const requestedBranch = branchOverride ?? parsed.branch;
+  const branch = requestedBranch ?? "main";
   const args = ["clone", "--depth", "1"];
 
-  if (parsed.branch) {
-    args.push("--branch", parsed.branch);
+  if (requestedBranch) {
+    args.push("--branch", requestedBranch);
   }
 
   args.push(parsed.url, root);
@@ -577,6 +578,15 @@ export function isDirectoryName(value: string) {
 
 export function isWellKnownSource(value: string) {
   return getWellKnownLocation(value) !== null;
+}
+
+function getLocalSourceRoot(value: string) {
+  if (parseHttpUrl(value) || isWellKnownSource(value)) {
+    return null;
+  }
+
+  const root = resolve(value);
+  return existsSync(root) ? root : null;
 }
 
 export function parseGitSource(value: string): ParsedGitSource {
@@ -647,18 +657,30 @@ export async function listWellKnownSource(source: string) {
   return await fetchWellKnownIndex(location);
 }
 
-export async function downloadSource(source: string) {
+export async function downloadSource(source: string, branchOverride?: string) {
+  const localRoot = getLocalSourceRoot(source);
+  if (localRoot) {
+    return {
+      kind: "local" as const,
+      label: localRoot,
+      url: `local:${localRoot}`,
+      branch: "local",
+      commit: "local",
+      root: localRoot,
+    };
+  }
+
   const location = getWellKnownLocation(source);
   if (!location) {
-    return downloadGitSource(trimWellKnownPrefix(source));
+    return downloadGitSource(trimWellKnownPrefix(source), branchOverride);
   }
 
   return downloadWellKnownIndex(await fetchWellKnownIndex(location));
 }
 
 export async function getLatestCommit(url: string, branch: string = "main") {
-  if (url.startsWith("well-known:")) {
-    return "well-known";
+  if (url.startsWith("well-known:") || url.startsWith("local:")) {
+    return url.startsWith("local:") ? "local" : "well-known";
   }
 
   const output = await runGit(["ls-remote", url, `refs/heads/${branch}`]);
@@ -666,5 +688,9 @@ export async function getLatestCommit(url: string, branch: string = "main") {
 }
 
 export async function cleanupSource(source: SourceBundle) {
+  if (source.kind === "local") {
+    return;
+  }
+
   rmSync(source.root, { recursive: true, force: true });
 }

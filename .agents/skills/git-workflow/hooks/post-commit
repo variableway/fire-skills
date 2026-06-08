@@ -1,0 +1,28 @@
+#!/bin/sh
+# Git post-commit hook: auto-comment to GitHub issue on each commit.
+#
+# Install:
+#   cp hooks/post-commit .git/hooks/post-commit
+#   chmod +x .git/hooks/post-commit
+#
+# Assumes branch names may start with issue number, e.g. "42-feature-login".
+
+ISSUE=$(git branch --show-current | grep -oE '^[0-9]+' | head -n 1)
+if [ -z "$ISSUE" ]; then
+    exit 0
+fi
+
+COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+COMMIT_HASH=$(git log -1 --pretty=format:"%h")
+BRANCH=$(git branch --show-current)
+
+cd "$(git rev-parse --show-toplevel)" || exit 0
+
+# Use gh CLI to comment on the issue
+gh issue comment "$ISSUE" \
+  --body "### New Commit
+
+- **Hash**: \`$COMMIT_HASH\`
+- **Message**: $COMMIT_MSG
+- **Branch**: \`$BRANCH\`" \
+  > /dev/null 2>&1

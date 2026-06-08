@@ -3,20 +3,21 @@
 import { Command } from "commander";
 import packageJson from "../package.json" with { type: "json" };
 import { runSearch } from "./commands/search.js";
-import { runMap, runSync } from "./commands/map.js";
+import { runMap, runSync, type SyncCommandOptions } from "./commands/map.js";
 import { runDoctor } from "./commands/doctor.js";
 import { handleAddCommand, type AddOptions } from "./commands/add.js";
 import { handleListCommand } from "./commands/list.js";
 import { handleRemoveCommand, type RemoveOptions } from "./commands/remove.js";
 import { handleUpdateCommand, handleOutdatedCommand } from "./commands/update.js";
+import {
+  runAgentAdd,
+  runAgentList,
+  runAgentRemove,
+  runAgentSchema,
+  type AgentAddOptions,
+} from "./commands/agent.js";
 
 const logo = `
-██╗    ██╗██╗██╗  ██╗██╗███████╗██████╗ ██╗
-██║    ██║██║██║ ██╔╝██║██╔════╝██╔══██╗██║
-██║ █╗ ██║██║█████╔╝ ██║█████╗  ██████╔╝██║
-██║███╗██║██║██╔═██╗ ██║██╔══╝  ██╔══██╗██║
-╚███╔███╔╝██║██║  ██╗██║███████╗██║  ██║███████╗
- ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
 `;
 
 const program = new Command();
@@ -25,7 +26,7 @@ program.addHelpText("beforeAll", logo);
 
 program
   .name("skill-spark")
-  .description("Universal skill manager for AI coding agents")
+  .description("SkillOps CLI for installing, syncing, and governing AI coding agent skills")
   .version(packageJson.version)
   .showHelpAfterError()
   .showSuggestionAfterError();
@@ -113,7 +114,7 @@ program
   .description("Map installed skills into target agent directory")
   .option("--target <target>", "Target environment (gemini, claude, codex, agent, qwen)")
   .option("--global", "Map from global skill-spark install")
-  .option("--universal", "Map from universal (.agent/skills)")
+  .option("--universal", "Map from universal (.agents/skills)")
   .option("--force-map", "Overwrite target mapping if it exists")
   .action(async (options: { target?: string; global?: boolean; universal?: boolean; forceMap?: boolean }) => {
     await runMap(options);
@@ -121,11 +122,59 @@ program
 
 program
   .command("sync")
-  .description("Forward to openskills sync")
-  .option("-y, --yes", "Skip interactive selection, sync all skills")
-  .option("-o, --output <path>", "Output file path (default: AGENTS.md)")
-  .action(async (options: { yes?: boolean; output?: string }) => {
-    runSync(options);
+  .description("Sync skills from a source directory to target AI agent skill folders")
+  .option("-s, --source <path>", "Source directory or remote source (default: skills/base)")
+  .option("-a, --agent <agents...>", "Target agents (default: codex, claude-code, opencode, trae, kimi-cli)")
+  .option("--skill <names...>", "Only sync matching skill names")
+  .option("--global", "Sync into global agent skill folders")
+  .option("-y, --yes", "Accepted for script compatibility; sync is non-interactive")
+  .option("-f, --force", "Overwrite existing target folders")
+  .option("--no-symlink", "Copy files directly instead of symlinking from .agents/skills")
+  .action(async (options: SyncCommandOptions) => {
+    await runSync(options);
+  });
+
+const agentCommand = program
+  .command("agent")
+  .alias("agents")
+  .description("Manage target AI agent directory configurations");
+
+agentCommand
+  .command("list")
+  .description("List built-in and custom agent directory configurations")
+  .option("--json", "Print JSON output")
+  .action((options: { json?: boolean }) => {
+    runAgentList(options);
+  });
+
+agentCommand
+  .command("schema")
+  .description("Print the skill-spark.agents.json standard format")
+  .action(() => {
+    runAgentSchema();
+  });
+
+agentCommand
+  .command("add <name>")
+  .description("Add a custom agent directory configuration")
+  .option("--label <label>", "Human-readable agent label")
+  .option("--skills-dir <path>", "Project-level skills directory, for example .my-agent/skills")
+  .option("--global-skills-dir <path>", "Global skills directory, for example ~/.my-agent/skills")
+  .option("--commands-dir <path>", "Project-level commands directory")
+  .option("--global-commands-dir <path>", "Global commands directory")
+  .option("--alias <aliases...>", "Additional names accepted by --agent")
+  .option("--global", "Write to ~/.skill-spark/agents.json instead of ./skill-spark.agents.json")
+  .option("--force", "Overwrite an existing custom config or built-in name")
+  .action((name: string, options: AgentAddOptions) => {
+    runAgentAdd(name, options);
+  });
+
+agentCommand
+  .command("remove <name>")
+  .description("Remove a custom agent directory configuration")
+  .option("--global", "Remove from ~/.skill-spark/agents.json instead of ./skill-spark.agents.json")
+  .action((name: string, options: { global?: boolean }) => {
+    runAgentRemove(name, options);
   });
 
 program

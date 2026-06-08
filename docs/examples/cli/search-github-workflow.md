@@ -5,14 +5,14 @@ This guide demonstrates how to use `skill-spark` to search for skills related to
 ## Prerequisites
 
 - [Bun](https://bun.sh) runtime installed
-- `skill-spark` CLI available (run from project root with `bun src/index.ts`)
+- `skill-spark` CLI available. Prefer `./dist/skill-spark` from the project root; run `bun run build:all` first if it does not exist.
 
 ## Basic Search
 
 Search for skills matching the "github workflow" keyword. Results are merged from two sources: the skills registry (`skillsdirectory.com`) and the flins directory:
 
 ```bash
-bun src/index.ts search "github workflow"
+./dist/skill-spark search "github workflow"
 ```
 
 Output:
@@ -31,7 +31,7 @@ Found 10 skills (registry: 10)
 Narrow results to a specific category (e.g., `devops`, `development`, `tools`):
 
 ```bash
-bun src/index.ts search "github workflow" --category devops
+./dist/skill-spark search "github workflow" --category devops
 ```
 
 ### Control Result Count
@@ -39,7 +39,7 @@ bun src/index.ts search "github workflow" --category devops
 Adjust the number of results per page (max 100):
 
 ```bash
-bun src/index.ts search "github workflow" --limit 10
+./dist/skill-spark search "github workflow" --limit 10
 ```
 
 ### Paginate Results
@@ -47,7 +47,7 @@ bun src/index.ts search "github workflow" --limit 10
 Use `--offset` for paginated browsing:
 
 ```bash
-bun src/index.ts search "github workflow" --limit 5 --offset 10
+./dist/skill-spark search "github workflow" --limit 5 --offset 10
 ```
 
 ### Sort Results
@@ -56,19 +56,19 @@ Sort by different criteria:
 
 ```bash
 # Sort by most starred
-bun src/index.ts search "github workflow" --sort stars
+./dist/skill-spark search "github workflow" --sort stars
 
 # Sort by most recent
-bun src/index.ts search "github workflow" --sort recent
+./dist/skill-spark search "github workflow" --sort recent
 
 # Sort by votes
-bun src/index.ts search "github workflow" --sort votes
+./dist/skill-spark search "github workflow" --sort votes
 ```
 
 ### Combine Multiple Options
 
 ```bash
-bun src/index.ts search "github workflow" \
+./dist/skill-spark search "github workflow" \
   --category devops \
   --limit 10 \
   --sort stars
@@ -79,14 +79,14 @@ bun src/index.ts search "github workflow" \
 Override the default registry URL:
 
 ```bash
-bun src/index.ts search "github workflow" --registry https://custom.registry.com/api
+./dist/skill-spark search "github workflow" --registry https://custom.registry.com/api
 ```
 
 Or set via environment variable:
 
 ```bash
 export FIRE_SKILL_REGISTRY_URL="https://custom.registry.com/api"
-bun src/index.ts search "github workflow"
+./dist/skill-spark search "github workflow"
 ```
 
 ## Save Results to File
@@ -94,8 +94,8 @@ bun src/index.ts search "github workflow"
 Export search results as JSON to a file:
 
 ```bash
-bun src/index.ts search "github workflow" -o results.json
-bun src/index.ts search "github workflow" --limit 5 --sort stars -o /tmp/output.json
+./dist/skill-spark search "github workflow" -o results.json
+./dist/skill-spark search "github workflow" --limit 5 --sort stars -o /tmp/output.json
 ```
 
 Output file structure:
@@ -126,7 +126,7 @@ Output file structure:
 Omit the query string to enter interactive TUI browse mode, where you can filter and multi-select skills for installation:
 
 ```bash
-bun src/index.ts search
+./dist/skill-spark search
 ```
 
 Use the arrow keys to navigate, type to filter, space to select/deselect, and Enter to install selected skills.
@@ -137,14 +137,14 @@ For broader coverage of GitHub workflow topics, try these related queries:
 
 ```bash
 # CI/CD pipeline skills
-bun src/index.ts search "ci cd pipeline"
+./dist/skill-spark search "ci cd pipeline"
 
 # GitHub Actions skills
-bun src/index.ts search "github actions"
+./dist/skill-spark search "github actions"
 
 # DevOps automation skills
-bun src/index.ts search "devops automation"
+./dist/skill-spark search "devops automation"
 
 # Deployment workflow skills
-bun src/index.ts search "deployment workflow"
+./dist/skill-spark search "deployment workflow"
 ```

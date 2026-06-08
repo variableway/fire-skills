@@ -11,7 +11,7 @@ import {
 import { homedir, platform } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import {
-  agents,
+  getAgentConfig,
   getAgentNames,
   resolveAgentCommandsDir,
   resolveAgentSkillsDir,
@@ -34,7 +34,8 @@ export interface InstallationResult {
 }
 
 const flinsHome = join(homedir(), ".skill-spark");
-const excludedSkillFiles = new Set(["README.md", "metadata.json"]);
+const excludedSkillFiles = new Set(["README.md", "metadata.json", ".env", ".env.local", ".DS_Store"]);
+const excludedSkillDirectories = new Set([".git", "node_modules", "__pycache__"]);
 
 function toError(error: unknown) {
   return error instanceof Error ? error.message : "Unknown error";
@@ -93,7 +94,11 @@ function copySkillDirectory(sourcePath: string, targetPath: string) {
   mkdirSync(targetPath, { recursive: true });
 
   for (const entry of readdirSync(sourcePath, { withFileTypes: true })) {
-    if (excludedSkillFiles.has(entry.name) || entry.name.startsWith("_")) {
+    if (
+      excludedSkillFiles.has(entry.name) ||
+      excludedSkillDirectories.has(entry.name) ||
+      entry.name.startsWith("_")
+    ) {
       continue;
     }
 
@@ -179,7 +184,7 @@ export function installInstallable(
       return {
         success: false,
         path: "",
-        error: `Agent ${agents[agent].label} does not support commands`,
+        error: `Agent ${getAgentConfig(agent, cwd)?.label ?? agent} does not support commands`,
       };
     }
 

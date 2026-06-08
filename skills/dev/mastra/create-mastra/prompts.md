@@ -1,0 +1,21 @@
+## Prompts
+
+## Create Mastra 
+
+```
+Make new Mastra project. Mastra = framework for AI apps + agents on modern TypeScript stack. Before run command, ask these questions one by one. Wait for answers unless already given:
+
+Project name? (default: "my-mastra-app")
+Provider? (default: "openai", options: "openai", "anthropic", "groq", "google", "cerebras", "mistral")
+Provider rules:
+
+Allowed provider -> use it.
+Any other value -> use "openai".
+Run with answers: npm create mastra@latest <project-name> --default --llm <provider>
+
+After project created, go to project dir. Start dev server: npx bgproc start -n <project-name> -w -- npm run dev
+
+Start Mastra Studio at http://localhost:4111. Studio = UI for build, test, manage agents, workflows, tools.
+
+Also tell: Mastra model router give 3000+ models from many providers: https://mastra.ai/models
+```

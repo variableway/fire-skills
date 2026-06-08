@@ -5,14 +5,14 @@
 ## 前置条件
 
 - 安装 [Bun](https://bun.sh) 运行时
-- `skill-spark` CLI 可用（在项目根目录执行 `bun src/index.ts`）
+- `skill-spark` CLI 可用（优先在项目根目录执行 `./dist/skill-spark`；如不存在先运行 `bun run build:all`）
 
 ## 基础搜索
 
 搜索匹配 "github workflow" 关键词的技能。结果会同时从两个数据源合并获取：skills 注册表（`skillsdirectory.com`）和 flins 目录：
 
 ```bash
-bun src/index.ts search "github workflow"
+./dist/skill-spark search "github workflow"
 ```
 
 输出示例：
@@ -31,7 +31,7 @@ Found 10 skills (registry: 10)
 缩小到特定分类（如 `devops`、`development`、`tools`）：
 
 ```bash
-bun src/index.ts search "github workflow" --category devops
+./dist/skill-spark search "github workflow" --category devops
 ```
 
 ### 控制结果数量
@@ -39,7 +39,7 @@ bun src/index.ts search "github workflow" --category devops
 调整每页结果数量（最大 100）：
 
 ```bash
-bun src/index.ts search "github workflow" --limit 10
+./dist/skill-spark search "github workflow" --limit 10
 ```
 
 ### 分页浏览
@@ -47,7 +47,7 @@ bun src/index.ts search "github workflow" --limit 10
 使用 `--offset` 进行分页：
 
 ```bash
-bun src/index.ts search "github workflow" --limit 5 --offset 10
+./dist/skill-spark search "github workflow" --limit 5 --offset 10
 ```
 
 ### 排序结果
@@ -56,19 +56,19 @@ bun src/index.ts search "github workflow" --limit 5 --offset 10
 
 ```bash
 # 按星标数排序（最多）
-bun src/index.ts search "github workflow" --sort stars
+./dist/skill-spark search "github workflow" --sort stars
 
 # 按最新排序
-bun src/index.ts search "github workflow" --sort recent
+./dist/skill-spark search "github workflow" --sort recent
 
 # 按投票排序
-bun src/index.ts search "github workflow" --sort votes
+./dist/skill-spark search "github workflow" --sort votes
 ```
 
 ### 组合多个选项
 
 ```bash
-bun src/index.ts search "github workflow" \
+./dist/skill-spark search "github workflow" \
   --category devops \
   --limit 10 \
   --sort stars
@@ -79,14 +79,14 @@ bun src/index.ts search "github workflow" \
 覆盖默认注册表 URL：
 
 ```bash
-bun src/index.ts search "github workflow" --registry https://custom.registry.com/api
+./dist/skill-spark search "github workflow" --registry https://custom.registry.com/api
 ```
 
 或通过环境变量设置：
 
 ```bash
 export FIRE_SKILL_REGISTRY_URL="https://custom.registry.com/api"
-bun src/index.ts search "github workflow"
+./dist/skill-spark search "github workflow"
 ```
 
 ## 保存结果到文件
@@ -94,8 +94,8 @@ bun src/index.ts search "github workflow"
 将搜索结果导出为 JSON 文件：
 
 ```bash
-bun src/index.ts search "github workflow" -o results.json
-bun src/index.ts search "github workflow" --limit 5 --sort stars -o /tmp/output.json
+./dist/skill-spark search "github workflow" -o results.json
+./dist/skill-spark search "github workflow" --limit 5 --sort stars -o /tmp/output.json
 ```
 
 输出文件结构：
@@ -126,7 +126,7 @@ bun src/index.ts search "github workflow" --limit 5 --sort stars -o /tmp/output.
 不提供查询字符串即可进入交互式 TUI 浏览模式，可过滤并多选技能进行安装：
 
 ```bash
-bun src/index.ts search
+./dist/skill-spark search
 ```
 
 使用方向键导航，输入进行过滤，空格键选择/取消选择，回车键安装选中技能。
@@ -137,14 +137,14 @@ bun src/index.ts search
 
 ```bash
 # CI/CD pipeline 技能
-bun src/index.ts search "ci cd pipeline"
+./dist/skill-spark search "ci cd pipeline"
 
 # GitHub Actions 技能
-bun src/index.ts search "github actions"
+./dist/skill-spark search "github actions"
 
 # DevOps 自动化技能
-bun src/index.ts search "devops automation"
+./dist/skill-spark search "devops automation"
 
 # 部署工作流技能
-bun src/index.ts search "deployment workflow"
+./dist/skill-spark search "deployment workflow"
 ```

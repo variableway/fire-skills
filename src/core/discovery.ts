@@ -35,17 +35,90 @@ function readHeaders(path: string) {
   }
 
   const frontmatter = content.match(/^---\n([\s\S]+?)\n---/)?.[1] || content;
+  const headers = parseSimpleYamlHeaders(frontmatter);
 
   return {
-    name: frontmatter
-      .match(/^name:\s*(.+)$/m)?.[1]
-      ?.replace(/^['"]|['"]$/g, "")
-      .trim(),
-    description: frontmatter
-      .match(/^description:\s*(.+)$/m)?.[1]
-      ?.replace(/^['"]|['"]$/g, "")
-      .trim(),
+    name: headers.name,
+    description: headers.description,
   };
+}
+
+function unquoteYamlScalar(value: string) {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed;
+}
+
+function parseBlockScalar(lines: string[], startIndex: number, folded: boolean) {
+  const values: string[] = [];
+  let index = startIndex + 1;
+
+  while (index < lines.length) {
+    const line = lines[index]!;
+    if (/^\S[^:]*:\s*/.test(line)) {
+      break;
+    }
+
+    if (line.trim() === "") {
+      values.push("");
+      index += 1;
+      continue;
+    }
+
+    const match = line.match(/^\s+(.*)$/);
+    if (!match) {
+      break;
+    }
+
+    values.push(match[1]!);
+    index += 1;
+  }
+
+  const text = folded ? values.join(" ").replace(/\s+/g, " ") : values.join("\n");
+  return { value: text.trim(), nextIndex: index };
+}
+
+function parseSimpleYamlHeaders(frontmatter: string) {
+  const headers: Record<string, string> = {};
+  const lines = frontmatter.replace(/\r\n/g, "\n").split("\n");
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index]!;
+    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!match) {
+      index += 1;
+      continue;
+    }
+
+    const key = match[1]!;
+    const rawValue = match[2]!.trim();
+
+    if (rawValue === ">" || rawValue === ">-" || rawValue === ">+") {
+      const parsed = parseBlockScalar(lines, index, true);
+      headers[key] = parsed.value;
+      index = parsed.nextIndex;
+      continue;
+    }
+
+    if (rawValue === "|" || rawValue === "|-" || rawValue === "|+") {
+      const parsed = parseBlockScalar(lines, index, false);
+      headers[key] = parsed.value;
+      index = parsed.nextIndex;
+      continue;
+    }
+
+    headers[key] = unquoteYamlScalar(rawValue);
+    index += 1;
+  }
+
+  return headers;
 }
 
 function parseSkill(path: string) {

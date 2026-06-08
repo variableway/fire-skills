@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { join } from "node:path";
 
@@ -6,6 +6,7 @@ const home = homedir();
 const configHome = process.env.XDG_CONFIG_HOME?.trim() || join(home, ".config");
 
 export const universalProjectSkillsDir = ".agents/skills";
+export const projectAgentConfigFileName = "skill-spark.agents.json";
 
 export type AgentScope = "project" | "global";
 
@@ -18,11 +19,25 @@ export interface AgentConfig {
   detectInstalled: () => boolean;
 }
 
+export interface AgentConfigSpec {
+  label: string;
+  skillsDir: string;
+  globalSkillsDir: string;
+  commandsDir?: string;
+  globalCommandsDir?: string;
+  aliases?: string[];
+}
+
+export interface AgentConfigFile {
+  version: "1";
+  agents: Record<string, AgentConfigSpec>;
+}
+
 function defineAgents<T extends Record<string, AgentConfig>>(value: T) {
   return value;
 }
 
-export const agents = defineAgents({
+export const builtInAgents = defineAgents({
   amp: {
     label: "Amp",
     skillsDir: universalProjectSkillsDir,
@@ -293,26 +308,200 @@ export const agents = defineAgents({
   },
 });
 
-export type AgentName = keyof typeof agents;
+export type BuiltInAgentName = keyof typeof builtInAgents;
+export type AgentName = string;
 
-export function getAgentNames() {
-  return Object.keys(agents) as AgentName[];
+const builtInAgentAliases: Record<string, AgentName> = {
+  claude: "claude-code",
+  claudecode: "claude-code",
+  "claude_code": "claude-code",
+  kimi: "kimi-cli",
+  kimicode: "kimi-cli",
+  "kimi-code": "kimi-cli",
+  "kimi_code": "kimi-cli",
+  open_code: "opencode",
+  "open-code": "opencode",
+};
+
+const skillSparkHome = join(home, ".skill-spark");
+
+function expandHome(path: string) {
+  if (path.startsWith("~")) {
+    return path.replace("~", home);
+  }
+
+  if (platform() === "win32" && path.startsWith("%USERPROFILE%")) {
+    return path.replace("%USERPROFILE%", home);
+  }
+
+  return path;
 }
 
-export function getCommandAgents() {
-  return getAgentNames().filter((agent) => {
-    const config: AgentConfig = agents[agent];
-    return Boolean(config.commandsDir);
+export function normalizeAgentSlug(value: string) {
+  return value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+}
+
+export function isValidAgentSlug(value: string) {
+  return /^[a-z0-9][a-z0-9-]*$/.test(value);
+}
+
+export function getAgentConfigPath(scope: AgentScope, cwd: string = process.cwd()) {
+  return scope === "global"
+    ? join(skillSparkHome, "agents.json")
+    : join(cwd, projectAgentConfigFileName);
+}
+
+function emptyAgentConfigFile(): AgentConfigFile {
+  return { version: "1", agents: {} };
+}
+
+export function readCustomAgentConfig(
+  scope: AgentScope,
+  cwd: string = process.cwd(),
+): AgentConfigFile {
+  const path = getAgentConfigPath(scope, cwd);
+  if (!existsSync(path)) {
+    return emptyAgentConfigFile();
+  }
+
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf-8")) as Partial<AgentConfigFile>;
+    return {
+      version: "1",
+      agents: parsed.agents ?? {},
+    };
+  } catch {
+    return emptyAgentConfigFile();
+  }
+}
+
+export function writeCustomAgentConfig(
+  scope: AgentScope,
+  config: AgentConfigFile,
+  cwd: string = process.cwd(),
+) {
+  const path = getAgentConfigPath(scope, cwd);
+  mkdirSync(scope === "global" ? skillSparkHome : cwd, { recursive: true });
+  writeFileSync(path, JSON.stringify(config, null, 2) + "\n", "utf-8");
+  return path;
+}
+
+function isAgentConfigSpec(value: unknown): value is AgentConfigSpec {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const spec = value as Partial<AgentConfigSpec>;
+  return (
+    typeof spec.label === "string" &&
+    typeof spec.skillsDir === "string" &&
+    typeof spec.globalSkillsDir === "string"
+  );
+}
+
+export function getCustomAgentSpecs(cwd: string = process.cwd()) {
+  const merged: Record<string, AgentConfigSpec> = {};
+
+  for (const scope of ["global", "project"] as const) {
+    const config = readCustomAgentConfig(scope, cwd);
+    for (const [name, spec] of Object.entries(config.agents)) {
+      const slug = normalizeAgentSlug(name);
+      if (!isValidAgentSlug(slug) || !isAgentConfigSpec(spec)) {
+        continue;
+      }
+
+      merged[slug] = spec;
+    }
+  }
+
+  return merged;
+}
+
+function toRuntimeAgentConfig(spec: AgentConfigSpec, cwd: string): AgentConfig {
+  return {
+    label: spec.label,
+    skillsDir: spec.skillsDir,
+    globalSkillsDir: expandHome(spec.globalSkillsDir),
+    commandsDir: spec.commandsDir,
+    globalCommandsDir: spec.globalCommandsDir ? expandHome(spec.globalCommandsDir) : undefined,
+    detectInstalled: () =>
+      existsSync(join(cwd, spec.skillsDir)) || existsSync(expandHome(spec.globalSkillsDir)),
+  };
+}
+
+export function getAgents(cwd: string = process.cwd()): Record<string, AgentConfig> {
+  const customAgents = Object.fromEntries(
+    Object.entries(getCustomAgentSpecs(cwd)).map(([name, spec]) => [
+      name,
+      toRuntimeAgentConfig(spec, cwd),
+    ]),
+  );
+
+  return { ...builtInAgents, ...customAgents };
+}
+
+export const agents: Record<string, AgentConfig> = new Proxy({} as Record<string, AgentConfig>, {
+  get(_target, property) {
+    if (typeof property !== "string") {
+      return undefined;
+    }
+
+    return getAgents()[property];
+  },
+  has(_target, property) {
+    return typeof property === "string" && property in getAgents();
+  },
+  ownKeys() {
+    return Reflect.ownKeys(getAgents());
+  },
+  getOwnPropertyDescriptor(_target, property) {
+    if (typeof property !== "string" || !(property in getAgents())) {
+      return undefined;
+    }
+
+    return { enumerable: true, configurable: true };
+  },
+});
+
+export function getAgentConfig(agent: AgentName, cwd: string = process.cwd()) {
+  return getAgents(cwd)[agent];
+}
+
+function getAgentAliases(cwd: string = process.cwd()) {
+  const aliases: Record<string, AgentName> = { ...builtInAgentAliases };
+
+  for (const [name, spec] of Object.entries(getCustomAgentSpecs(cwd))) {
+    for (const alias of spec.aliases ?? []) {
+      const slug = normalizeAgentSlug(alias);
+      if (slug) {
+        aliases[slug] = name;
+      }
+    }
+  }
+
+  return aliases;
+}
+
+export function getAgentNames(cwd: string = process.cwd()) {
+  return Object.keys(getAgents(cwd));
+}
+
+export function getCommandAgents(cwd: string = process.cwd()) {
+  return getAgentNames(cwd).filter((agent) => {
+    const config = getAgentConfig(agent, cwd);
+    return Boolean(config?.commandsDir);
   });
 }
 
-export function getUniversalAgents() {
-  return getAgentNames().filter((agent) => agents[agent].skillsDir === universalProjectSkillsDir);
+export function getUniversalAgents(cwd: string = process.cwd()) {
+  return getAgentNames(cwd).filter(
+    (agent) => getAgentConfig(agent, cwd)?.skillsDir === universalProjectSkillsDir,
+  );
 }
 
-export function getNonUniversalAgents() {
-  const universal = new Set(getUniversalAgents());
-  return getAgentNames().filter((agent) => !universal.has(agent));
+export function getNonUniversalAgents(cwd: string = process.cwd()) {
+  const universal = new Set(getUniversalAgents(cwd));
+  return getAgentNames(cwd).filter((agent) => !universal.has(agent));
 }
 
 export function getSupportedAgentSummary() {
@@ -323,14 +512,17 @@ export function formatAgentPath(path: string) {
   return path.replace(home, "~");
 }
 
-export function normalizeAgentNames(values: string[]) {
+export function normalizeAgentNames(values: string[], cwd: string = process.cwd()) {
   const normalized: AgentName[] = [];
   const invalid: string[] = [];
   const seen = new Set<AgentName>();
+  const registry = getAgents(cwd);
+  const aliases = getAgentAliases(cwd);
 
   for (const value of values) {
-    const agent = value.trim().toLowerCase() as AgentName;
-    if (!(agent in agents)) {
+    const key = normalizeAgentSlug(value);
+    const agent = aliases[key] ?? key;
+    if (!(agent in registry)) {
       invalid.push(value);
       continue;
     }
@@ -347,24 +539,12 @@ export function normalizeAgentNames(values: string[]) {
 }
 
 export function supportsCommands(agent: AgentName) {
-  const config: AgentConfig = agents[agent];
-  return Boolean(config.commandsDir);
+  const config = getAgentConfig(agent);
+  return Boolean(config?.commandsDir);
 }
 
-export function detectInstalledAgents() {
-  return getAgentNames().filter((agent) => agents[agent].detectInstalled());
-}
-
-function expandHome(path: string) {
-  if (path.startsWith("~")) {
-    return path.replace("~", home);
-  }
-
-  if (platform() === "win32" && path.startsWith("%USERPROFILE%")) {
-    return path.replace("%USERPROFILE%", home);
-  }
-
-  return path;
+export function detectInstalledAgents(cwd: string = process.cwd()) {
+  return getAgentNames(cwd).filter((agent) => getAgentConfig(agent, cwd)?.detectInstalled());
 }
 
 export function resolveAgentSkillsDir(
@@ -372,7 +552,12 @@ export function resolveAgentSkillsDir(
   scope: AgentScope,
   cwd: string = process.cwd(),
 ) {
-  const path = scope === "global" ? agents[agent].globalSkillsDir : agents[agent].skillsDir;
+  const config = getAgentConfig(agent, cwd);
+  if (!config) {
+    throw new Error(`Unknown agent: ${agent}`);
+  }
+
+  const path = scope === "global" ? config.globalSkillsDir : config.skillsDir;
   return scope === "global" ? expandHome(path) : join(cwd, path);
 }
 
@@ -381,7 +566,11 @@ export function resolveAgentCommandsDir(
   scope: AgentScope,
   cwd: string = process.cwd(),
 ) {
-  const config: AgentConfig = agents[agent];
+  const config = getAgentConfig(agent, cwd);
+  if (!config) {
+    throw new Error(`Unknown agent: ${agent}`);
+  }
+
   const path = scope === "global" ? config.globalCommandsDir : config.commandsDir;
   if (!path) {
     return null;
@@ -395,7 +584,12 @@ export function getSharedDirectoryNotes(selectedAgents: AgentName[], scope: Agen
   const groups = new Map<string, AgentName[]>();
 
   for (const agent of getAgentNames()) {
-    const path = scope === "global" ? agents[agent].globalSkillsDir : agents[agent].skillsDir;
+    const config = getAgentConfig(agent);
+    if (!config) {
+      continue;
+    }
+
+    const path = scope === "global" ? config.globalSkillsDir : config.skillsDir;
     const grouped = groups.get(path) ?? [];
     grouped.push(agent);
     groups.set(path, grouped);
@@ -405,6 +599,6 @@ export function getSharedDirectoryNotes(selectedAgents: AgentName[], scope: Agen
     .filter(([, grouped]) => grouped.length > 1 && grouped.some((agent) => selected.has(agent)))
     .map(
       ([path, grouped]) =>
-        `${formatAgentPath(path)} is shared by ${grouped.map((agent) => agents[agent].label).join(", ")}`,
+        `${formatAgentPath(path)} is shared by ${grouped.map((agent) => getAgentConfig(agent)?.label ?? agent).join(", ")}`,
     );
 }

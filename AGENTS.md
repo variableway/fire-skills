@@ -2,6 +2,16 @@
 
 This document lists the AI coding agents supported by skill-spark and their skill/command directories.
 
+## No-Hook Workflow Control
+
+Hooks are optional. In Codex and other agents that read project instructions plus `.agents/skills`, prefer this no-hook control path:
+
+- When the user asks to execute, implement, run, or complete a task with GitHub Issue tracking, use `git-workflow`.
+- When the user asks for local/offline/no GitHub tracking, use `local-workflow`.
+- For GitHub mode, run `python3 .agents/skills/git-workflow/scripts/orchestrate.py init --title "<task title>" --description "<task description>"` before implementation.
+- After implementation and checks, run `python3 .agents/skills/git-workflow/scripts/orchestrate.py finish --agent-expansion "<scope/questions/acceptance>" --plan "<plan>" --execution "<execution notes/tests>" --message "<completion summary>"`.
+- Do not require Claude/Kimi/Git hooks for this workflow. Hooks only provide optional reminders or commit event logs.
+
 ## Universal Agents
 
 These agents share the same `.agents/skills` directory:

@@ -8,6 +8,8 @@
   },
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node --minify",
+    "build:exe": "bun build src/index.ts --compile --outfile dist/skill-spark",
+    "build:all": "bun run build && bun run build:exe",
     "dev": "bun src/index.ts",
     "typecheck": "tsgo --noEmit"
   },

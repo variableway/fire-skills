@@ -41,8 +41,9 @@ program
   .option("--offset <n>", "Pagination offset", (value) => Number.parseInt(value, 10))
   .option("--sort <value>", "Sort by: votes, recent, stars")
   .option("-i, --interactive", "Force interactive TUI browse mode")
-  .option("-o, --output <path>", "Write results to file (JSON format)")
-  .action(async (query: string | undefined, options: { registry?: string; category?: string; limit?: number; offset?: number; sort?: string; interactive?: boolean; output?: string }) => {
+  .option("-o, --output <path>", "Write results to file (JSON or markdown)")
+  .option("-f, --format <type>", "Output format: json, markdown (default: auto-detect from extension)")
+  .action(async (query: string | undefined, options: { registry?: string; category?: string; limit?: number; offset?: number; sort?: string; interactive?: boolean; output?: string; format?: string }) => {
     await runSearch(query, options);
   });
 

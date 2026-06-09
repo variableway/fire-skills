@@ -1,0 +1,218 @@
+{
+  "query": "workflow automation",
+  "registry": 10,
+  "directory": 0,
+  "total": 10,
+  "skills": [
+    {
+      "schemaVersion": "1",
+      "slug": "agentskillexchange-zammad-open-source-helpdesk-ticketing-system",
+      "name": "Zammad Open Source Helpdesk Ticketing System",
+      "description": "Zammad is a self-hosted, open-source helpdesk and customer support system with email, chat, phone, Twitter, and Telegram channel integration. It provides a REST and GraphQL API for ticket management, user administration, and workflow automation.",
+      "repository": "agentskillexchange/skills",
+      "verified": false,
+      "stars": 13,
+      "tags": [
+        "go",
+        "docker",
+        "git",
+        "api",
+        "security"
+      ],
+      "author": {
+        "name": "agentskillexchange"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "agentskillexchange-twenty-open-source-crm-salesforce-alternative",
+      "name": "Twenty Open Source Crm Salesforce Alternative",
+      "description": "Twenty is a modern open-source CRM built to replace Salesforce, with customizable objects, workflow automation, email and calendar integration, and a GraphQL API. It offers kanban, table, and calendar views with fine-grained permission controls and self-hosting support.",
+      "repository": "agentskillexchange/skills",
+      "verified": false,
+      "stars": 13,
+      "tags": [
+        "go",
+        "docker",
+        "git",
+        "api",
+        "security"
+      ],
+      "author": {
+        "name": "agentskillexchange"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "agentskillexchange-pipedream-api-workflow-automation-platform",
+      "name": "Pipedream Api Workflow Automation Platform",
+      "description": "Pipedream is a developer-focused workflow platform for connecting APIs and running automation logic in hosted workflows. It fits ASE as a source-backed integration skill for agents that need to trigger apps, transform events, and chain API actions across services.",
+      "repository": "agentskillexchange/skills",
+      "verified": false,
+      "stars": 13,
+      "tags": [
+        "python",
+        "go",
+        "node",
+        "nodejs",
+        "express",
+        "git",
+        "api",
+        "security"
+      ],
+      "author": {
+        "name": "agentskillexchange"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "simota-latch",
+      "name": "Latch",
+      "description": "Proposing, configuring, debugging, and maintaining Claude Code hooks (PreToolUse/PostToolUse/Stop and other lifecycle events). Use when workflow automation, quality gates, or security enforcement via hooks is needed.",
+      "repository": "simota/agent-skills",
+      "verified": false,
+      "stars": 48,
+      "tags": [
+        "python",
+        "rust",
+        "go",
+        "shell",
+        "bash",
+        "react",
+        "express",
+        "rails",
+        "debugging",
+        "git"
+      ],
+      "author": {
+        "name": "simota"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "frank-luongt-github-workflow-automation",
+      "name": "Github Workflow Automation",
+      "description": "> Patterns for automating GitHub workflows with AI assistance, inspired by [Gemini CLI](https://github.com/google-gemini/gemini-cli) and modern DevOps practices.",
+      "repository": "frank-luongt/faos-skills-marketplace",
+      "verified": false,
+      "stars": 21,
+      "tags": [
+        "javascript",
+        "typescript",
+        "go",
+        "java",
+        "docker",
+        "terraform",
+        "testing",
+        "git",
+        "api",
+        "database"
+      ],
+      "author": {
+        "name": "frank-luongt"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "frank-luongt-cicd-automation-workflow-automate",
+      "name": "Cicd Automation Workflow Automate",
+      "description": "You are a workflow automation expert specializing in creating efficient CI/CD pipelines, GitHub Actions workflows, and automated development processes. Design and implement automation that reduces manual work, improves consistency, and accelerates delivery while maintaining quality and security.",
+      "repository": "frank-luongt/faos-skills-marketplace",
+      "verified": false,
+      "stars": 21,
+      "tags": [
+        "go",
+        "git",
+        "devops",
+        "ci/cd",
+        "security"
+      ],
+      "author": {
+        "name": "frank-luongt"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "brycewang-stanford-research-workflow-automation",
+      "name": "Research Workflow Automation",
+      "description": "Automate repetitive research tasks with pipelines, schedulers, and scripting",
+      "repository": "brycewang-stanford/Auto-Empirical-Research-Skills",
+      "verified": false,
+      "stars": 1694,
+      "tags": [
+        "python",
+        "go",
+        "shell",
+        "bash"
+      ],
+      "author": {
+        "name": "brycewang-stanford"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "brycewang-stanford-zotero-actions-tags-guide",
+      "name": "Zotero Actions Tags Guide",
+      "description": "Zotero workflow automation with custom actions and tags",
+      "repository": "brycewang-stanford/Auto-Empirical-Research-Skills",
+      "verified": false,
+      "stars": 1694,
+      "tags": [
+        "javascript",
+        "go",
+        "java",
+        "bash",
+        "git",
+        "api"
+      ],
+      "author": {
+        "name": "brycewang-stanford"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "paperclipai-n8n-automations-expertise",
+      "name": "N8n Automations Expertise",
+      "description": "Domain expertise for n8n workflow automation. Covers workflow architecture, node catalog, expressions, AI and HTTP nodes, code nodes, testing, performance optimization, and deployment.",
+      "repository": "paperclipai/companies",
+      "verified": false,
+      "stars": 679,
+      "tags": [
+        "node",
+        "express",
+        "testing",
+        "git",
+        "performance"
+      ],
+      "author": {
+        "name": "paperclipai"
+      },
+      "signals": {}
+    },
+    {
+      "schemaVersion": "1",
+      "slug": "l-lesteryu-n8n-workflow-automation-zh",
+      "name": "N8n Workflow Automation Zh",
+      "description": "设计并输出 n8n 工作流 JSON，具备健壮的触发器、幂等性、错误处理、日志记录、重试机制和人机协作审核队列。当您需要可审计且不会静默失败的自动化时使用。",
+      "repository": "L-LesterYu/OpenClaw-hot-skills-zh",
+      "verified": false,
+      "stars": 42,
+      "tags": [
+        "node",
+        "api"
+      ],
+      "author": {
+        "name": "L-LesterYu"
+      },
+      "signals": {}
+    }
+  ]
+}

@@ -16,6 +16,7 @@ export interface SearchCommandOptions {
   sort?: string;
   interactive?: boolean;
   output?: string;
+  format?: "json" | "markdown" | "md";
 }
 
 function matchesQuery(entry: DirectoryEntry, query: string): boolean {
@@ -55,6 +56,44 @@ function mergeAndDedupe(
   return merged;
 }
 
+function generateMarkdown(query: string, merged: SkillListItem[], registryCount: number, directoryCount: number): string {
+  const lines: string[] = [];
+
+  lines.push(`# Skill Search Results`);
+  lines.push(``);
+  lines.push(`**Query:** ${query}`);
+  lines.push(`**Total:** ${merged.length} skills (registry: ${registryCount}, directory: ${directoryCount})`);
+  lines.push(`**Date:** ${new Date().toISOString()}`);
+  lines.push(``);
+  lines.push(`---`);
+  lines.push(``);
+
+  for (const item of merged) {
+    lines.push(`## ${item.name}`);
+    lines.push(``);
+
+    if (item.author) {
+      lines.push(`**Author:** ${item.author.name}`);
+    }
+
+    if (item.repository) {
+      lines.push(`**Source:** ${item.repository}`);
+    }
+
+    if (item.tags && item.tags.length > 0) {
+      lines.push(`**Tags:** ${item.tags.join(", ")}`);
+    }
+
+    lines.push(``);
+    lines.push(item.description);
+    lines.push(``);
+    lines.push(`---`);
+    lines.push(``);
+  }
+
+  return lines.join("\n");
+}
+
 export async function runSearch(query: string, options: SearchCommandOptions): Promise<void> {
   if (!query) {
     await handleInteractiveSearch();
@@ -88,15 +127,23 @@ export async function runSearch(query: string, options: SearchCommandOptions): P
     const merged = mergeAndDedupe(registryResult.items, dirItems);
 
     if (options.output) {
-      const output = {
-        query,
-        registry: registryResult.items.length,
-        directory: dirItems.length,
-        total: merged.length,
-        skills: merged,
-      };
-      writeFileSync(options.output, JSON.stringify(output, null, 2), "utf-8");
-      p.log.info(pc.dim(`Results written to ${options.output}`));
+      const format = options.format || (options.output.endsWith(".md") || options.output.endsWith(".markdown") ? "markdown" : "json");
+
+      if (format === "markdown" || format === "md") {
+        const markdown = generateMarkdown(query, merged, registryResult.items.length, dirItems.length);
+        writeFileSync(options.output, markdown, "utf-8");
+        p.log.info(pc.dim(`Results written to ${options.output} (markdown)`));
+      } else {
+        const output = {
+          query,
+          registry: registryResult.items.length,
+          directory: dirItems.length,
+          total: merged.length,
+          skills: merged,
+        };
+        writeFileSync(options.output, JSON.stringify(output, null, 2), "utf-8");
+        p.log.info(pc.dim(`Results written to ${options.output} (json)`));
+      }
     }
 
     if (merged.length === 0) {

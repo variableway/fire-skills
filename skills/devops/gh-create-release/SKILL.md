@@ -7,6 +7,12 @@ metadata:
     - github
     - release
     - dev-workflow
+  triggers:
+    - pattern: "create.*release|发布.*版本|创建.*release|新建.*release"
+    - pattern: "draft.*release|prerelease|预发布|草稿.*发布|beta.*发布"
+    - pattern: "release.*note|changelog.*release|发布.*说明|版本.*说明"
+    - pattern: "upload.*asset|上传.*asset|release.*asset|发布.*资源"
+    - pattern: "tag.*release|版本.*tag|打.*tag|创建.*tag"
 ---
 
 # GitHub Release Creation Skill

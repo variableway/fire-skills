@@ -18,6 +18,12 @@ metadata:
     - github
     - cli
     - dev-workflow
+  triggers:
+    - pattern: "gh\\s|github cli|gh command|gh.*命令"
+    - pattern: "create.*repo|创建.*仓库|新建.*仓库|初始化.*仓库"
+    - pattern: "list.*issue|查看.*issue|issue.*列表|关闭.*issue"
+    - pattern: "github.*操作|github.*命令|gh.*auth|gh.*登录"
+    - pattern: "pr.*create|pull.*request|合并.*请求"
 ---
 
 # GitHub CLI Skill

@@ -16,6 +16,11 @@ metadata:
     - workflow
     - local
     - dev-workflow
+  triggers:
+    - pattern: "local.*workflow|本地.*工作流|本地.*任务流程"
+    - pattern: "offline|离线|不.*github|no github|local.*only|仅.*本地"
+    - pattern: "local.*task|本地.*开发|私有.*项目|离线.*开发"
+    - pattern: "tracing|追踪.*本地|本地.*追踪|任务.*追踪"
 ---
 
 # Local Task Workflow

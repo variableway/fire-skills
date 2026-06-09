@@ -1,6 +1,14 @@
 ---
 name: skill-spark
 description: 使用 skill-spark 管理 AI coding agent skills。用于安装 Skill、同步到 Codex/Claude Code/OpenCode/Trae/Kimi 或自定义 agent、解释 agent 目录差异、维护 skills.lock、执行 list/outdated/update/remove/doctor，以及添加自定义 agent 目录配置。
+metadata:
+  triggers:
+    - pattern: "install.*skill|安装.*skill|添加.*skill|部署.*skill"
+    - pattern: "sync.*skill|同步.*skill|映射.*skill|map.*skill"
+    - pattern: "update.*skill|更新.*skill|升级.*skill"
+    - pattern: "remove.*skill|删除.*skill|卸载.*skill|清理.*skill"
+    - pattern: "skill-spark|管理.*skill|skill.*lock|skill.*目录"
+    - pattern: "list.*skill|outdated|doctor|skill.*状态"
 ---
 
 # Skill Spark

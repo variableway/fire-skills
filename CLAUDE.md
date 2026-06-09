@@ -22,24 +22,15 @@ bun run typecheck    # Type check with tsgo
 统一的跨平台安装/删除/更新脚本，支持 macOS、Linux、Windows、WSL2：
 
 ```bash
-# 安装 skills
-./scripts/install.sh skills/devops --system                    # 安装到全局
-./scripts/install.sh skills/base --project --agent claude-code # 安装到项目
-./scripts/install.sh skills/devops --system --skill git-workflow --agent codex
+# 一键安装 (使用 skill-spark CLI)
+./scripts/install-devops.sh --system                        # devops → 全局
+./scripts/install-base.sh --system                          # base → 全局
+./scripts/install-devops.sh --project --agent codex         # devops → 项目/Codex
 
-# 删除 skills
+# 通用安装/删除/更新
+./scripts/install.sh skills/devops --system
 ./scripts/remove.sh git-workflow --system
-./scripts/remove.sh anysearch --project --agent claude-code --dry-run
-
-# 更新 skills
 ./scripts/update.sh skills/devops --system --force
-```
-
-Windows (PowerShell):
-```powershell
-.\scripts\install.ps1 skills\devops -System
-.\scripts\remove.ps1 git-workflow -System
-.\scripts\update.ps1 skills\devops -System -Force
 ```
 
 

@@ -7,6 +7,13 @@ credentials:
     required: false
     description: 可选 API key，用于更高限额；无 key 时可匿名访问。
     storage: .env file, environment variable, or --api_key CLI flag
+metadata:
+  triggers:
+    - pattern: "search for|查找|搜索|查一下|查询"
+    - pattern: "verify|核实|验证|fact check|核验"
+    - pattern: "extract|抽取.*url|打开.*网页|网页.*内容|抓取.*网页"
+    - pattern: "anysearch|实时搜索"
+    - pattern: "find.*github|find.*doc|找.*资料|找.*信息|搜.*开源"
 ---
 
 # AnySearch

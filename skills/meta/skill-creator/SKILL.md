@@ -1,6 +1,14 @@
 ---
 name: skill-creator
 description: Create, update, evaluate, and optimize AI agent skills in English or Chinese. Use when the user wants to create a new SKILL.md, convert a workflow into a skill, improve an existing skill, design evals, compare versions, optimize triggering descriptions, or apply a SkillOpt-style loop with rollout, reflection, edit ranking, rewrite, validation gate, and meta-skill memory. 中文场景：创建 Skill、优化 Skill、写双语 Skill、设计评估集、从失败案例改进技能文档、用 SkillOpt 方法迭代 Skill。
+metadata:
+  triggers:
+    - pattern: "create.*skill|创建.*skill|新建.*skill|写.*skill|制作.*skill"
+    - pattern: "improve.*skill|优化.*skill|改进.*skill|提升.*skill|完善.*skill"
+    - pattern: "eval.*skill|评估.*skill|评测.*skill|测试.*skill|skill.*测试"
+    - pattern: "skillopt|skill.*creator|skill.*md|SKILL.*md"
+    - pattern: "convert.*workflow|工作流.*skill|workflow.*skill|流程.*skill"
+    - pattern: "trigger.*skill|skill.*trigger|触发.*skill|优化.*触发"
 ---
 
 # Skill Creator / Skill 创建与优化

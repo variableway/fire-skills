@@ -7,6 +7,11 @@ metadata:
     - security
     - git
     - dev-workflow
+  triggers:
+    - pattern: "scan.*secret|扫描.*敏感|扫描.*密钥|secret.*scan|密钥.*扫描"
+    - pattern: "before.*commit|提交前|push前|commit前|提交.*之前"
+    - pattern: "gitleaks|detect-secret|泄露.*检测|secret.*检测"
+    - pattern: "token|api key|credential|密码.*提交|密钥.*提交|api.*key"
 ---
 
 # Scanning for Secrets

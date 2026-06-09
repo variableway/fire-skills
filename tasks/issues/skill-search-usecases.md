@@ -21,3 +21,8 @@
 
 1. 使用Skill-spark获取URL markdown内容的use case
 2. 写入use-cases目录中去
+
+## Task 3:  使用GH SKill关闭所有的github Issues，和tasks
+
+1. please use gh to close all the github issues, and tasks
+2. also write as use-cases into use-cases directory

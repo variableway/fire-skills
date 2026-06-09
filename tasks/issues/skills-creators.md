@@ -1,5 +1,23 @@
 # Issues For Skill Usage
 
+## ✅ Task 2: 测试Git Workflow/Local Workflow — 已完成
+
+- 统一安装/删除/更新脚本已创建在 `scripts/` 目录
+- 支持 macOS、Linux、Windows、WSL2
+- Issue #60: https://github.com/variableway/fire-skills/issues/60
+
+## ✅ Task 4: 确认base/devops skills在Claude Code下生效 — 已完成
+
+- 全局和项目级别均测试通过
+- Issue #60: https://github.com/variableway/fire-skills/issues/60
+
+## ✅ Task 5: 测试Github flow运行流程 — 已完成
+
+- Claude Code、Codex、Kimi 三个 agent 均测试通过
+- Issue #61: https://github.com/variableway/fire-skills/issues/61
+
+---
+
 ## Task 1:  Skill收集使用评估方案
 
 1. 需要如何收集使用评估Skill的一个完整方案
@@ -33,3 +51,8 @@
 
 1. 请确认base/devops skills 在claude code下面可以全局和项目级别生效
 2.. 可以先删除一下项目级别的.claude目录，然后测试全局和项目级别skill生效情况
+
+## Task 5: 测试Github flow运行流程
+
+1. 编写任务，然后AI Agent 完成任务
+2. 提交ISSUE 到GITHUB，测试通过之后关闭ISSUE

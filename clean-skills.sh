@@ -280,7 +280,6 @@ $cwd/.kiro/skills
 $cwd/.kode/skills
 $cwd/.letta/skills
 $cwd/.mcpjam/skills
-$cwd/.skills
 $cwd/skills
 EOF
 }

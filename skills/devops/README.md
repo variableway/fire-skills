@@ -45,6 +45,42 @@ pwsh -File scripts/dev-workflow.ps1 remove -Scope system -Agent codex
 
 Codex project level 会安装到 `.agents/skills`；Codex system/global level 会安装到 `$CODEX_HOME/skills`，未设置 `CODEX_HOME` 时为 `~/.codex/skills`。
 
+## No-Hook 使用方式
+
+不需要安装 hook 也可以完整使用 Git/Local workflow。推荐把 hook 当成可选提醒，而不是主控制机制。
+
+Codex 下的 GitHub Issue 工作流：
+
+```bash
+python3 .agents/skills/git-workflow/scripts/orchestrate.py init \
+  --title "任务标题" \
+  --description "任务描述"
+
+# Agent 执行计划、修改和测试
+
+python3 .agents/skills/git-workflow/scripts/orchestrate.py finish \
+  --agent-expansion "范围澄清、关键假设、验收标准" \
+  --plan "执行计划" \
+  --execution "变更内容、测试和检查" \
+  --message "完成总结"
+```
+
+Codex 下的本地工作流：
+
+```bash
+python3 .agents/skills/local-workflow/scripts/orchestrate.py init tasks/my-task.md
+# Agent 执行任务
+python3 .agents/skills/local-workflow/scripts/orchestrate.py finish
+```
+
+只有在确实需要自动提醒或 commit 事件日志时，再安装 hook：
+
+```bash
+scripts/dev-workflow.sh hooks --agent claude-code
+```
+
+注意：Codex 不执行 Claude Code 的 `.claude/settings.json` hook。Codex 的控制入口是 `AGENTS.md`、已安装的 `.agents/skills/*/SKILL.md`，以及上面的显式 CLI。
+
 底层仍然使用 `skill-spark`：
 
 ```bash

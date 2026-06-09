@@ -20,4 +20,5 @@ node_modules/
 references-projects/
 yorun-workflow/
 skills-backup/
+__pycache__/
 dist/

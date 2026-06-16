@@ -154,9 +154,9 @@ async function selectSkillTargets(
       );
       const targets = universal
         ? [
-            "universal",
-            ...getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent)),
-          ] as AgentName[]
+          "universal",
+          ...getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent)),
+        ] as AgentName[]
         : getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent));
       const explicitUniversal = parsed.agents.filter(
         (agent) => agent !== "universal" && getUniversalAgents().includes(agent),

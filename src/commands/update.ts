@@ -15,9 +15,7 @@ export interface UpdateOptions {
 
 function findInstallable(installables: Installable[], item: { name: string; type: string }) {
   return installables.find(
-    (installable) =>
-      installable.type === item.type &&
-      installable.name.toLowerCase() === item.name.toLowerCase(),
+    (installable) => installable.type === item.type && installable.name.toLowerCase() === item.name.toLowerCase(),
   );
 }
 
@@ -62,9 +60,7 @@ export async function handleUpdateCommand(names: string[], options: UpdateOption
 
     p.log.step(pc.bold("Outdated Skills"));
     for (const item of outdated) {
-      p.log.message(
-        `  ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${item.commit} → ${item.latestCommit})`)}`,
-      );
+      p.log.message(`  ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${item.commit} → ${item.latestCommit})`)}`);
     }
 
     if (!options.yes && !options.force) {
@@ -85,10 +81,7 @@ export async function handleUpdateCommand(names: string[], options: UpdateOption
       const source = await downloadSource(item.url, item.branch);
 
       try {
-        const installable = findInstallable(
-          discoverInstallables(source.root, item.subpath ?? source.subpath),
-          item,
-        );
+        const installable = findInstallable(discoverInstallables(source.root, item.subpath ?? source.subpath), item);
 
         if (!installable) {
           failures.push(`${item.type}:${item.name} not found in ${item.url}`);
@@ -104,9 +97,7 @@ export async function handleUpdateCommand(names: string[], options: UpdateOption
           if (outcome.success) {
             successCount += 1;
           } else {
-            failures.push(
-              `${item.type}:${item.name} failed for ${installation.agent}: ${outcome.error}`,
-            );
+            failures.push(`${item.type}:${item.name} failed for ${installation.agent}: ${outcome.error}`);
           }
         }
 
@@ -160,9 +151,7 @@ export async function handleOutdatedCommand(names: string[], options: { verbose?
     if (outdated.length > 0) {
       p.log.step(pc.bold(pc.yellow("Update Available")));
       for (const item of outdated) {
-        p.log.message(
-          `  ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${item.commit} → ${item.latestCommit})`)}`,
-        );
+        p.log.message(`  ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${item.commit} → ${item.latestCommit})`)}`);
       }
     }
 

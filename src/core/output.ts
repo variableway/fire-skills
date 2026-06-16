@@ -14,7 +14,7 @@ export function showOutro(message: string, silent: boolean = false) {
 }
 
 export function plural(count: number, singular: string, pluralForm?: string) {
-  return count === 1 ? singular : pluralForm ?? `${singular}s`;
+  return count === 1 ? singular : (pluralForm ?? `${singular}s`);
 }
 
 export function getError(error: unknown, fallback: string) {

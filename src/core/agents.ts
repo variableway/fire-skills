@@ -61,12 +61,8 @@ export const builtInAgents = defineAgents({
     skillsDir: ".claude/skills",
     globalSkillsDir: join(process.env.CLAUDE_CONFIG_DIR?.trim() || join(home, ".claude"), "skills"),
     commandsDir: ".claude/commands",
-    globalCommandsDir: join(
-      process.env.CLAUDE_CONFIG_DIR?.trim() || join(home, ".claude"),
-      "commands",
-    ),
-    detectInstalled: () =>
-      existsSync(process.env.CLAUDE_CONFIG_DIR?.trim() || join(home, ".claude")),
+    globalCommandsDir: join(process.env.CLAUDE_CONFIG_DIR?.trim() || join(home, ".claude"), "commands"),
+    detectInstalled: () => existsSync(process.env.CLAUDE_CONFIG_DIR?.trim() || join(home, ".claude")),
   },
   openclaw: {
     label: "OpenClaw",
@@ -84,16 +80,14 @@ export const builtInAgents = defineAgents({
     label: "CodeBuddy",
     skillsDir: ".codebuddy/skills",
     globalSkillsDir: join(home, ".codebuddy/skills"),
-    detectInstalled: () =>
-      existsSync(join(process.cwd(), ".codebuddy")) || existsSync(join(home, ".codebuddy")),
+    detectInstalled: () => existsSync(join(process.cwd(), ".codebuddy")) || existsSync(join(home, ".codebuddy")),
   },
   codex: {
     label: "Codex",
     skillsDir: universalProjectSkillsDir,
     globalSkillsDir: join(process.env.CODEX_HOME?.trim() || join(home, ".codex"), "skills"),
     detectInstalled: () =>
-      existsSync(process.env.CODEX_HOME?.trim() || join(home, ".codex")) ||
-      existsSync("/etc/codex"),
+      existsSync(process.env.CODEX_HOME?.trim() || join(home, ".codex")) || existsSync("/etc/codex"),
   },
   "command-code": {
     label: "Command Code",
@@ -105,8 +99,7 @@ export const builtInAgents = defineAgents({
     label: "Continue",
     skillsDir: ".continue/skills",
     globalSkillsDir: join(home, ".continue/skills"),
-    detectInstalled: () =>
-      existsSync(join(process.cwd(), ".continue")) || existsSync(join(home, ".continue")),
+    detectInstalled: () => existsSync(join(process.cwd(), ".continue")) || existsSync(join(home, ".continue")),
   },
   cortex: {
     label: "Cortex Code",
@@ -150,8 +143,7 @@ export const builtInAgents = defineAgents({
     label: "Goose",
     skillsDir: ".goose/skills",
     globalSkillsDir: join(configHome, "goose/skills"),
-    detectInstalled: () =>
-      existsSync(join(configHome, "goose")) || existsSync(join(home, ".goose")),
+    detectInstalled: () => existsSync(join(configHome, "goose")) || existsSync(join(home, ".goose")),
   },
   junie: {
     label: "Junie",
@@ -273,8 +265,7 @@ export const builtInAgents = defineAgents({
     label: "Windsurf",
     skillsDir: ".windsurf/skills",
     globalSkillsDir: join(home, ".codeium/windsurf/skills"),
-    detectInstalled: () =>
-      existsSync(join(home, ".codeium/windsurf")) || existsSync(join(home, ".windsurf")),
+    detectInstalled: () => existsSync(join(home, ".codeium/windsurf")) || existsSync(join(home, ".windsurf")),
   },
   zencoder: {
     label: "Zencoder",
@@ -314,11 +305,11 @@ export type AgentName = string;
 const builtInAgentAliases: Record<string, AgentName> = {
   claude: "claude-code",
   claudecode: "claude-code",
-  "claude_code": "claude-code",
+  claude_code: "claude-code",
   kimi: "kimi-cli",
   kimicode: "kimi-cli",
   "kimi-code": "kimi-cli",
-  "kimi_code": "kimi-cli",
+  kimi_code: "kimi-cli",
   open_code: "opencode",
   "open-code": "opencode",
 };
@@ -338,7 +329,10 @@ function expandHome(path: string) {
 }
 
 export function normalizeAgentSlug(value: string) {
-  return value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[_\s]+/g, "-");
 }
 
 export function isValidAgentSlug(value: string) {
@@ -346,19 +340,14 @@ export function isValidAgentSlug(value: string) {
 }
 
 export function getAgentConfigPath(scope: AgentScope, cwd: string = process.cwd()) {
-  return scope === "global"
-    ? join(skillSparkHome, "agents.json")
-    : join(cwd, projectAgentConfigFileName);
+  return scope === "global" ? join(skillSparkHome, "agents.json") : join(cwd, projectAgentConfigFileName);
 }
 
 function emptyAgentConfigFile(): AgentConfigFile {
   return { version: "1", agents: {} };
 }
 
-export function readCustomAgentConfig(
-  scope: AgentScope,
-  cwd: string = process.cwd(),
-): AgentConfigFile {
+export function readCustomAgentConfig(scope: AgentScope, cwd: string = process.cwd()): AgentConfigFile {
   const path = getAgentConfigPath(scope, cwd);
   if (!existsSync(path)) {
     return emptyAgentConfigFile();
@@ -375,11 +364,7 @@ export function readCustomAgentConfig(
   }
 }
 
-export function writeCustomAgentConfig(
-  scope: AgentScope,
-  config: AgentConfigFile,
-  cwd: string = process.cwd(),
-) {
+export function writeCustomAgentConfig(scope: AgentScope, config: AgentConfigFile, cwd: string = process.cwd()) {
   const path = getAgentConfigPath(scope, cwd);
   mkdirSync(scope === "global" ? skillSparkHome : cwd, { recursive: true });
   writeFileSync(path, JSON.stringify(config, null, 2) + "\n", "utf-8");
@@ -393,9 +378,7 @@ function isAgentConfigSpec(value: unknown): value is AgentConfigSpec {
 
   const spec = value as Partial<AgentConfigSpec>;
   return (
-    typeof spec.label === "string" &&
-    typeof spec.skillsDir === "string" &&
-    typeof spec.globalSkillsDir === "string"
+    typeof spec.label === "string" && typeof spec.skillsDir === "string" && typeof spec.globalSkillsDir === "string"
   );
 }
 
@@ -424,17 +407,13 @@ function toRuntimeAgentConfig(spec: AgentConfigSpec, cwd: string): AgentConfig {
     globalSkillsDir: expandHome(spec.globalSkillsDir),
     commandsDir: spec.commandsDir,
     globalCommandsDir: spec.globalCommandsDir ? expandHome(spec.globalCommandsDir) : undefined,
-    detectInstalled: () =>
-      existsSync(join(cwd, spec.skillsDir)) || existsSync(expandHome(spec.globalSkillsDir)),
+    detectInstalled: () => existsSync(join(cwd, spec.skillsDir)) || existsSync(expandHome(spec.globalSkillsDir)),
   };
 }
 
 export function getAgents(cwd: string = process.cwd()): Record<string, AgentConfig> {
   const customAgents = Object.fromEntries(
-    Object.entries(getCustomAgentSpecs(cwd)).map(([name, spec]) => [
-      name,
-      toRuntimeAgentConfig(spec, cwd),
-    ]),
+    Object.entries(getCustomAgentSpecs(cwd)).map(([name, spec]) => [name, toRuntimeAgentConfig(spec, cwd)]),
   );
 
   return { ...builtInAgents, ...customAgents };
@@ -494,9 +473,7 @@ export function getCommandAgents(cwd: string = process.cwd()) {
 }
 
 export function getUniversalAgents(cwd: string = process.cwd()) {
-  return getAgentNames(cwd).filter(
-    (agent) => getAgentConfig(agent, cwd)?.skillsDir === universalProjectSkillsDir,
-  );
+  return getAgentNames(cwd).filter((agent) => getAgentConfig(agent, cwd)?.skillsDir === universalProjectSkillsDir);
 }
 
 export function getNonUniversalAgents(cwd: string = process.cwd()) {
@@ -547,11 +524,7 @@ export function detectInstalledAgents(cwd: string = process.cwd()) {
   return getAgentNames(cwd).filter((agent) => getAgentConfig(agent, cwd)?.detectInstalled());
 }
 
-export function resolveAgentSkillsDir(
-  agent: AgentName,
-  scope: AgentScope,
-  cwd: string = process.cwd(),
-) {
+export function resolveAgentSkillsDir(agent: AgentName, scope: AgentScope, cwd: string = process.cwd()) {
   const config = getAgentConfig(agent, cwd);
   if (!config) {
     throw new Error(`Unknown agent: ${agent}`);
@@ -561,11 +534,7 @@ export function resolveAgentSkillsDir(
   return scope === "global" ? expandHome(path) : join(cwd, path);
 }
 
-export function resolveAgentCommandsDir(
-  agent: AgentName,
-  scope: AgentScope,
-  cwd: string = process.cwd(),
-) {
+export function resolveAgentCommandsDir(agent: AgentName, scope: AgentScope, cwd: string = process.cwd()) {
   const config = getAgentConfig(agent, cwd);
   if (!config) {
     throw new Error(`Unknown agent: ${agent}`);

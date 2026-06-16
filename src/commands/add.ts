@@ -106,25 +106,18 @@ async function selectInstallables(installables: Installable[], options: AddOptio
   }
 
   const lookup = new Map(
-    installables.map((installable) => [
-      `${installable.type}:${installable.name.toLowerCase()}`,
-      installable,
-    ]),
+    installables.map((installable) => [`${installable.type}:${installable.name.toLowerCase()}`, installable]),
   );
   const selected = await p.multiselect<string>({
     message: "Choose items to add",
     required: false,
     initialValues:
-      installables.length === 1
-        ? [`${installables[0]!.type}:${installables[0]!.name.toLowerCase()}`]
-        : undefined,
+      installables.length === 1 ? [`${installables[0]!.type}:${installables[0]!.name.toLowerCase()}`] : undefined,
     options: installables.map((installable) => ({
       value: `${installable.type}:${installable.name.toLowerCase()}`,
       label: `${installable.type === "skill" ? "Skill" : "Command"}: ${installable.name}`,
       hint:
-        installable.description.length > 70
-          ? `${installable.description.slice(0, 67)}...`
-          : installable.description,
+        installable.description.length > 70 ? `${installable.description.slice(0, 67)}...` : installable.description,
     })),
   });
 
@@ -136,10 +129,7 @@ async function selectInstallables(installables: Installable[], options: AddOptio
   return (selected as string[]).map((value) => lookup.get(value)).filter(Boolean) as Installable[];
 }
 
-async function selectSkillTargets(
-  scope: AgentScope,
-  options: AddOptions,
-): Promise<AgentName[] | null> {
+async function selectSkillTargets(scope: AgentScope, options: AddOptions): Promise<AgentName[] | null> {
   if (options.agent && options.agent.length > 0) {
     const parsed = normalizeAgentNames(options.agent);
     if (parsed.invalid.length > 0) {
@@ -149,14 +139,9 @@ async function selectSkillTargets(
     }
 
     if (scope === "project") {
-      const universal = parsed.agents.some(
-        (agent) => agent === "universal" || getUniversalAgents().includes(agent),
-      );
+      const universal = parsed.agents.some((agent) => agent === "universal" || getUniversalAgents().includes(agent));
       const targets = universal
-        ? [
-          "universal",
-          ...getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent)),
-        ] as AgentName[]
+        ? (["universal", ...getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent))] as AgentName[])
         : getNonUniversalAgents().filter((agent) => parsed.agents.includes(agent));
       const explicitUniversal = parsed.agents.filter(
         (agent) => agent !== "universal" && getUniversalAgents().includes(agent),
@@ -262,15 +247,11 @@ async function selectCommandTargets(options: AddOptions): Promise<AgentName[] | 
     const ignored = parsed.agents.filter((agent) => !supportsCommands(agent));
 
     if (ignored.length > 0) {
-      p.log.warn(
-        `Ignoring agents without command folders: ${ignored.map((agent) => agents[agent].label).join(", ")}`,
-      );
+      p.log.warn(`Ignoring agents without command folders: ${ignored.map((agent) => agents[agent].label).join(", ")}`);
     }
 
     if (supported.length === 0) {
-      p.log.error(
-        `Commands are supported by ${commandAgents.map((agent) => agents[agent].label).join(", ")}.`,
-      );
+      p.log.error(`Commands are supported by ${commandAgents.map((agent) => agents[agent].label).join(", ")}.`);
       return null;
     }
 
@@ -298,9 +279,7 @@ async function selectCommandTargets(options: AddOptions): Promise<AgentName[] | 
       return {
         value: agent,
         label: agents[agent].label,
-        hint:
-          formatAgentPath(config.commandsDir || "") +
-          (installedAgents.includes(agent) ? " • installed" : ""),
+        hint: formatAgentPath(config.commandsDir || "") + (installedAgents.includes(agent) ? " • installed" : ""),
       };
     }),
   });
@@ -324,9 +303,7 @@ async function confirmInstall(
   p.log.step(pc.bold("Install Summary"));
   p.log.message(`${pc.bold("Source:")} ${sourceLabel}`);
   p.log.message(`${pc.bold("Scope:")} ${scope === "global" ? "Global" : "Local"}`);
-  p.log.message(
-    `${pc.bold("Items:")} ${installables.map((item) => `${item.type}:${item.name}`).join(", ")}`,
-  );
+  p.log.message(`${pc.bold("Items:")} ${installables.map((item) => `${item.type}:${item.name}`).join(", ")}`);
 
   const hasSkills = installables.some((item) => item.type === "skill");
   const hasCommands = installables.some((item) => item.type === "command");
@@ -347,9 +324,7 @@ async function confirmInstall(
         );
       }
     } else {
-      p.log.message(
-        `${pc.bold("Skill targets:")} ${skillTargets.map((agent) => agents[agent].label).join(", ")}`,
-      );
+      p.log.message(`${pc.bold("Skill targets:")} ${skillTargets.map((agent) => agents[agent].label).join(", ")}`);
     }
 
     const sharedNotes = getSharedDirectoryNotes(skillTargets, scope);
@@ -431,9 +406,7 @@ export async function handleAddCommand(sourceInput: string, options: AddOptions)
     try {
       const installables = discoverInstallables(source.root, source.subpath);
       if (installables.length === 0) {
-        p.log.error(
-          "No skills or commands found. The source must contain SKILL.md files or command markdown files.",
-        );
+        p.log.error("No skills or commands found. The source must contain SKILL.md files or command markdown files.");
         showOutro(pc.red("Installation failed"), Boolean(options.silent));
         process.exit(1);
       }
@@ -467,16 +440,7 @@ export async function handleAddCommand(sourceInput: string, options: AddOptions)
         process.exit(1);
       }
 
-      if (
-        !(await confirmInstall(
-          source.label,
-          scope,
-          selected,
-          skillTargets,
-          commandTargets,
-          options,
-        ))
-      ) {
+      if (!(await confirmInstall(source.label, scope, selected, skillTargets, commandTargets, options))) {
         return;
       }
 

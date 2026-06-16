@@ -1,13 +1,4 @@
-import {
-  cpSync,
-  existsSync,
-  lstatSync,
-  mkdirSync,
-  readdirSync,
-  readlinkSync,
-  rmSync,
-  symlinkSync,
-} from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readlinkSync, rmSync, symlinkSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import {
@@ -94,11 +85,7 @@ function copySkillDirectory(sourcePath: string, targetPath: string) {
   mkdirSync(targetPath, { recursive: true });
 
   for (const entry of readdirSync(sourcePath, { withFileTypes: true })) {
-    if (
-      excludedSkillFiles.has(entry.name) ||
-      excludedSkillDirectories.has(entry.name) ||
-      entry.name.startsWith("_")
-    ) {
+    if (excludedSkillFiles.has(entry.name) || excludedSkillDirectories.has(entry.name) || entry.name.startsWith("_")) {
       continue;
     }
 
@@ -118,9 +105,7 @@ function copySkillDirectory(sourcePath: string, targetPath: string) {
 function getStoredInstallablePath(installable: Installable, scope: AgentScope, cwd: string) {
   const root = getStorageRoot(scope, installable.type, cwd);
   mkdirSync(root, { recursive: true });
-  return installable.type === "skill"
-    ? join(root, installable.name)
-    : join(root, `${installable.name}.md`);
+  return installable.type === "skill" ? join(root, installable.name) : join(root, `${installable.name}.md`);
 }
 
 function getSymlinkKind(type: InstallableType) {
@@ -131,19 +116,12 @@ function getSymlinkKind(type: InstallableType) {
   return type === "skill" ? "junction" : "file";
 }
 
-export function findInstallations(
-  name: string,
-  type: InstallableType,
-  scope: AgentScope,
-  cwd: string = process.cwd(),
-) {
+export function findInstallations(name: string, type: InstallableType, scope: AgentScope, cwd: string = process.cwd()) {
   const installations: InstallationRecord[] = [];
 
   for (const agent of getAgentNames()) {
     const directory =
-      type === "skill"
-        ? resolveAgentSkillsDir(agent, scope, cwd)
-        : resolveAgentCommandsDir(agent, scope, cwd);
+      type === "skill" ? resolveAgentSkillsDir(agent, scope, cwd) : resolveAgentCommandsDir(agent, scope, cwd);
 
     if (!directory || !existsSync(directory)) {
       continue;
@@ -208,11 +186,7 @@ export function installInstallable(
 
       mkdirSync(dirname(targetPath), { recursive: true });
       rmSync(targetPath, { recursive: true, force: true });
-      symlinkSync(
-        relative(dirname(targetPath), sourcePath),
-        targetPath,
-        getSymlinkKind(installable.type),
-      );
+      symlinkSync(relative(dirname(targetPath), sourcePath), targetPath, getSymlinkKind(installable.type));
       return { success: true, path: targetPath };
     } catch (error) {
       return { success: false, path: targetPath, error: toError(error) };
@@ -236,11 +210,7 @@ export function installInstallable(
 
     mkdirSync(dirname(targetPath), { recursive: true });
     rmSync(targetPath, { recursive: true, force: true });
-    symlinkSync(
-      relative(dirname(targetPath), sourcePath),
-      targetPath,
-      getSymlinkKind(installable.type),
-    );
+    symlinkSync(relative(dirname(targetPath), sourcePath), targetPath, getSymlinkKind(installable.type));
     return { success: true, path: targetPath };
   } catch (error) {
     return { success: false, path: targetPath, error: toError(error) };

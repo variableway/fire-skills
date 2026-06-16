@@ -33,22 +33,19 @@ function normalizeSkill(item: Record<string, unknown>): SkillListItem {
     typeof item.stars === "number"
       ? item.stars
       : typeof (item.github as { stars?: unknown } | undefined)?.stars === "number"
-      ? (item.github as { stars: number }).stars
-      : undefined;
+        ? (item.github as { stars: number }).stars
+        : undefined;
   const tags = Array.isArray(item.tags) ? item.tags.map(String) : undefined;
   const authorObj = item.author as { name?: unknown; url?: unknown } | undefined;
   const authorName =
     typeof item.author === "string" ? String(item.author) : authorObj?.name ? String(authorObj.name) : undefined;
-  const author = authorName
-    ? { name: authorName, url: authorObj?.url ? String(authorObj.url) : undefined }
-    : undefined;
+  const author = authorName ? { name: authorName, url: authorObj?.url ? String(authorObj.url) : undefined } : undefined;
 
   const signals = {
     lastUpdated: item.lastUpdated ? String(item.lastUpdated) : undefined,
-    license:
-      item.license
-        ? String(item.license)
-        : typeof (item.github as { license?: unknown } | undefined)?.license === "string"
+    license: item.license
+      ? String(item.license)
+      : typeof (item.github as { license?: unknown } | undefined)?.license === "string"
         ? String((item.github as { license: string }).license)
         : undefined,
     riskHints: Array.isArray(item.riskHints) ? item.riskHints.map(String) : undefined,

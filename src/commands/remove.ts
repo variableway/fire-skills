@@ -1,11 +1,6 @@
 import * as p from "@clack/prompts";
 import pc from "picocolors";
-import {
-  agents,
-  getAgentNames,
-  resolveAgentCommandsDir,
-  resolveAgentSkillsDir,
-} from "../core/agents";
+import { agents, getAgentNames, resolveAgentCommandsDir, resolveAgentSkillsDir } from "../core/agents";
 import { showIntro, showOutro, getError } from "../core/output";
 import { removeTrackedItem } from "../core/state";
 import { removeInstalledPath } from "../core/installations";
@@ -36,10 +31,7 @@ export async function handleRemoveCommand(names: string[], options: RemoveOption
       const installedAgents = getAgentNames().filter((agent) => {
         const skillsDir = resolveAgentSkillsDir(agent, "project");
         const commandsDir = resolveAgentCommandsDir(agent, "project");
-        return (
-          (type === "skill" && skillsDir) ||
-          (type === "command" && commandsDir)
-        );
+        return (type === "skill" && skillsDir) || (type === "command" && commandsDir);
       });
 
       if (!isAutoConfirm) {
@@ -55,15 +47,11 @@ export async function handleRemoveCommand(names: string[], options: RemoveOption
       let removed = false;
       for (const agent of installedAgents) {
         const directory =
-          type === "skill"
-            ? resolveAgentSkillsDir(agent, "project")
-            : resolveAgentCommandsDir(agent, "project");
+          type === "skill" ? resolveAgentSkillsDir(agent, "project") : resolveAgentCommandsDir(agent, "project");
 
         if (!directory) continue;
 
-        const path = type === "skill"
-          ? `${directory}/${actualName || name}`
-          : `${directory}/${actualName || name}.md`;
+        const path = type === "skill" ? `${directory}/${actualName || name}` : `${directory}/${actualName || name}.md`;
 
         const result = removeInstalledPath(path);
         if (result.success) {

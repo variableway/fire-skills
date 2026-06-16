@@ -19,18 +19,19 @@ bun run typecheck    # Type check with tsgo
 
 ## Scripts (scripts/)
 
-统一的跨平台安装/删除/更新脚本，支持 macOS、Linux、Windows、WSL2：
+Shell wrapper scripts for the `skill-spark` CLI. See [docs/scripts-usage.md](docs/scripts-usage.md) for full documentation.
 
 ```bash
-# 一键安装 (使用 skill-spark CLI)
-./scripts/install-devops.sh --system                        # devops → 全局
-./scripts/install-base.sh --system                          # base → 全局
-./scripts/install-devops.sh --project --agent codex         # devops → 项目/Codex
+# Install
+./scripts/install.sh skills/devops --system                    # Install globally
+./scripts/install.sh skills/devops --project --agent codex     # Install for specific agent
 
-# 通用安装/删除/更新
-./scripts/install.sh skills/devops --system
-./scripts/remove.sh git-workflow --system
-./scripts/update.sh skills/devops --system --force
+# Remove
+./scripts/remove.sh git-workflow                               # Remove a skill
+
+# Update
+./scripts/update.sh                                            # Update all tracked skills
+./scripts/update.sh git-workflow                               # Update specific skill
 ```
 
 

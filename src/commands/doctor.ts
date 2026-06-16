@@ -30,9 +30,7 @@ export async function runDoctor(): Promise<void> {
     for (const check of checks) {
       const fullPath = check.isFile ? check.path : join(cwd, check.path);
       const exists = existsSync(check.isFile ? fullPath : fullPath);
-      p.log.message(
-        `  ${exists ? pc.green("✓") : pc.yellow("✗")} ${check.name} ${pc.dim(`(${check.path})`)}`,
-      );
+      p.log.message(`  ${exists ? pc.green("✓") : pc.yellow("✗")} ${check.name} ${pc.dim(`(${check.path})`)}`);
     }
 
     const { agents, detectInstalledAgents } = await import("../core/agents");

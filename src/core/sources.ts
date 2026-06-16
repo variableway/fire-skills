@@ -215,12 +215,7 @@ function normalizeArchivePath(filePath: string) {
   const normalized = posix.normalize(filePath.replace(/\\/g, "/"));
   const segments = normalized.split("/");
 
-  if (
-    normalized === "." ||
-    normalized.startsWith("../") ||
-    normalized.includes("/../") ||
-    segments.includes("..")
-  ) {
+  if (normalized === "." || normalized.startsWith("../") || normalized.includes("/../") || segments.includes("..")) {
     throw new Error(`Unsafe archive entry path: ${filePath}`);
   }
 
@@ -229,10 +224,7 @@ function normalizeArchivePath(filePath: string) {
 
 function detectArchiveFormat(url: string, contentType: string | null): ArchiveFormat {
   const normalizedContentType = contentType?.split(";")[0]?.trim().toLowerCase() ?? "";
-  if (
-    normalizedContentType === "application/gzip" ||
-    normalizedContentType === "application/x-gzip"
-  ) {
+  if (normalizedContentType === "application/gzip" || normalizedContentType === "application/x-gzip") {
     return "tar.gz";
   }
 
@@ -253,19 +245,13 @@ function detectArchiveFormat(url: string, contentType: string | null): ArchiveFo
 }
 
 function normalizeWellKnownSkills(payload: unknown, indexUrl: string) {
-  if (
-    !payload ||
-    typeof payload !== "object" ||
-    !Array.isArray((payload as { skills?: unknown[] }).skills)
-  ) {
+  if (!payload || typeof payload !== "object" || !Array.isArray((payload as { skills?: unknown[] }).skills)) {
     throw new Error(`Invalid skill index format from ${new URL(indexUrl).host}`);
   }
 
   const baseUrl = new URL(indexUrl);
   const schema =
-    typeof (payload as { $schema?: unknown }).$schema === "string"
-      ? (payload as { $schema: string }).$schema
-      : null;
+    typeof (payload as { $schema?: unknown }).$schema === "string" ? (payload as { $schema: string }).$schema : null;
 
   if (schema !== supportedWellKnownSchema) {
     throw new Error(`Unsupported discovery schema from ${baseUrl.host}`);
@@ -429,8 +415,7 @@ async function extractZipArchive(skillRoot: string, bytes: Uint8Array) {
 
         zipfile.on("entry", (entry) => {
           try {
-            const unixMode =
-              entry.versionMadeBy >> 8 === 3 ? entry.externalFileAttributes >>> 16 : 0;
+            const unixMode = entry.versionMadeBy >> 8 === 3 ? entry.externalFileAttributes >>> 16 : 0;
 
             if ((unixMode & 0o170000) === 0o120000) {
               fail(new Error(`Unsafe archive entry in ${basename(skillRoot)}: ${entry.fileName}`));
@@ -454,11 +439,7 @@ async function extractZipArchive(skillRoot: string, bytes: Uint8Array) {
 
             zipfile.openReadStream(entry, (streamError, stream) => {
               if (streamError || !stream) {
-                fail(
-                  streamError instanceof Error
-                    ? streamError
-                    : new Error("Unable to read zip entry"),
-                );
+                fail(streamError instanceof Error ? streamError : new Error("Unable to read zip entry"));
                 return;
               }
 
@@ -624,12 +605,7 @@ export function parseGitSource(value: string): ParsedGitSource {
 
   const githubShorthand = value.match(/^([^/]+)\/([^/]+)(?:\/(.+))?$/);
   const shorthandOwner = githubShorthand?.[1];
-  if (
-    shorthandOwner &&
-    githubShorthand[2] &&
-    !value.includes(":") &&
-    !shorthandOwner.includes(".")
-  ) {
+  if (shorthandOwner && githubShorthand[2] && !value.includes(":") && !shorthandOwner.includes(".")) {
     return {
       url: `https://github.com/${shorthandOwner}/${githubShorthand[2]}.git`,
       subpath: githubShorthand[3],

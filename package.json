@@ -11,7 +11,10 @@
     "build:exe": "bun build src/index.ts --compile --outfile dist/skill-spark",
     "build:all": "bun run build && bun run build:exe",
     "dev": "bun src/index.ts",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsgo --noEmit",
+    "format": "biome format --write src/",
+    "lint": "biome lint src/",
+    "check": "biome check src/"
   },
   "keywords": [
     "skills",
@@ -31,6 +34,8 @@
     "yauzl": "^3.4.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "@biomejs/cli-darwin-x64": "^2.4.16",
     "@types/bun": "latest",
     "@types/node": "^25.9.3",
     "@types/tar-stream": "^3.1.4",

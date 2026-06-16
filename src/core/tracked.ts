@@ -1,9 +1,6 @@
 import { lstatSync } from "node:fs";
 import { join } from "node:path";
-import {
-  findInstallations,
-  type InstallationRecord,
-} from "./installations";
+import { findInstallations, type InstallationRecord } from "./installations";
 import { listTrackedItems, type TrackedItem } from "./state";
 import { getLatestCommit } from "./sources";
 
@@ -54,9 +51,7 @@ export function scanTracked(names?: string[], cwd: string = process.cwd()): Trac
       return isValidCommandPath(inst.path);
     });
 
-    const missingInstallations = installations.filter(
-      (inst) => !validInstallations.some((v) => v.path === inst.path),
-    );
+    const missingInstallations = installations.filter((inst) => !validInstallations.some((v) => v.path === inst.path));
 
     return {
       ...item,

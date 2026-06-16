@@ -21,10 +21,7 @@ export interface SearchCommandOptions {
 
 function matchesQuery(entry: DirectoryEntry, query: string): boolean {
   const lowerQuery = query.toLowerCase();
-  return (
-    entry.name.toLowerCase().includes(lowerQuery) ||
-    entry.description.toLowerCase().includes(lowerQuery)
-  );
+  return entry.name.toLowerCase().includes(lowerQuery) || entry.description.toLowerCase().includes(lowerQuery);
 }
 
 function directoryEntryToSkillItem(entry: DirectoryEntry): SkillListItem {
@@ -38,10 +35,7 @@ function directoryEntryToSkillItem(entry: DirectoryEntry): SkillListItem {
   };
 }
 
-function mergeAndDedupe(
-  registryItems: SkillListItem[],
-  directoryItems: SkillListItem[],
-): SkillListItem[] {
+function mergeAndDedupe(registryItems: SkillListItem[], directoryItems: SkillListItem[]): SkillListItem[] {
   const seen = new Set<string>();
   const merged: SkillListItem[] = [];
 
@@ -56,7 +50,12 @@ function mergeAndDedupe(
   return merged;
 }
 
-function generateMarkdown(query: string, merged: SkillListItem[], registryCount: number, directoryCount: number): string {
+function generateMarkdown(
+  query: string,
+  merged: SkillListItem[],
+  registryCount: number,
+  directoryCount: number,
+): string {
   const lines: string[] = [];
 
   lines.push(`# Skill Search Results`);
@@ -127,7 +126,9 @@ export async function runSearch(query: string, options: SearchCommandOptions): P
     const merged = mergeAndDedupe(registryResult.items, dirItems);
 
     if (options.output) {
-      const format = options.format || (options.output.endsWith(".md") || options.output.endsWith(".markdown") ? "markdown" : "json");
+      const format =
+        options.format ||
+        (options.output.endsWith(".md") || options.output.endsWith(".markdown") ? "markdown" : "json");
 
       if (format === "markdown" || format === "md") {
         const markdown = generateMarkdown(query, merged, registryResult.items.length, dirItems.length);
@@ -167,9 +168,7 @@ export async function runSearch(query: string, options: SearchCommandOptions): P
 
     for (const item of merged.slice(0, 20)) {
       const desc = item.description.slice(0, 60);
-      p.log.message(
-        `  ${pc.cyan(item.name)} ${pc.dim(desc)}${item.description.length > 60 ? "..." : ""}`,
-      );
+      p.log.message(`  ${pc.cyan(item.name)} ${pc.dim(desc)}${item.description.length > 60 ? "..." : ""}`);
     }
 
     if (merged.length > 20) {

@@ -144,9 +144,7 @@ export async function runSync(options: SyncCommandOptions): Promise<void> {
           source: source.label,
           synced: 0,
           error: `No matching skills found for: ${options.skill.join(", ")}`,
-          availableSkills: discovered
-            .filter((item) => item.type === "skill")
-            .map((item) => item.name),
+          availableSkills: discovered.filter((item) => item.type === "skill").map((item) => item.name),
         });
         process.exit(1);
       }

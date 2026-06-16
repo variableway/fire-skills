@@ -22,9 +22,7 @@ export async function handleListCommand() {
     if (local.length > 0) {
       p.log.message(pc.bold(pc.cyan("Local (./skills.lock)")));
       for (const item of local) {
-        const installedIn = item.validInstallations
-          .map((installation) => agents[installation.agent].label)
-          .join(", ");
+        const installedIn = item.validInstallations.map((installation) => agents[installation.agent].label).join(", ");
         const icon = item.type === "command" ? pc.yellow("⚡") : pc.green("✓");
         p.log.message(
           `  ${icon} ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${installedIn || "missing files"})`)}`,
@@ -35,9 +33,7 @@ export async function handleListCommand() {
     if (global.length > 0) {
       p.log.message(pc.bold(pc.cyan("Global (~/.skill-spark/skills.lock)")));
       for (const item of global) {
-        const installedIn = item.validInstallations
-          .map((installation) => agents[installation.agent].label)
-          .join(", ");
+        const installedIn = item.validInstallations.map((installation) => agents[installation.agent].label).join(", ");
         const icon = item.type === "command" ? pc.yellow("⚡") : pc.green("✓");
         p.log.message(
           `  ${icon} ${pc.cyan(`${item.type}:${item.name}`)} ${pc.dim(`(${installedIn || "missing files"})`)}`,

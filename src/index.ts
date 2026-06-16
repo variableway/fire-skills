@@ -9,13 +9,7 @@ import { handleAddCommand, type AddOptions } from "./commands/add.js";
 import { handleListCommand } from "./commands/list.js";
 import { handleRemoveCommand, type RemoveOptions } from "./commands/remove.js";
 import { handleUpdateCommand, handleOutdatedCommand } from "./commands/update.js";
-import {
-  runAgentAdd,
-  runAgentList,
-  runAgentRemove,
-  runAgentSchema,
-  type AgentAddOptions,
-} from "./commands/agent.js";
+import { runAgentAdd, runAgentList, runAgentRemove, runAgentSchema, type AgentAddOptions } from "./commands/agent.js";
 
 const logo = `
 `;
@@ -43,9 +37,23 @@ program
   .option("-i, --interactive", "Force interactive TUI browse mode")
   .option("-o, --output <path>", "Write results to file (JSON or markdown)")
   .option("-f, --format <type>", "Output format: json, markdown (default: auto-detect from extension)")
-  .action(async (query: string | undefined, options: { registry?: string; category?: string; limit?: number; offset?: number; sort?: string; interactive?: boolean; output?: string; format?: string }) => {
-    await runSearch(query, options);
-  });
+  .action(
+    async (
+      query: string | undefined,
+      options: {
+        registry?: string;
+        category?: string;
+        limit?: number;
+        offset?: number;
+        sort?: string;
+        interactive?: boolean;
+        output?: string;
+        format?: string;
+      },
+    ) => {
+      await runSearch(query, options);
+    },
+  );
 
 program
   .command("add <source>")
@@ -72,11 +80,9 @@ program
   .option("-y, --yes", "Auto-confirm prompts")
   .option("-f, --force", "Skip confirmations")
   .option("--silent", "Suppress banner and non-error output")
-  .action(
-    async (skills: string[], options: { yes?: boolean; force?: boolean; silent?: boolean }) => {
-      await handleUpdateCommand(skills, options);
-    },
-  );
+  .action(async (skills: string[], options: { yes?: boolean; force?: boolean; silent?: boolean }) => {
+    await handleUpdateCommand(skills, options);
+  });
 
 program
   .command("outdated [skills...]")

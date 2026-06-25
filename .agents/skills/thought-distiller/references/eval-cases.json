@@ -1,0 +1,179 @@
+[
+  {
+    "id": "E-001",
+    "phase": "Phase 0",
+    "name": "信源分级——拒绝知乎/公众号来源",
+    "type": "negative",
+    "prompt": "请开始调研 Naval Ravikant，收集他的著作材料。要求 Phase 0 收集。",
+    "verify": [
+      {"check": "未出现任何 zhihu.com / mp.weixin.qq.com 链接", "weight": 30},
+      {"check": "每条素材有来源 URL", "weight": 25},
+      {"check": "标注了素材的一手/二手级别", "weight": 25},
+      {"check": "素材数量≥15", "weight": 20}
+    ],
+    "forbidden": ["知乎", "公众号", "百度百科", "zhihu.com"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-002",
+    "phase": "Phase 0",
+    "name": "收集顺序——著作优先于批评",
+    "type": "process",
+    "prompt": "调研 Elon Musk 的思想体系。先收集他的核心著作和长文。",
+    "verify": [
+      {"check": "先收集了著作/长文，再收集了批评", "weight": 40},
+      {"check": "六层都覆盖到（著作/对话/表达/批评/决策/时间线）", "weight": 35},
+      {"check": "外部批评不是在第一层就被收集的", "weight": 25}
+    ],
+    "forbidden": [],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-003",
+    "phase": "Phase 2",
+    "name": "三重验证——著作+播客+决策交叉",
+    "type": "quality",
+    "prompt": "Naval 的「杠杆思维」能否被认定为心智模型？请按三重验证法分析。",
+    "verify": [
+      {"check": "检查了著作证据（How to Get Rich Tweetstorm）", "weight": 30},
+      {"check": "检查了播客证据（Joe Rogan等）", "weight": 30},
+      {"check": "检查了决策证据（AngelList = 代码杠杆产品）", "weight": 30},
+      {"check": "给出了明确的三层结论", "weight": 10}
+    ],
+    "forbidden": ["凭训练数据编造", "未经查证"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-004",
+    "phase": "Phase 2",
+    "name": "矛盾标注——书面vs行为不一致",
+    "type": "quality",
+    "prompt": "Naval 说「远离政治」，但 2024 年公开站队。你蒸馏的心智模型中应该怎么处理这个？",
+    "verify": [
+      {"check": "没有选一边忽略另一边", "weight": 30},
+      {"check": "没有编造调和的解释", "weight": 30},
+      {"check": "明确标注为内在张力", "weight": 30},
+      {"check": "引用了两个方向的证据", "weight": 10}
+    ],
+    "forbidden": ["调和", "可能他的意思是", "这不是矛盾"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-005",
+    "phase": "Phase 2",
+    "name": "排他性测试——过滤通用共识",
+    "type": "quality",
+    "prompt": "这些观点中哪些应该被提炼为心智模型：「持续学习很重要」「投资要买好公司」「反脆弱是塔勒布独有的思维框架」？",
+    "verify": [
+      {"check": "「持续学习很重要」被排除（通用共识）", "weight": 30},
+      {"check": "「投资要买好公司」被排除（太泛，无区分度）", "weight": 30},
+      {"check": "「反脆弱」通过（非共识视角）", "weight": 30},
+      {"check": "每个结论有排他性解释", "weight": 10}
+    ],
+    "forbidden": ["三个都要", "没有过滤掉任何一个"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-006",
+    "phase": "Phase 3",
+    "name": "心智模型数量控制——3-7个",
+    "type": "structural",
+    "prompt": "生成 Naval Ravikant 的 SKILL.md。",
+    "verify": [
+      {"check": "心智模型在3-7个之间", "weight": 30},
+      {"check": "每个模型有一句话定义", "weight": 20},
+      {"check": "每个模型有至少2个场景的证据", "weight": 25},
+      {"check": "每个模型标注了局限性", "weight": 25}
+    ],
+    "forbidden": ["8+个心智模型", "无局限性标注"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-007",
+    "phase": "Phase 3",
+    "name": "表达DNA——必须量化",
+    "type": "structural",
+    "prompt": "已经完成 Naval 的六维调研。请提取他的表达DNA。",
+    "verify": [
+      {"check": "有平均句长统计", "weight": 20},
+      {"check": "有类比密度统计", "weight": 20},
+      {"check": "有确定性语气比例", "weight": 20},
+      {"check": "从原始素材中抽样了段落", "weight": 20},
+      {"check": "不是凭感觉说「他说话像XX」", "weight": 20}
+    ],
+    "forbidden": ["感觉", "我觉得", "似乎", "大概"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-008",
+    "phase": "Phase 4",
+    "name": "已知测试——对比公开立场",
+    "type": "validation",
+    "prompt": "已完成 Naval SKILL.md。请运行已知测试：\"应该去大公司还是创业？\"对比 Skill 推断的实际 Navals 公开立场。",
+    "verify": [
+      {"check": "Skill 推断出的结论和 Naval 实际立场方向一致", "weight": 40},
+      {"check": "标注了Skill推断比实际略绝对的分歧点", "weight": 30},
+      {"check": "记录了测试过程——不是只给结论", "weight": 30}
+    ],
+    "forbidden": ["完全一致（不可能/不诚实）", "跳过立场对比"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-009",
+    "phase": "Phase 4.5",
+    "name": "交叉比对——概念重叠分析",
+    "type": "cross-ref",
+    "prompt": "已经蒸馏了 Naval 和 Munger。做一次交叉比对——他们的核心概念有什么重叠和差异？",
+    "verify": [
+      {"check": "覆盖了概念重叠维度", "weight": 25},
+      {"check": "覆盖了框架共享维度", "weight": 25},
+      {"check": "覆盖了思想传承维度", "weight": 25},
+      {"check": "覆盖了矛盾对立维度", "weight": 25}
+    ],
+    "forbidden": ["只罗列对比不分析"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-010",
+    "phase": "Phase 5",
+    "name": "Progressive Disclosure——SKILL.md 不超 150 行",
+    "type": "structural",
+    "prompt": "最终交付 Naval Ravikant 的 SKILL.md 文件。",
+    "verify": [
+      {"check": "SKILL.md ≤ 150 行", "weight": 30},
+      {"check": "深参考在 references/ 目录，不在 SKILL.md 正文", "weight": 25},
+      {"check": "有角色扮演规则 + 工作流 + 强制检查", "weight": 25},
+      {"check": "有透明度协议（结尾标注）", "weight": 20}
+    ],
+    "forbidden": ["SKILL.md > 200 行", "心智模型详解在正文中"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-011",
+    "phase": "Phase 5",
+    "name": "透明度协议——每条回答结尾标注",
+    "type": "compliance",
+    "prompt": "让我测试生成的 Naval Skill：用 Naval 视角回答「什么是杠杆？」。",
+    "verify": [
+      {"check": "结尾有「—」开头的独行标注", "weight": 40},
+      {"check": "标注内容匹配话题类型", "weight": 30},
+      {"check": "标注不在正文中间，在结尾", "weight": 30}
+    ],
+    "forbidden": ["无结尾标注", "只有一个免责声明"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  },
+  {
+    "id": "E-012",
+    "phase": "Phase 5",
+    "name": "边缘问题——分级标注",
+    "type": "compliance",
+    "prompt": "用 Naval 视角回答：\"把同事的工作能力蒸馏成 AI Skill 靠谱吗？\"",
+    "verify": [
+      {"check": "开了头亮出了推断级别", "weight": 30},
+      {"check": "使用了至少2个心智模型组合推断", "weight": 35},
+      {"check": "结尾有双重标注（分级声明 + 透明度标注）", "weight": 35}
+    ],
+    "forbidden": ["没有标分级", "以Oracle模式回答边缘问题"],
+    "rubric": "pass:≥80, warn:≥60, fail:<60"
+  }
+]

@@ -22,3 +22,8 @@ yorun-workflow/
 skills-backup/
 __pycache__/
 dist/
+tasks/issues/software-copy.md
+software-copyright/
+sdlc/
+qa/
+content-creation/

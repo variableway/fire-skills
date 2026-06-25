@@ -18,10 +18,10 @@ description: "Next.js + TypeScript + shadcn/ui 前端开发。适用于创建页
 
 | 当前项目框架 | 参考实现 | 不允许查看 |
 |--------------|----------|------------|
-| Next.js | `innate-base/apps/admin-nextjs` | ~~admin-tanstack~~ |
-| TanStack Router | `innate-base/apps/admin-tanstack` | ~~admin-nextjs~~ |
+| Next.js | `/Users/patrick/workspace/variableway/factory/innate-base/apps/admin-nextjs` | ~~admin-tanstack~~ |
+| TanStack Router | `/Users/patrick/workspace/variableway/factory/innate-base/apps/admin-tanstack` | ~~admin-nextjs~~ |
 
-> 核心原则：**Next.js 项目不看 TanStack 参考，TanStack 项目不看 Next.js 参考。** 判断后只读取对应参考项目的代码和组件。
+> 核心原则：**Next.js 项目不看 TanStack 参考，TanStack 项目不看 Next.js 参考。** 判断后只读取对应项目的代码和组件。
 
 ## 技术栈
 
@@ -42,24 +42,46 @@ description: "Next.js + TypeScript + shadcn/ui 前端开发。适用于创建页
 
 innate-base 是参考实现项目，位于 `/Users/patrick/workspace/variableway/factory/innate-base`。开发时优先参考与当前项目框架一致的 `apps/` 子项目。
 
-### 组件来源
+**Next.js 参考代码结构**（`innate-base/apps/admin-nextjs/src/`）：
+
+```
+src/
+├── app/                        # App Router 路由（layout, providers, 业务路由）
+├── components/
+│   ├── admin/components/ui/   # shadcn 基础组件（22+）
+│   ├── admin/components/layout/ # app-sidebar, nav-secondary, nav-user, site-header
+│   ├── admin/components/      # data-table, section-cards
+│   ├── auth/                  # signin, signup, google-signin-button
+│   ├── charts/                # campaign-visitors, payments-overview, used-devices, weeks-profit
+│   ├── form-elements/         # checkbox, date-picker, input-group, multi-select, radio, select, switch, switcher, text-area
+│   ├── theme-provider/        # 主题系统
+│   ├── theme-selector/        # 主题选择器
+│   └── theme-toggle/          # 主题切换
+├── lib/                       # auth, db, utils, scene-catalog
+├── hooks/                     # use-click-outside, use-mobile
+├── services/                  # charts.services
+├── styles/                    # globals.css, nextjs-theme.css
+└── themes/                    # linear.css, notion.css
+```
+
+## 组件来源
 
 开发时按以下优先级选择组件：
 
 | 优先级 | 来源 | 说明 |
 |--------|------|------|
 | 1 | `@innate/ui` | 基础 shadcn/ui 封装（60+ 组件），全局安装 |
-| 2 | 对应框架的 admin 本地组件 | Next.js → `admin-nextjs`，TanStack → `admin-tanstack` |
+| 2 | 对应框架的 admin 本地组件 | Next.js → `innate-base/apps/admin-nextjs/src/components/`，TanStack → `innate-base/apps/admin-tanstack/src/components/` |
 
 **admin-nextjs 可用组件清单**（`innate-base/apps/admin-nextjs/src/components/`）：
 
 - **UI 基础组件** (`admin/components/ui/`)：avatar, badge, breadcrumb, button, card, checkbox, dialog, dropdown-menu, empty, field, input, label, scroll-area, select, separator, sheet, sidebar, skeleton, sonner, table, tabs, tooltip
 - **布局组件** (`admin/components/layout/`)：app-sidebar, nav-secondary, nav-user, site-header
 - **数据组件** (`admin/components/`)：data-table, section-cards
-- **图表组件** (`components/charts/`)：campaign-visitors, payments-overview, used-devices, weeks-profit
-- **表单组件** (`components/form-elements/`)：checkbox, date-picker, input-group, multi-select, radio, select, switch, switcher, text-area
-- **认证组件** (`components/auth/`)：signin, signup, google-signin-button
-- **主题组件** (`components/`)：theme-provider, theme-selector, theme-toggle
+- **图表组件** (`charts/`)：campaign-visitors, payments-overview, used-devices, weeks-profit
+- **表单组件** (`form-elements/`)：checkbox, date-picker, input-group, multi-select, radio, select, switch, switcher, text-area
+- **认证组件** (`auth/`)：signin, signup, google-signin-button
+- **主题组件**：theme-provider, theme-selector, theme-toggle
 
 - class 合并工具：`cn()` from `@innate/ui` 或项目本地的 `lib/utils`
 

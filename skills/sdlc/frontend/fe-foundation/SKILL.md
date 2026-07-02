@@ -1,6 +1,6 @@
 ---
 name: "frontend-dev"
-description: "Next.js + TypeScript + shadcn/ui 前端开发。适用于创建页面、组件、表单、数据表、Dashboard 和 SaaS 界面。"
+description: "Next.js 或者tanstack + TypeScript + shadcn/ui 前端开发。适用于创建页面、组件、表单、数据表、Dashboard 和 SaaS 界面。"
 ---
 
 # Frontend 开发技能

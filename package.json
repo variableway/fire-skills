@@ -2,19 +2,21 @@
   "name": "skill-spark",
   "version": "0.1.0",
   "description": "Universal skill manager for AI coding agents - merge of Fire-Skill and Flins",
+  "private": true,
+  "packageManager": "pnpm@11.5.2",
   "type": "module",
   "bin": {
-    "skill-spark": "./src/index.ts"
+    "skill-spark": "./dist/index.js"
   },
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target node --minify",
-    "build:exe": "bun build src/index.ts --compile --outfile dist/skill-spark",
+    "build": "bun build packages/skill-cli/src/index.ts --outdir dist --target node --minify && chmod +x dist/index.js",
+    "build:exe": "bun build packages/skill-cli/src/index.ts --compile --outfile dist/skill-spark",
     "build:all": "bun run build && bun run build:exe",
-    "dev": "bun src/index.ts",
-    "typecheck": "tsgo --noEmit",
-    "format": "biome format --write src/",
-    "lint": "biome lint src/",
-    "check": "biome check src/"
+    "dev": "bun packages/skill-cli/src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write src/ packages/",
+    "lint": "biome lint src/ packages/",
+    "check": "biome check src/ packages/"
   },
   "keywords": [
     "skills",
@@ -31,7 +33,9 @@
     "commander": "^15.0.0",
     "picocolors": "^1.1.1",
     "tar-stream": "^3.2.0",
-    "yauzl": "^3.4.0"
+    "yaml": "^2.9.0",
+    "yauzl": "^3.4.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",
@@ -40,6 +44,8 @@
     "@types/node": "^26.0.1",
     "@types/tar-stream": "^3.1.4",
     "@types/yauzl": "^3.4.0",
-    "bun-types": "^1.3.14"
+    "bun-types": "^1.3.14",
+    "gpt-tokenizer": "^3.4.0",
+    "typescript": "^6.0.3"
   }
 }

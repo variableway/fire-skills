@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "module": "ES2022",
+    "module": "ESNext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
@@ -23,9 +23,13 @@
     "isolatedModules": true,
     "types": ["bun-types"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@skill-spark/skill-cli": ["./packages/skill-cli/src/index.ts"],
+      "@skill-spark/skill-core": ["./packages/skill-core/src/index.ts"],
+      "@skill-spark/skill-core/*": ["./packages/skill-core/src/*.ts"],
+      "@skill-spark/skill-schemas": ["./packages/skill-schemas/src/index.ts"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "packages/**/*"],
+  "exclude": ["node_modules", "dist", "references-projects"]
 }

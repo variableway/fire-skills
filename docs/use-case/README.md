@@ -70,3 +70,19 @@ dist/skill-spark search "关键词" --output results.md --format markdown
 # 自动检测格式 (.md 扩展名自动用 markdown)
 dist/skill-spark search "关键词" --output results.md
 ```
+
+## DevOps Skills 安装
+
+将 `skills/devops/` 下的 workflow skills 安装到指定目录。
+
+| 文件 | 说明 |
+|------|------|
+| [devops-skills-install.md](devops/devops-skills-install.md) | DevOps Skills 安装与使用指南 |
+
+## Skill Workspace CLI Phase 0-1
+
+整理当前 `skill-spark` CLI 的 Phase 0-1 使用方式、monorepo package 边界、interactive CLI 判断、`find-skills.mjs` 去留、validate/inspect/profile/use 目标命令。
+
+| 文件 | 说明 |
+|------|------|
+| [phase0-phase1-skill-workspace-cli.md](cli/phase0-phase1-skill-workspace-cli.md) | Phase 0-1 命令行 use case 和验收标准 |

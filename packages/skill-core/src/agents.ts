@@ -165,8 +165,10 @@ export const builtInAgents = defineAgents({
   },
   "kimi-cli": {
     label: "Kimi Code CLI",
-    skillsDir: universalProjectSkillsDir,
-    globalSkillsDir: join(configHome, "agents/skills"),
+    skillsDir: ".kimi/skills",
+    globalSkillsDir: join(home, ".kimi/skills"),
+    commandsDir: ".kimi/commands",
+    globalCommandsDir: join(home, ".kimi/commands"),
     detectInstalled: () => existsSync(join(home, ".kimi")),
   },
   "kiro-cli": {

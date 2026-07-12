@@ -7,7 +7,18 @@ import type { DirectoryEntry } from "@skill-spark/skill-core/sources";
 import { listDirectory } from "@skill-spark/skill-core/sources";
 import type { SkillListItem } from "@skill-spark/skill-core/types";
 import pc from "picocolors";
-import { handleAddCommand } from "./add";
+import { handleAddCommand } from "../skill/add.js";
+
+export const COMMAND_DESCRIPTION = "Search skills from registry, directory, or local sources";
+export const COMMAND_EXAMPLES = [
+  "skill-spark search my-skill",
+  "skill-spark search --sources registry,directory --limit 20",
+  "skill-spark find --interactive",
+];
+export const COMMAND_PREREQUISITES = [
+  "Registry or directory must be accessible for remote searches",
+  "Local skills must have valid SKILL.md files",
+];
 
 export interface SearchCommandOptions {
   registry?: string;

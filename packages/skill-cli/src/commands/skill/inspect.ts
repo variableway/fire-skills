@@ -3,6 +3,18 @@ import { inspectSkillDirectory } from "@skill-spark/skill-core/inspection";
 import type { InspectionReport, RiskSignal } from "@skill-spark/skill-core/schemas";
 import { resolveSkillTargets } from "@skill-spark/skill-core/skill-targets";
 import pc from "picocolors";
+import { normalizedFormat } from "../shared/format.js";
+
+export const COMMAND_DESCRIPTION = "Inspect skills with deterministic rule-based risk and quality checks";
+export const COMMAND_EXAMPLES = [
+  "skill-spark inspect .",
+  "skill-spark inspect skills/base --all --fail-on high",
+  "skill-spark inspect . --skill my-skill --format markdown --output report.md",
+];
+export const COMMAND_PREREQUISITES = [
+  "Target path must contain skills with SKILL.md files",
+  "Git source must be accessible when using --branch",
+];
 
 export interface InspectOptions {
   all?: boolean;
@@ -13,26 +25,6 @@ export interface InspectOptions {
   format?: string;
   output?: string;
   failOn?: string;
-}
-
-function normalizedFormat(format: InspectOptions["format"], output?: string) {
-  if (format) {
-    if (!["text", "json", "markdown", "md"].includes(format)) {
-      throw new Error(`Unsupported format: ${format}`);
-    }
-
-    return format === "md" ? "markdown" : format;
-  }
-
-  if (output?.endsWith(".json")) {
-    return "json";
-  }
-
-  if (output?.endsWith(".md") || output?.endsWith(".markdown")) {
-    return "markdown";
-  }
-
-  return "text";
 }
 
 function riskRank(level: RiskSignal["level"]) {

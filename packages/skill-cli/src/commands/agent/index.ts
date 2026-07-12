@@ -10,8 +10,19 @@ import {
   readCustomAgentConfig,
   writeCustomAgentConfig,
 } from "@skill-spark/skill-core/agents";
-import { printJson } from "../utils/json";
-import { detectRoot } from "../utils/root";
+import { printJson } from "../../utils/json";
+import { detectRoot } from "../../utils/root";
+
+export const COMMAND_DESCRIPTION = "Manage target AI agent directory configurations";
+export const COMMAND_EXAMPLES = [
+  "skill-spark agent list",
+  "skill-spark agent add my-agent --skills-dir .my-agent/skills --global",
+  "skill-spark agent schema",
+];
+export const COMMAND_PREREQUISITES = [
+  "Agent directory paths must be writable",
+  "Custom agent names must use lowercase letters, numbers, and hyphens only",
+];
 
 export interface AgentAddOptions {
   label?: string;

@@ -4,6 +4,14 @@ import { getError, showIntro, showNoTrackedItems, showOutro } from "@skill-spark
 import { scanTracked } from "@skill-spark/skill-core/tracked";
 import pc from "picocolors";
 
+export const COMMAND_DESCRIPTION = "List installed skills and commands with their installation scope";
+export const COMMAND_EXAMPLES = [
+  "skill-spark list",
+];
+export const COMMAND_PREREQUISITES = [
+  "skills.lock file must exist in project or global scope",
+];
+
 export async function handleListCommand() {
   showIntro(false);
 

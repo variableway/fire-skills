@@ -3,6 +3,18 @@ import type { ValidationReport } from "@skill-spark/skill-core/schemas";
 import { resolveSkillTargets } from "@skill-spark/skill-core/skill-targets";
 import { validateSkillDirectory } from "@skill-spark/skill-core/validation";
 import pc from "picocolors";
+import { normalizedFormat } from "../shared/format.js";
+
+export const COMMAND_DESCRIPTION = "Validate SKILL.md structure, metadata, references, and basic file safety";
+export const COMMAND_EXAMPLES = [
+  "skill-spark validate .",
+  "skill-spark validate skills/base --all --strict",
+  "skill-spark validate . --skill my-skill --format json --output report.json",
+];
+export const COMMAND_PREREQUISITES = [
+  "Target path must contain skills with SKILL.md files",
+  "Git source must be accessible when using --branch",
+];
 
 export interface ValidateOptions {
   all?: boolean;
@@ -11,26 +23,6 @@ export interface ValidateOptions {
   format?: string;
   output?: string;
   strict?: boolean;
-}
-
-function normalizedFormat(format: ValidateOptions["format"], output?: string) {
-  if (format) {
-    if (!["text", "json", "markdown", "md"].includes(format)) {
-      throw new Error(`Unsupported format: ${format}`);
-    }
-
-    return format === "md" ? "markdown" : format;
-  }
-
-  if (output?.endsWith(".json")) {
-    return "json";
-  }
-
-  if (output?.endsWith(".md") || output?.endsWith(".markdown")) {
-    return "markdown";
-  }
-
-  return "text";
 }
 
 function reportSummary(report: ValidationReport) {

@@ -2,7 +2,18 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { join } from "node:path";
 import { type SkillProfile, SkillProfileSchema } from "@skill-spark/skill-core/schemas";
 import pc from "picocolors";
-import { handleAddCommand } from "./add";
+import { handleAddCommand } from "../skill/add.js";
+
+export const COMMAND_DESCRIPTION = "Manage skill profiles for composed batch installations";
+export const COMMAND_EXAMPLES = [
+  "skill-spark profile add my-profile --skill my-skill --agent claude",
+  "skill-spark profile list",
+  "skill-spark profile install my-profile --global",
+];
+export const COMMAND_PREREQUISITES = [
+  "Profile directory (.skill-workspace/profiles) must be writable",
+  "Skills referenced in profiles must be available from their sources",
+];
 
 const profileRoot = ".skill-workspace/profiles";
 

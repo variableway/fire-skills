@@ -7,6 +7,17 @@ import { updateTrackedCommit } from "@skill-spark/skill-core/state";
 import { hydrateTracked, scanTracked } from "@skill-spark/skill-core/tracked";
 import pc from "picocolors";
 
+export const COMMAND_DESCRIPTION = "Update installed skills and commands to their latest versions";
+export const COMMAND_EXAMPLES = [
+  "skill-spark update",
+  "skill-spark update my-skill --yes",
+  "skill-spark outdated --verbose",
+];
+export const COMMAND_PREREQUISITES = [
+  "Skills must be tracked in skills.lock with source URL",
+  "Source repository must be accessible for update checks",
+];
+
 export interface UpdateOptions {
   yes?: boolean;
   force?: boolean;

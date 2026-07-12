@@ -3,6 +3,18 @@ import { join } from "node:path";
 import { inspectSkillDirectory } from "@skill-spark/skill-core/inspection";
 import { parseSkillMarkdownFile } from "@skill-spark/skill-core/skill-parser";
 import { resolveSkillTargets } from "@skill-spark/skill-core/skill-targets";
+import { normalizedFormat } from "../shared/format.js";
+
+export const COMMAND_DESCRIPTION = "Generate a task packet from skills without installing them";
+export const COMMAND_EXAMPLES = [
+  "skill-spark use .",
+  "skill-spark use skills/base --skill my-skill --objective 'Build a CLI'",
+  "skill-spark use . --format json --output task.json",
+];
+export const COMMAND_PREREQUISITES = [
+  "Target path must contain skills with SKILL.md files",
+  "Git source must be accessible when using --branch",
+];
 
 export interface UseOptions {
   branch?: string;
@@ -11,26 +23,6 @@ export interface UseOptions {
   agent?: string;
   format?: string;
   output?: string;
-}
-
-function normalizedFormat(format: UseOptions["format"], output?: string) {
-  if (format) {
-    if (!["text", "json", "markdown", "md"].includes(format)) {
-      throw new Error(`Unsupported format: ${format}`);
-    }
-
-    return format === "md" ? "markdown" : format;
-  }
-
-  if (output?.endsWith(".json")) {
-    return "json";
-  }
-
-  if (output?.endsWith(".md") || output?.endsWith(".markdown")) {
-    return "markdown";
-  }
-
-  return "text";
 }
 
 function taskPacketText(packet: ReturnType<typeof buildTaskPacket>) {

@@ -3,7 +3,15 @@ import * as p from "@clack/prompts";
 import { agents, detectInstalledAgents } from "@skill-spark/skill-core/agents";
 import { getError, showIntro, showOutro } from "@skill-spark/skill-core/output";
 import pc from "picocolors";
-import { detectRoot } from "../utils/root";
+import { detectRoot } from "../../utils/root";
+
+export const COMMAND_DESCRIPTION = "Diagnose skill-spark environment and agent directories";
+export const COMMAND_EXAMPLES = [
+  "skill-spark doctor",
+];
+export const COMMAND_PREREQUISITES = [
+  "Current working directory should be within a skill-spark project",
+];
 
 interface DirectoryCheck {
   name: string;

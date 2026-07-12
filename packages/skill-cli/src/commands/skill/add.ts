@@ -28,6 +28,17 @@ import {
 import { trackInstall } from "@skill-spark/skill-core/state";
 import pc from "picocolors";
 
+export const COMMAND_DESCRIPTION = "Install skills and commands from a source into agent directories";
+export const COMMAND_EXAMPLES = [
+  "skill-spark add my-skill",
+  "skill-spark add skills/base --skill my-skill --agent claude --yes",
+  "skill-spark add github:org/repo --global --no-symlink",
+];
+export const COMMAND_PREREQUISITES = [
+  "Target agent directories must be writable",
+  "Source must contain valid SKILL.md files or command markdown files",
+];
+
 export interface AddOptions {
   global?: boolean;
   agent?: string[];

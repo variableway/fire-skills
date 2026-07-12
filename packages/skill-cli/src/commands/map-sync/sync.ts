@@ -1,5 +1,4 @@
 import { existsSync, readdirSync } from "node:fs";
-import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import {
   type AgentName,
@@ -11,19 +10,21 @@ import {
 } from "@skill-spark/skill-core/agents";
 import { discoverInstallables } from "@skill-spark/skill-core/discovery";
 import { installInstallable } from "@skill-spark/skill-core/installations";
-import { mapSkill } from "@skill-spark/skill-core/mapping";
 import { cleanupSource, downloadSource } from "@skill-spark/skill-core/sources";
 import { trackInstall } from "@skill-spark/skill-core/state";
-import type { TargetEnvironment } from "@skill-spark/skill-core/types";
-import { printJson } from "../utils/json";
-import { detectRoot } from "../utils/root";
+import { printJson } from "../../utils/json";
+import { detectRoot } from "../../utils/root";
 
-export interface MapCommandOptions {
-  target?: string;
-  global?: boolean;
-  universal?: boolean;
-  forceMap?: boolean;
-}
+export const COMMAND_DESCRIPTION = "Sync skills from a source directory to target AI agent skill folders";
+export const COMMAND_EXAMPLES = [
+  "skill-spark sync",
+  "skill-spark sync --source skills/base --agent codex",
+  "skill-spark sync --skill my-skill --global --no-symlink",
+];
+export const COMMAND_PREREQUISITES = [
+  "Source directory must contain skills with valid SKILL.md files",
+  "Target agents must be configured in skill-spark",
+];
 
 export interface SyncCommandOptions {
   source?: string;
@@ -54,54 +55,6 @@ function dedupeSkillTargets(targets: AgentName[], scope: AgentScope, root: strin
   }
 
   return deduped;
-}
-
-export async function runMap(options: MapCommandOptions): Promise<void> {
-  if (!options.target) {
-    console.error("Error: --target is required");
-    process.exit(1);
-  }
-
-  const target = options.target as TargetEnvironment;
-  if (!["codex", "gemini", "claude", "agent", "qwen"].includes(target)) {
-    console.error(`Error: Invalid target '${target}'. Valid options: codex, gemini, claude, agent, qwen`);
-    process.exit(1);
-  }
-
-  const { root } = detectRoot(process.cwd());
-
-  let sourceBase: string;
-  if (options.global) {
-    sourceBase = join(homedir(), ".skill-spark/skills");
-  } else if (options.universal) {
-    sourceBase = join(root, ".agents/skills");
-  } else {
-    sourceBase = join(root, ".claude/skills");
-  }
-
-  if (!existsSync(sourceBase)) {
-    printJson({ schemaVersion: "1", mapped: 0, sourceBase, targetRoot: "" });
-    return;
-  }
-
-  const entries = readdirSync(sourceBase, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name);
-
-  let mapped = 0;
-  const targetRoot = join(root, target === "codex" ? ".codex/skills" : `.${target}/skills`);
-
-  for (const skillName of entries) {
-    const sourcePath = join(sourceBase, skillName);
-    try {
-      mapSkill(root, target, skillName, sourcePath, { forceMap: options.forceMap });
-      mapped++;
-    } catch {
-      // Skip already mapped or errors
-    }
-  }
-
-  printJson({ schemaVersion: "1", mapped, sourceBase, targetRoot });
 }
 
 function resolveSyncSource(root: string, source?: string) {

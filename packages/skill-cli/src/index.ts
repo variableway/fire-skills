@@ -2,12 +2,13 @@
 
 import { Command } from "commander";
 import packageJson from "../package.json" with { type: "json" };
-import { type AddOptions, handleAddCommand } from "./commands/add.js";
-import { type AgentAddOptions, runAgentAdd, runAgentList, runAgentRemove, runAgentSchema } from "./commands/agent.js";
-import { runDoctor } from "./commands/doctor.js";
-import { type InspectOptions, runInspect } from "./commands/inspect.js";
-import { handleListCommand } from "./commands/list.js";
-import { runMap, runSync, type SyncCommandOptions } from "./commands/map.js";
+import { type AddOptions, handleAddCommand } from "./commands/skill/add.js";
+import { type AgentAddOptions, runAgentAdd, runAgentList, runAgentRemove, runAgentSchema } from "./commands/agent/index.js";
+import { runDoctor } from "./commands/doctor/index.js";
+import { type InspectOptions, runInspect } from "./commands/skill/inspect.js";
+import { handleListCommand } from "./commands/skill/list.js";
+import { runMap } from "./commands/map-sync/map.js";
+import { runSync, type SyncCommandOptions } from "./commands/map-sync/sync.js";
 import {
   type ProfileAddOptions,
   type ProfileInstallOptions,
@@ -15,12 +16,12 @@ import {
   runProfileInstall,
   runProfileList,
   runProfileShow,
-} from "./commands/profile.js";
-import { handleRemoveCommand, type RemoveOptions } from "./commands/remove.js";
-import { runSearch } from "./commands/search.js";
-import { handleOutdatedCommand, handleUpdateCommand } from "./commands/update.js";
-import { runUse, type UseOptions } from "./commands/use.js";
-import { runValidate, type ValidateOptions } from "./commands/validate.js";
+} from "./commands/profile/index.js";
+import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove.js";
+import { runSearch } from "./commands/search/index.js";
+import { handleOutdatedCommand, handleUpdateCommand } from "./commands/skill/update.js";
+import { runUse, type UseOptions } from "./commands/skill/use.js";
+import { runValidate, type ValidateOptions } from "./commands/skill/validate.js";
 
 const logo = `
 `;

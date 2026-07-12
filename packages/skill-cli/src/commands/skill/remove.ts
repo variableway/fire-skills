@@ -5,6 +5,17 @@ import { getError, showIntro, showOutro } from "@skill-spark/skill-core/output";
 import { removeTrackedItem } from "@skill-spark/skill-core/state";
 import pc from "picocolors";
 
+export const COMMAND_DESCRIPTION = "Remove installed skills and commands from agent directories";
+export const COMMAND_EXAMPLES = [
+  "skill-spark remove my-skill",
+  "skill-spark remove skill:my-skill command:my-cmd --yes",
+  "skill-spark remove my-skill --force --silent",
+];
+export const COMMAND_PREREQUISITES = [
+  "Skills must be tracked in skills.lock",
+  "Agent directories must be writable",
+];
+
 export interface RemoveOptions {
   yes?: boolean;
   force?: boolean;

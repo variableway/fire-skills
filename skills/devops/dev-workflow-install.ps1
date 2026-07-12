@@ -5,7 +5,7 @@
     Installs all dev-workflow related skills.
 
 .DESCRIPTION
-    Installs: github-cli-skill, gh-create-release, git-workflow, local-workflow
+    Installs: github-cli-skill, gh-create-release, git-workflow, local-workflow, scanning-for-secrets
 
 .PARAMETER System
     Install to system directories
@@ -14,7 +14,7 @@
     Install to current project directory
 
 .PARAMETER Agent
-    Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
+    Target specific agent (claude-code, kimi, codex, opencode, trae)
 
 .PARAMETER Hooks
     Also install git hooks (git-workflow only)
@@ -54,6 +54,7 @@ $Skills = @(
     "gh-create-release"
     "git-workflow"
     "local-workflow"
+    "scanning-for-secrets"
 )
 
 function Write-ColorOutput {
@@ -86,30 +87,28 @@ function Get-SystemTargetDirs {
         "" {
             $dirs += Join-Path $homePath ".config\agents\skills"
             $dirs += Join-Path $homePath ".claude\skills"
-            $dirs += Join-Path $homePath ".kimi\skills"
             $dirs += Join-Path $homePath ".codex\skills"
-            $dirs += Join-Path $homePath ".opencode\skills"
+            $dirs += Join-Path $homePath ".config\opencode\skills"
             $dirs += Join-Path $homePath ".trae\skills"
         }
         "claude-code" {
             $dirs += Join-Path $homePath ".claude\skills"
         }
         "kimi" {
-            $dirs += Join-Path $homePath ".kimi\skills"
             $dirs += Join-Path $homePath ".config\agents\skills"
         }
         "codex" {
             $dirs += Join-Path $homePath ".codex\skills"
         }
         "opencode" {
-            $dirs += Join-Path $homePath ".opencode\skills"
+            $dirs += Join-Path $homePath ".config\opencode\skills"
         }
-        { $_ -in "trae", "trae-solo" } {
+        { $_ -in "trae" } {
             $dirs += Join-Path $homePath ".trae\skills"
         }
         default {
             Write-ErrorMsg "Error: Unknown agent '$Agent'"
-            Write-Host "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo"
+            Write-Host "Supported agents: claude-code, kimi, codex, opencode, trae"
             exit 1
         }
     }

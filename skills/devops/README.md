@@ -32,15 +32,8 @@ scripts/dev-workflow.sh remove --scope system --agent codex
 Windows PowerShell / PowerShell 7：
 
 ```powershell
-pwsh -File scripts/dev-workflow.ps1 install -Agent codex
-pwsh -File scripts/dev-workflow.ps1 verify -Agent codex
-pwsh -File scripts/dev-workflow.ps1 update -Agent codex
-pwsh -File scripts/dev-workflow.ps1 remove -Agent codex
-
-# system/global level for Codex
-pwsh -File scripts/dev-workflow.ps1 install -Scope system -Agent codex
-pwsh -File scripts/dev-workflow.ps1 verify -Scope system -Agent codex
-pwsh -File scripts/dev-workflow.ps1 remove -Scope system -Agent codex
+pwsh -File skills/devops/dev-workflow-install.ps1 -System -Agent codex
+pwsh -File skills/devops/dev-workflow-install.ps1 -Project -Agent codex
 ```
 
 Codex project level 会安装到 `.agents/skills`；Codex system/global level 会安装到 `$CODEX_HOME/skills`，未设置 `CODEX_HOME` 时为 `~/.codex/skills`。
@@ -76,7 +69,7 @@ python3 .agents/skills/local-workflow/scripts/orchestrate.py finish
 只有在确实需要自动提醒或 commit 事件日志时，再安装 hook：
 
 ```bash
-scripts/dev-workflow.sh hooks --agent claude-code
+scripts/dev-workflow.sh hooks
 ```
 
 注意：Codex 不执行 Claude Code 的 `.claude/settings.json` hook。Codex 的控制入口是 `AGENTS.md`、已安装的 `.agents/skills/*/SKILL.md`，以及上面的显式 CLI。

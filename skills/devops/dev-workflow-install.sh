@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Dev Workflow Combined Installer (macOS / Linux)
-# Installs all dev-workflow related skills: github-cli-skill, gh-create-release, git-workflow, local-workflow
+# Installs all dev-workflow related skills: github-cli-skill, gh-create-release, git-workflow, local-workflow, scanning-for-secrets
 #
 # Usage: ./dev-workflow-install.sh [--system | --project] [--agent <name>] [--hooks]
 #
 # Options:
 #   --system        Install to system skill directories (default: ~/.config/agents/skills/)
 #   --project       Install to current project directory (./.agents/skills/)
-#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
+#   --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae)
 #   --hooks         Also install git hooks (git-workflow only)
 #   -h, --help      Show this help message
 #
@@ -32,6 +32,7 @@ SKILLS=(
     "gh-create-release"
     "git-workflow"
     "local-workflow"
+    "scanning-for-secrets"
 )
 
 RED='\033[0;31m'
@@ -50,7 +51,7 @@ Usage: ./dev-workflow-install.sh [--system | --project] [--agent <name>] [--hook
 Options:
   --system        Install to system directories (~/.config/agents/skills/)
   --project       Install to current project directory (./.agents/skills/)
-  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
+  --agent <name>  Target specific agent (claude-code, kimi, codex, opencode, trae)
   --hooks         Also install git hooks (git-workflow only)
   -h, --help      Show this help message
 
@@ -157,30 +158,28 @@ get_system_target_dirs() {
         "")
             dirs+=("$HOME/.config/agents/skills")
             dirs+=("$HOME/.claude/skills")
-            dirs+=("$HOME/.kimi/skills")
             dirs+=("$HOME/.codex/skills")
-            dirs+=("$HOME/.opencode/skills")
+            dirs+=("$HOME/.config/opencode/skills")
             dirs+=("$HOME/.trae/skills")
             ;;
         claude-code)
             dirs+=("$HOME/.claude/skills")
             ;;
         kimi)
-            dirs+=("$HOME/.kimi/skills")
             dirs+=("$HOME/.config/agents/skills")
             ;;
         codex)
             dirs+=("$HOME/.codex/skills")
             ;;
         opencode)
-            dirs+=("$HOME/.opencode/skills")
+            dirs+=("$HOME/.config/opencode/skills")
             ;;
-        trae|trae-solo)
+        trae)
             dirs+=("$HOME/.trae/skills")
             ;;
         *)
             echo -e "${RED}Error: Unknown agent '$TARGET_AGENT'${NC}" >&2
-            echo "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo" >&2
+            echo "Supported agents: claude-code, kimi, codex, opencode, trae" >&2
             exit 1
             ;;
     esac

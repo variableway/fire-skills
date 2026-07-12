@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Local Task Tracing for git-workflow.
 
-Records task execution locally in tasks/tracing/ alongside GitHub Issues.
+Records task execution locally in tasks/tracing/{task-name}/ alongside GitHub Issues.
 
 Usage:
     python tracing.py init --issue <number> [--parsed "..."]
@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -19,12 +20,16 @@ TRACING_DIR = Path("tasks/tracing")
 STATE_FILE = Path(".git-workflow.state.json")
 
 
-def _ensure_dir():
-    TRACING_DIR.mkdir(parents=True, exist_ok=True)
+def _sanitize_dir_name(name: str) -> str:
+    """Convert a title into a filesystem-safe directory name."""
+    sanitized = re.sub(r'[\s/\\]+', '-', name.strip())
+    sanitized = re.sub(r'[<>:"|?*]', '', sanitized)
+    sanitized = re.sub(r'-+', '-', sanitized)
+    return sanitized[:64] or "untitled"
 
 
-def _tracing_file(issue_number: int) -> Path:
-    return TRACING_DIR / f"issue-{issue_number}.md"
+def _tracing_file(issue_number: int, task_name: str) -> Path:
+    return TRACING_DIR / _sanitize_dir_name(task_name) / f"issue-{issue_number}.md"
 
 
 def _read_state() -> dict:
@@ -35,8 +40,6 @@ def _read_state() -> dict:
 
 def cmd_init(args):
     """Initialize tracing record for a GitHub issue."""
-    _ensure_dir()
-
     state = _read_state()
     issue_number = args.issue or state.get("issue")
     title = args.title or state.get("title", f"Issue #{issue_number}")
@@ -47,7 +50,8 @@ def cmd_init(args):
         sys.exit(1)
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    tracing_file = _tracing_file(issue_number)
+    tracing_file = _tracing_file(issue_number, title)
+    tracing_file.parent.mkdir(parents=True, exist_ok=True)
 
     content = f"# Tracing: {title}\n\n"
     content += f"## Task Entry ({now})\n\n"
@@ -80,11 +84,11 @@ def cmd_finish(args):
         print("Error: No issue number found. Provide --issue or run orchestrate.py init first.", file=sys.stderr)
         sys.exit(1)
 
-    tracing_file = _tracing_file(issue_number)
+    tracing_file = _tracing_file(issue_number, title)
 
     if not tracing_file.exists():
         # Create a minimal tracing file if init wasn't called
-        _ensure_dir()
+        tracing_file.parent.mkdir(parents=True, exist_ok=True)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         content = f"# Tracing: {title}\n\n"
         content += f"## Task Entry ({now})\n\n"
@@ -114,7 +118,7 @@ def cmd_status(_args):
         print("No tracing directory found.")
         return
 
-    files = sorted(TRACING_DIR.glob("issue-*.md"))
+    files = sorted(TRACING_DIR.rglob("issue-*.md"))
     if not files:
         print("No tracing records found.")
         return
@@ -129,7 +133,7 @@ def cmd_status(_args):
                 status = line.split("**Status**:")[1].strip()
             if "**Title**:" in line:
                 title = line.split("**Title**:")[1].strip()
-        print(f"  - {f.name}: {title} [{status}]")
+        print(f"  - {f.parent.name}/{f.name}: {title} [{status}]")
 
 
 def main():

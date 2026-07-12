@@ -7,7 +7,7 @@
 # Options:
 #   --system          Install to system skill directories
 #   --project         Install to current project directory
-#   --agent <name>    Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
+#   --agent <name>    Target specific agent (claude-code, kimi, codex, opencode, trae)
 #                     If omitted, installs to all supported agents.
 #   --hooks           Also install git hooks (git-workflow only, project mode only)
 #   -h, --help        Show this help message
@@ -49,7 +49,7 @@ Usage: ./dev-workflow-symlink-install.sh [--system | --project] [--agent <name>]
 Options:
   --system          Install to system directories
   --project         Install to current project directory
-  --agent <name>    Target specific agent (claude-code, kimi, codex, opencode, trae, trae-solo)
+  --agent <name>    Target specific agent (claude-code, kimi, codex, opencode, trae)
   --hooks           Also install git hooks (git-workflow only)
   -h, --help        Show this help message
 
@@ -98,30 +98,28 @@ get_system_target_dirs() {
         "")
             echo "$HOME/.config/agents/skills"
             echo "$HOME/.claude/skills"
-            echo "$HOME/.kimi/skills"
             echo "$HOME/.codex/skills"
-            echo "$HOME/.opencode/skills"
+            echo "$HOME/.config/opencode/skills"
             echo "$HOME/.trae/skills"
             ;;
         claude-code)
             echo "$HOME/.claude/skills"
             ;;
         kimi)
-            echo "$HOME/.kimi/skills"
             echo "$HOME/.config/agents/skills"
             ;;
         codex)
             echo "$HOME/.codex/skills"
             ;;
         opencode)
-            echo "$HOME/.opencode/skills"
+            echo "$HOME/.config/opencode/skills"
             ;;
-        trae|trae-solo)
+        trae)
             echo "$HOME/.trae/skills"
             ;;
         *)
             echo -e "${RED}Error: Unknown agent '$TARGET_AGENT'${NC}" >&2
-            echo "Supported agents: claude-code, kimi, codex, opencode, trae, trae-solo" >&2
+            echo "Supported agents: claude-code, kimi, codex, opencode, trae" >&2
             exit 1
             ;;
     esac

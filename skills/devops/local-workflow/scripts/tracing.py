@@ -4,7 +4,7 @@
 功能：
 1. Task 创建时：记录原始内容和 Agent 解析后的内容
 2. Task 完成时：追加实现总结，标记完成状态
-3. 文件按 task 文件名命名，保存在 tasks/tracing/ 目录
+3. 文件按 task 文件名命名，保存在 tasks/tracing/{task-name}/ 目录
 
 用法：
     python tracing.py init --task tasks/features/my-task.md [--parsed "..."]
@@ -34,18 +34,14 @@ def _generate_task_id(task_path: str) -> str:
 
 
 def _task_stem(task_path: str) -> str:
-    """从 task 文件路径提取不含扩展名的文件名作为 tracing 文件名。"""
+    """从 task 文件路径提取不含扩展名的文件名作为 tracing 目录名。"""
     return Path(task_path).stem
 
 
 def _tracing_file(task_path: str) -> Path:
-    """获取对应的 tracing 文件路径。"""
-    return TRACING_DIR / f"{_task_stem(task_path)}.md"
-
-
-def _ensure_dir():
-    """确保 tracing 目录存在。"""
-    TRACING_DIR.mkdir(parents=True, exist_ok=True)
+    """获取对应的 tracing 文件路径（按任务名分目录）。"""
+    stem = _task_stem(task_path)
+    return TRACING_DIR / stem / f"{stem}.md"
 
 
 def _read_task_content(task_path: str) -> str:
@@ -66,8 +62,6 @@ def _extract_title(content: str) -> str:
 
 def cmd_init(args):
     """初始化 tracing 记录：写入原始内容和解析后内容。"""
-    _ensure_dir()
-
     task_path = args.task
     parsed = args.parsed or ""
     task_id = _generate_task_id(task_path)
@@ -77,6 +71,7 @@ def cmd_init(args):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     tracing_file = _tracing_file(task_path)
+    tracing_file.parent.mkdir(parents=True, exist_ok=True)
 
     # 如果文件已存在，追加新的 task 记录
     if tracing_file.exists():
@@ -129,7 +124,7 @@ def cmd_finish(args):
 
     if not tracing_file.exists():
         print(f"Warning: No tracing file found for {task_path}. Creating new entry.", file=sys.stderr)
-        _ensure_dir()
+        tracing_file.parent.mkdir(parents=True, exist_ok=True)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task_id = _generate_task_id(task_path)
         original = _read_task_content(task_path)
@@ -183,7 +178,7 @@ def cmd_status(_args):
         print("No tracing directory found.")
         return
 
-    files = sorted(TRACING_DIR.glob("*.md"))
+    files = sorted(TRACING_DIR.rglob("*.md"))
     if not files:
         print("No tracing records found.")
         return
@@ -199,7 +194,7 @@ def cmd_status(_args):
                 status = line.split("**Status**:")[1].strip()
             if "**Title**:" in line:
                 title = line.split("**Title**:")[1].strip()
-        print(f"  - {f.name}: {title} [{status}]")
+        print(f"  - {f.parent.name}/{f.name}: {title} [{status}]")
 
 
 def cmd_show(args):
@@ -221,7 +216,7 @@ def cmd_list(args):
         print("No tracing directory found.")
         return
 
-    files = sorted(TRACING_DIR.glob("*.md"))
+    files = sorted(TRACING_DIR.rglob("*.md"))
     if not files:
         print("No tracing records found.")
         return
@@ -251,6 +246,7 @@ def cmd_list(args):
             
         records.append({
             "file": f.name,
+            "dir": f.parent.name,
             "title": title,
             "status": status,
             "started": started_at,
@@ -264,7 +260,7 @@ def cmd_list(args):
     print(f"Tracing records ({len(records)}):\n")
     for r in records:
         completed_info = f", completed: {r['completed']}" if r["completed"] else ""
-        print(f"  - {r['file']}: {r['title']} [{r['status']}]")
+        print(f"  - {r['dir']}/{r['file']}: {r['title']} [{r['status']}]")
         print(f"    started: {r['started']}{completed_info}")
 
 

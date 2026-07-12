@@ -27,6 +27,19 @@ metadata:
 
 本地任务管理的工作流：通过本地文件系统追踪任务执行过程，无需 GitHub Issues。
 
+## 支持的 Agent
+
+本 Skill 支持以下 AI Agent：
+
+| Agent | 说明 |
+|-------|------|
+| Claude Code | 通过 `AGENTS.md` / `CLAUDE.md` 集成 |
+| Kimi / kimi-cli | 完全支持，包括 tracing 和 AI Agent Protocol |
+| Codex | 通过 CLI 显式调用 orchestrate.py |
+| OpenCode | 通过 CLI 显式调用 orchestrate.py |
+| Trae / Trae-Solo | 通过 CLI 显式调用 orchestrate.py |
+| WorkBuddy | 通过 CLI 显式调用 orchestrate.py |
+
 ## 使用方式
 
 ### 方式 A：普通对话模式（推荐）
@@ -79,7 +92,7 @@ flowchart TD
 
 **TRACE_INIT**
 - 运行：`python3 .agents/skills/local-workflow/scripts/tracing.py init --task ... --parsed "..."`
-- 创建 `tasks/tracing/<task-name>.md` 记录文件
+- 创建 `tasks/tracing/<task-stem>/<task-stem>.md` 记录文件
 - 包含：原始任务内容、Agent 解析内容、开始时间、状态
 
 **IMPLEMENT**
@@ -147,7 +160,7 @@ AI Agent 应写入 `.task-output.md`：
 |------|---------------|-----------------|
 | 需要 GitHub | 否 | 是 |
 | 创建 Issue | 否 | 是 |
-| 追踪位置 | `tasks/tracing/*.md` | GitHub Issue + `tracing/*.md` |
+| 追踪位置 | `tasks/tracing/<task-stem>/<task-stem>.md` | GitHub Issue + `tasks/tracing/<task-title>/issue-{number}.md` |
 | AI Agent 输出捕获 | ✅ 支持 | ✅ 支持 |
 | 适用场景 | 本地开发、无网络、私有项目 | 团队协作、需要 GitHub 集成 |
 
@@ -215,7 +228,11 @@ python3 .agents/skills/local-workflow/scripts/orchestrate.py abort
 
 ## 追踪记录格式
 
-追踪记录保存在 `tasks/tracing/` 目录下，以任务文件名命名：
+追踪记录保存在 `tasks/tracing/` 目录下，按任务名分子目录：
+
+- **目录结构**：`tasks/tracing/<task-stem>/<task-stem>.md`
+- `<task-stem>`：task 文件名的主干（不含路径和扩展名）
+- 例如 `tasks/features/my-feature.md` 的追踪文件位于 `tasks/tracing/my-feature/my-feature.md`
 
 ```markdown
 # Tracing: my-feature

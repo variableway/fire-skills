@@ -73,6 +73,7 @@ flowchart TD
    - 创建 GitHub Issue
    - 将任务描述写入 Issue body，并初始化 `Agent Expansion`、`Plan`、`Execution`、`Result` 等待补全区块
    - 保存工作流状态到 `.git-workflow.state.json`
+   - 同时创建本地 tracing 记录：`tasks/tracing/<sanitized-task-title>/issue-{number}.md`
 
 2. **PLAN** — Agent 轻量分析
    - 小任务也需要短计划：明确问题、假设、验收标准、最小实现步骤
@@ -100,6 +101,14 @@ flowchart TD
 | `Execution` | 变更范围、测试、检查、文档建议 |
 | `Result` | 完成总结 |
 | `Metadata` | 创建/完成时间、状态 |
+
+## 本地追踪记录
+
+除了 GitHub Issue body 主记录外，`git-workflow` 还在本地 `tasks/tracing/` 目录维护一份追踪文件：
+
+- **目录结构**：`tasks/tracing/<sanitized-task-title>/issue-{number}.md`
+- `<sanitized-task-title>`：Issue 标题经过清理后的目录名（保留字母、数字、连字符，小写，最长 50 字符）
+- 该文件与 Issue body 同步，包含任务描述、Agent 扩展、计划、执行和结果摘要
 
 ## 前置要求
 
@@ -229,6 +238,8 @@ chmod +x .git/hooks/post-commit
 ```
 
 ## Kimi Hooks
+
+Kimi（包括 kimi-cli）完全支持本 Skill。通过 `~/.kimi/config.toml` 配置 hooks 可实现自动 Issue 创建和会话结束更新。
 
 ### kimi-auto-issue.sh (PostToolUse)
 

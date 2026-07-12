@@ -12,6 +12,7 @@
     "build": "bun build packages/skill-cli/src/index.ts --outdir dist --target node --minify && chmod +x dist/index.js",
     "build:exe": "bun build packages/skill-cli/src/index.ts --compile --outfile dist/skill-spark",
     "build:all": "bun run build && bun run build:exe",
+    "build:install": "./scripts/build-install.sh",
     "dev": "bun packages/skill-cli/src/index.ts",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write src/ packages/",

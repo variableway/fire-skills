@@ -44,12 +44,6 @@ export const builtInAgents = defineAgents({
     globalSkillsDir: join(configHome, "agents/skills"),
     detectInstalled: () => existsSync(join(configHome, "amp")) || existsSync(join(home, ".amp")),
   },
-  antigravity: {
-    label: "Antigravity",
-    skillsDir: ".agent/skills",
-    globalSkillsDir: join(home, ".gemini/antigravity/skills"),
-    detectInstalled: () => existsSync(join(home, ".gemini/antigravity")),
-  },
   augment: {
     label: "Augment",
     skillsDir: ".augment/skills",
@@ -126,12 +120,6 @@ export const builtInAgents = defineAgents({
     commandsDir: ".factory/commands",
     globalCommandsDir: join(home, ".factory/commands"),
     detectInstalled: () => existsSync(join(home, ".factory")),
-  },
-  "gemini-cli": {
-    label: "Gemini CLI",
-    skillsDir: universalProjectSkillsDir,
-    globalSkillsDir: join(home, ".gemini/skills"),
-    detectInstalled: () => existsSync(join(home, ".gemini")),
   },
   "github-copilot": {
     label: "GitHub Copilot",

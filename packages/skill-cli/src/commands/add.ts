@@ -44,6 +44,7 @@ interface InstallResult {
   type: Installable["type"];
   label: string;
   agent: string;
+  path: string;
   success: boolean;
   error?: string;
 }
@@ -461,6 +462,7 @@ export async function handleAddCommand(sourceInput: string, options: AddOptions)
             type: installable.type,
             label: `${installable.type}:${installable.name}`,
             agent: agents[agent].label,
+            path: outcome.path,
             success: outcome.success,
             error: outcome.error,
           });
@@ -490,6 +492,10 @@ export async function handleAddCommand(sourceInput: string, options: AddOptions)
 
       if (installed > 0) {
         p.log.success(pc.green(`Installed ${installed} ${plural(installed, "item")}.`));
+        for (const result of results.filter((result) => result.success)) {
+          p.log.message(`  ${pc.green("✓")} ${result.label} ${pc.dim(`→ ${result.agent}`)}`);
+          p.log.message(`    ${pc.dim(result.path)}`);
+        }
       }
 
       if (failed > 0) {

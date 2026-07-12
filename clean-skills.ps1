@@ -218,8 +218,6 @@ function Get-AgentGlobalDirs {
         (Join-Path $homeDir ".codex\skills"),
         (Join-Path $homeDir ".opencode\skills"),
         (Join-Path $homeDir ".cursor\skills"),
-        (Join-Path $homeDir ".gemini\skills"),
-        (Join-Path $homeDir ".gemini\antigravity\skills"),
         (Join-Path $homeDir ".copilot\skills"),
         (Join-Path $homeDir ".roo\skills"),
         (Join-Path $homeDir ".continue\skills"),
@@ -467,9 +465,6 @@ function Invoke-CleanAgent {
         "^cursor$" {
             $dirsToCheck += ".agents\skills", "$env:USERPROFILE\.cursor\skills"
         }
-        "^(gemini|gemini-cli)$" {
-            $dirsToCheck += ".agents\skills", "$env:USERPROFILE\.gemini\skills"
-        }
         "^(copilot|github-copilot)$" {
             $dirsToCheck += ".agents\skills", "$env:USERPROFILE\.copilot\skills"
         }
@@ -532,9 +527,6 @@ function Invoke-CleanAgent {
         }
         "^zencoder$" {
             $dirsToCheck += ".zencoder\skills", "$env:USERPROFILE\.zencoder\skills"
-        }
-        "^antigravity$" {
-            $dirsToCheck += ".agent\skills", "$env:USERPROFILE\.gemini\antigravity\skills"
         }
         "^cortex$" {
             $dirsToCheck += ".cortex\skills", "$env:USERPROFILE\.snowflake\cortex\skills"

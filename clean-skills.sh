@@ -296,8 +296,6 @@ $home_dir/.trae-cn/skills
 $home_dir/.codex/skills
 $home_dir/.opencode/skills
 $home_dir/.cursor/skills
-$home_dir/.gemini/skills
-$home_dir/.gemini/antigravity/skills
 $home_dir/.copilot/skills
 $home_dir/.roo/skills
 $home_dir/.continue/skills
@@ -605,9 +603,6 @@ do_clean_agent() {
         cursor)
             dirs_to_check+=(".agents/skills" "$HOME/.cursor/skills")
             ;;
-        gemini|gemini-cli)
-            dirs_to_check+=(".agents/skills" "$HOME/.gemini/skills")
-            ;;
         copilot|github-copilot)
             dirs_to_check+=(".agents/skills" "$HOME/.copilot/skills")
             ;;
@@ -670,9 +665,6 @@ do_clean_agent() {
             ;;
         zencoder)
             dirs_to_check+=(".zencoder/skills" "$HOME/.zencoder/skills")
-            ;;
-        antigravity)
-            dirs_to_check+=(".agent/skills" "$HOME/.gemini/antigravity/skills")
             ;;
         cortex)
             dirs_to_check+=(".cortex/skills" "$HOME/.snowflake/cortex/skills")

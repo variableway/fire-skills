@@ -1,0 +1,297 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-07-07T03:53:47.976Z",
+  "root": "skills",
+  "count": 13,
+  "skills": [
+    {
+      "slug": "anysearch",
+      "name": "anysearch",
+      "description": "实时搜索与网页内容抽取 Skill。用于需要当前信息检索、事实核验、GitHub/文档/网页搜索、垂直领域搜索、批量搜索、URL 内容提取，或从问题出发发现相关 Skill/开源资料的任务；支持中文查询、中文总结和中文工作流说明。",
+      "category": "base",
+      "path": "skills/base/anysearch",
+      "version": "2.1.0",
+      "inspection": {
+        "riskLevel": "high",
+        "qualityScore": 90,
+        "portabilityScore": 70,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": false,
+          "scriptCount": 6,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 129
+        }
+      }
+    },
+    {
+      "slug": "skill-spark",
+      "name": "skill-spark",
+      "description": "使用 skill-spark 管理 AI coding agent skills。用于安装 Skill、同步到 Codex/Claude Code/OpenCode/Trae/Kimi 或自定义 agent、解释 agent 目录差异、维护 skills.lock、执行 list/outdated/update/remove/doctor，以及添加自定义 agent 目录配置。",
+      "category": "base",
+      "path": "skills/base/skill-spark",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 90,
+        "portabilityScore": 100,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 162
+        }
+      }
+    },
+    {
+      "slug": "gh-create-release",
+      "name": "gh-create-release",
+      "description": "Create GitHub releases using the gh CLI tool. Use when the user wants to (1) create a new GitHub release for a tag, (2) draft or publish a release with notes, (3) upload release assets/binaries, (4) create a prerelease, (5) generate release notes automatically, or (6) extract release notes from a CHANGELOG.md file. Covers workflows from simple tag-based releases to complex releases with multiple assets and custom notes.",
+      "category": "devops",
+      "path": "skills/devops/gh-create-release",
+      "inspection": {
+        "riskLevel": "critical",
+        "qualityScore": 100,
+        "portabilityScore": 50,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": true,
+          "scriptCount": 4,
+          "referenceCount": 1,
+          "assetCount": 0,
+          "lineCount": 135
+        }
+      }
+    },
+    {
+      "slug": "git-workflow",
+      "name": "git-workflow",
+      "description": "基于 github-cli-skill 的 GitHub Issue 工作流 Skill。\n输入任务描述 → 创建 Issue body 作为唯一主记录 → Agent 执行任务（含轻量计划/测试）→ 更新 Issue body 并关闭 Issue。\nTRIGGER: When user asks to \"execute task\", \"执行任务\", \"implement task\", \"run task\", \"complete task\",\nreferences tasks from a task file (e.g., \"Task 9\", \"Task 3\"), or says @tasks/issues/ to execute a specific task AND wants GitHub Issue tracking.\nDo not use when the user explicitly asks for local-only/offline workflow; use local-workflow instead.",
+      "category": "devops",
+      "path": "skills/devops/git-workflow",
+      "inspection": {
+        "riskLevel": "critical",
+        "qualityScore": 82,
+        "portabilityScore": 45,
+        "validationStatus": "warning",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": true,
+          "scriptCount": 7,
+          "referenceCount": 2,
+          "assetCount": 0,
+          "lineCount": 292
+        }
+      }
+    },
+    {
+      "slug": "github-cli-skill",
+      "name": "github-cli",
+      "description": "GitHub CLI operations helper. Use when the user needs gh commands for repository creation, issue listing/viewing/commenting/closing, or small GitHub CLI snippets without running the full git-workflow Issue lifecycle.",
+      "category": "devops",
+      "path": "skills/devops/github-cli-skill",
+      "inspection": {
+        "riskLevel": "critical",
+        "qualityScore": 82,
+        "portabilityScore": 35,
+        "validationStatus": "warning",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": false,
+          "scriptCount": 3,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 180
+        }
+      }
+    },
+    {
+      "slug": "local-workflow",
+      "name": "local-workflow",
+      "description": "本地任务工作流：读取 task 文件，创建本地追踪记录，AI 实现任务，更新追踪。无需 GitHub Issue，适用于本地开发、离线开发、私有项目或用户明确要求 local/offline/no GitHub 的场景。默认不提交或推送代码；只有用户明确要求或使用 --commit/--push 时才执行 git commit/push。",
+      "category": "devops",
+      "path": "skills/devops/local-workflow",
+      "inspection": {
+        "riskLevel": "critical",
+        "qualityScore": 100,
+        "portabilityScore": 60,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": true,
+          "scriptCount": 4,
+          "referenceCount": 1,
+          "assetCount": 0,
+          "lineCount": 303
+        }
+      }
+    },
+    {
+      "slug": "scanning-for-secrets",
+      "name": "scanning-for-secrets",
+      "description": "Use when about to commit or push code, or when GitHub push protection blocks a push. Scans staged files for accidentally included secrets, tokens, API keys, and credentials.",
+      "category": "devops",
+      "path": "skills/devops/scanning-for-secrets",
+      "inspection": {
+        "riskLevel": "high",
+        "qualityScore": 100,
+        "portabilityScore": 80,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 132
+        }
+      }
+    },
+    {
+      "slug": "thought-distiller",
+      "name": "thought-distiller",
+      "description": "名人思想蒸馏器。从零开始调研任意公众人物，提炼其思维操作系统——心智模型、决策启发式和表达DNA，\n输出可安装运行的 AI Skill。覆盖六维调研、三重验证、结构化解码、质量验证和交叉比对。\n当用户提到「蒸馏某人的思想」「提取某人的思维框架」「创建某人的AI分身」「调研某人的心智模型」时使用。\n即使用户只是说「分析Naval的思维方式」「乔布斯是怎么做决策的」也可触发。",
+      "category": "knowledge",
+      "path": "skills/knowledge/thought-distiller",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 82,
+        "portabilityScore": 100,
+        "validationStatus": "warning",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": true,
+          "scriptCount": 0,
+          "referenceCount": 7,
+          "assetCount": 0,
+          "lineCount": 240
+        }
+      }
+    },
+    {
+      "slug": "skill-creator",
+      "name": "skill-creator",
+      "description": "Create, update, evaluate, and optimize AI agent skills in English or Chinese. Use when the user wants to create a new SKILL.md, convert a workflow into a skill, improve an existing skill, design evals, compare versions, optimize triggering descriptions, or apply a SkillOpt-style loop with rollout, reflection, edit ranking, rewrite, validation gate, and meta-skill memory. 中文场景：创建 Skill、优化 Skill、写双语 Skill、设计评估集、从失败案例改进技能文档、用 SkillOpt 方法迭代 Skill。",
+      "category": "meta",
+      "path": "skills/meta/skill-creator",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 100,
+        "portabilityScore": 90,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": true,
+          "hasReferences": true,
+          "scriptCount": 9,
+          "referenceCount": 2,
+          "assetCount": 1,
+          "lineCount": 152
+        }
+      }
+    },
+    {
+      "slug": "fe-code-structure",
+      "name": "frontend-code-structure",
+      "description": "前端业务域代码组织与模块化重构",
+      "category": "sdlc",
+      "subcategory": "frontend",
+      "path": "skills/sdlc/frontend/fe-code-structure",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 92,
+        "portabilityScore": 100,
+        "validationStatus": "warning",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 101
+        }
+      }
+    },
+    {
+      "slug": "fe-foundation",
+      "name": "frontend-dev",
+      "description": "Next.js 或者tanstack + TypeScript + shadcn/ui 前端开发。适用于创建页面、组件、表单、数据表、Dashboard 和 SaaS 界面。",
+      "category": "sdlc",
+      "subcategory": "frontend",
+      "path": "skills/sdlc/frontend/fe-foundation",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 82,
+        "portabilityScore": 100,
+        "validationStatus": "warning",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 220
+        }
+      }
+    },
+    {
+      "slug": "find-skills",
+      "name": "find-skills",
+      "description": "Discover and install agent skills from local manifest, skills.sh, flins.tech, SkillsLLM, and other sources in data/sources.yaml.",
+      "category": "skill-shared",
+      "path": "skills/skill-shared/_shared/find-skills",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 100,
+        "portabilityScore": 100,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 133
+        }
+      }
+    },
+    {
+      "slug": "scaffold-app",
+      "name": "scaffold-app",
+      "description": "Guide for creating a new app from an external template repo (not stored in agentway).",
+      "category": "skill-shared",
+      "path": "skills/skill-shared/_shared/scaffold-app",
+      "inspection": {
+        "riskLevel": "low",
+        "qualityScore": 90,
+        "portabilityScore": 100,
+        "validationStatus": "valid",
+        "summary": {
+          "hasFrontmatter": true,
+          "hasScripts": false,
+          "hasReferences": false,
+          "scriptCount": 0,
+          "referenceCount": 0,
+          "assetCount": 0,
+          "lineCount": 39
+        }
+      }
+    }
+  ]
+}

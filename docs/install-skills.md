@@ -187,6 +187,13 @@ Or install binary:
 
 ```bash
 bun run build:exe
+# or: bun run build:install  → ~/.local/bin/skill-spark
 ```
 
 Then retry your script command.
+
+## Related docs
+
+- [skill-spark install and run](./skill-spark/install-and-run.md)
+- [DevOps skills install](./usage/install-devops-skills.md)
+- [Architecture and MVP](./projects/architecture-and-mvp.md)

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-07-07T03:53:46.257Z",
+  "root": "skills",
+  "categories": [
+    {
+      "slug": "base",
+      "name": "Core",
+      "description": "Foundational skills that bootstrap the skill-spark workspace itself: universal skill search and the skill-spark CLI companion skill.",
+      "icon": "layers",
+      "order": 1,
+      "path": "skills/base",
+      "skillCount": 2,
+      "subcategories": []
+    },
+    {
+      "slug": "devops",
+      "name": "DevOps",
+      "description": "开发工作流相关的 AI Agent Skill 集合。",
+      "icon": "git-branch",
+      "order": 2,
+      "path": "skills/devops",
+      "skillCount": 5,
+      "subcategories": []
+    },
+    {
+      "slug": "meta",
+      "name": "Meta Skills",
+      "description": "Skills about skills — authoring, scaffolding, evaluating, and managing other skills.",
+      "icon": "wrench",
+      "order": 3,
+      "path": "skills/meta",
+      "skillCount": 1,
+      "subcategories": []
+    },
+    {
+      "slug": "sdlc",
+      "name": "SDLC",
+      "description": "Software development lifecycle skills, organized by domain (frontend, backend, etc.).",
+      "icon": "code",
+      "order": 4,
+      "path": "skills/sdlc",
+      "skillCount": 0,
+      "subcategories": [
+        {
+          "slug": "frontend",
+          "name": "Frontend",
+          "description": "Frontend development skills: Next.js or TanStack Router + TypeScript + Tailwind + shadcn/ui.",
+          "icon": "monitor",
+          "order": 1,
+          "skillCount": 2,
+          "path": "skills/sdlc/frontend"
+        }
+      ]
+    },
+    {
+      "slug": "knowledge",
+      "name": "Knowledge",
+      "description": "Skills that distill public figures' mental models, decision heuristics, and communication DNA into runnable AI skills.",
+      "icon": "book-open",
+      "order": 5,
+      "path": "skills/knowledge",
+      "skillCount": 1,
+      "subcategories": []
+    },
+    {
+      "slug": "skill-shared",
+      "name": "Shared",
+      "description": "Cross-cutting skills reused across categories and apps: skill search and app scaffolding.",
+      "icon": "boxes",
+      "order": 6,
+      "path": "skills/skill-shared",
+      "skillCount": 2,
+      "subcategories": []
+    }
+  ]
+}

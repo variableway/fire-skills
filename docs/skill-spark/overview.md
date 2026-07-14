@@ -59,20 +59,12 @@ skill-spark 采用**分层架构**，从下到上分为：
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    CLI 层 (skill-cli)                     │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────┐  │
-│  │ search  │ │  add    │ │validate │ │   doctor    │  │
-│  │  find   │ │ update  │ │inspect │ │   agent     │  │
-│  │  list   │ │remove   │ │  use    │ │   profile   │  │
-│  │ outdated│ │  map    │ │  sync   │ │             │  │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────────┘  │
+│  skill/  search/  map-sync/  agent/  profile/  doctor/  │
+│  + shared/（选项类型、格式化、CommandMeta）                 │
 ├─────────────────────────────────────────────────────────┤
 │                    核心层 (skill-core)                    │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────────┐  │
-│  │ agents  │ │discovery│ │ sources │ │ installations│  │
-│  │ registry│ │ mapping │ │  state  │ │   output    │  │
-│  │validation│ │inspect  │ │  fs     │ │ skill-parser│  │
-│  │ schemas │ │  types  │ │tracked  │ │skill-targets│  │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────────┘  │
+│  agents · discovery · sources · installations · mapping │
+│  registry · validation · inspection · state · ...       │
 ├─────────────────────────────────────────────────────────┤
 │                   模式层 (skill-schemas)                  │
 │           Zod 数据验证模式与类型定义                       │
@@ -95,29 +87,31 @@ skill-spark 采用**分层架构**，从下到上分为：
 
 `packages/skill-cli` 是用户直接交互的入口，基于 [Commander.js](https://github.com/tj/commander.js) 构建 CLI，使用 [@clack/prompts](https://github.com/natemoo-re/clack) 提供交互式 TUI 体验。
 
-#### 4.1.1 命令模块
+#### 4.1.1 命令模块（按功能目录分组）
 
 | 命令 | 文件 | 功能说明 |
 |------|------|----------|
-| `search` / `find` | `commands/search.ts` | 从 Registry 或本地源搜索 Skill，支持交互式浏览 |
-| `add` / `install` | `commands/add.ts` | 从源安装 Skill，支持选择目标 Agent、作用域和安装模式 |
-| `update` | `commands/update.ts` | 更新已安装 Skill 到最新版本 |
-| `outdated` / `status` | `commands/update.ts` | 检查 Skill 更新状态和缺失文件 |
-| `remove` / `uninstall` | `commands/remove.ts` | 移除已安装的 Skill |
-| `list` | `commands/list.ts` | 列出已安装的 Skill 和 Command |
-| `validate` | `commands/validate.ts` | 验证 Skill 目录结构和元数据 |
-| `inspect` | `commands/inspect.ts` | 基于规则的风险检查与质量评估 |
-| `use` | `commands/use.ts` | 生成任务数据包而不实际安装 Skill |
-| `profile` | `commands/profile.ts` | 管理 Skill Profile（预定义组合） |
-| `map` | `commands/map.ts` | 将已安装 Skill 映射到目标 Agent 目录 |
-| `sync` | `commands/map.ts` | 同步源目录到目标 Agent Skill 文件夹 |
-| `agent` | `commands/agent.ts` | 管理 Agent 目录配置（列出、添加、移除） |
-| `doctor` | `commands/doctor.ts` | 诊断环境健康和配置状态 |
+| `search` / `find` | `commands/search/index.ts` | 从 Registry 或本地源搜索 Skill，支持交互式浏览 |
+| `add` / `install` | `commands/skill/add.ts` | 从源安装 Skill，支持选择目标 Agent、作用域和安装模式 |
+| `update` | `commands/skill/update.ts` | 更新已安装 Skill 到最新版本 |
+| `outdated` / `status` | `commands/skill/update.ts` | 检查 Skill 更新状态和缺失文件 |
+| `remove` / `uninstall` | `commands/skill/remove.ts` | 移除已安装的 Skill |
+| `list` | `commands/skill/list.ts` | 列出已安装的 Skill 和 Command |
+| `validate` | `commands/skill/validate.ts` | 验证 Skill 目录结构和元数据 |
+| `inspect` | `commands/skill/inspect.ts` | 基于规则的风险检查与质量评估 |
+| `use` | `commands/skill/use.ts` | 生成任务数据包而不实际安装 Skill |
+| `profile` | `commands/profile/index.ts` | 管理 Skill Profile（预定义组合） |
+| `map` | `commands/map-sync/map.ts` | 将已安装 Skill 映射到目标 Agent 目录 |
+| `sync` | `commands/map-sync/sync.ts` | 同步源目录到目标 Agent Skill 文件夹 |
+| `agent` | `commands/agent/index.ts` | 管理 Agent 目录配置（列出、添加、移除） |
+| `doctor` | `commands/doctor/index.ts` | 诊断环境健康和配置状态 |
 
-#### 4.1.2 工具模块
+#### 4.1.2 共享与工具模块
 
 | 模块 | 文件 | 功能说明 |
 |------|------|----------|
+| `shared/types` | `commands/shared/types.ts` | 通用选项类型与 `CommandMeta` |
+| `shared/format` | `commands/shared/format.ts` | CLI 输出格式化 |
 | `json` | `utils/json.ts` | JSON 文件读写工具 |
 | `root` | `utils/root.ts` | 项目根目录检测工具 |
 
@@ -229,18 +223,22 @@ skill-spark 内置支持以下 Agent（部分列表）：
 ```
 skill-spark/
 ├── packages/
-│   ├── skill-cli/          # CLI 命令层
+│   ├── skill-cli/          # CLI 命令层（commands 按功能分组）
 │   ├── skill-core/         # 核心逻辑层
 │   └── skill-schemas/      # 数据模式层
-├── skills/                 # 示例 Skill 仓库
+├── skills/                 # Skill 仓库（category registry）
+│   ├── categories.json     # 分类清单
+│   ├── index.json          # Skill 索引
 │   ├── base/               # 基础 Skill
 │   ├── devops/             # DevOps 相关 Skill
 │   ├── meta/               # 元 Skill
 │   ├── sdlc/               # 软件开发生命周期 Skill
+│   ├── knowledge/          # 知识蒸馏类 Skill
 │   └── skill-shared/       # 共享 Skill
+├── scripts/                # build-install、dev-workflow 等
 ├── src/
 │   └── index.ts            # 入口文件（指向 skill-cli）
-├── docs/                   # 文档目录
+├── docs/                   # 文档（projects / skill-spark / usage）
 ├── package.json            # 根包配置（pnpm workspace）
 ├── pnpm-workspace.yaml     # pnpm 工作区配置
 └── tsconfig.json           # TypeScript 配置
@@ -264,4 +262,4 @@ skill-spark/
 
 ---
 
-> 本文档与 [安装与运行指南](./install-and-run.md) 配合使用，可全面了解 skill-spark 的使用方法。
+> 本文档与 [安装与运行指南](./install-and-run.md) 配合使用。项目规划与 MVP 见 [architecture-and-mvp](../projects/architecture-and-mvp.md)。

@@ -79,10 +79,20 @@ bun run build:all
 
 等价于先后执行 `bun run build` 和 `bun run build:exe`。
 
+### 构建并安装到用户 PATH
+
+```bash
+bun run build:install
+# 等价于 ./scripts/build-install.sh
+```
+
+会执行 `build:all`，并将可执行文件安装到 `~/.local/bin/skill-spark`（需该目录在 PATH 中）。
+
 ### 其他常用脚本
 
 | 命令 | 作用 |
 |------|------|
+| `bun run build:install` | 构建并安装到 `~/.local/bin` |
 | `bun run dev` | 直接以开发模式运行源码（不构建） |
 | `bun run typecheck` | 运行 TypeScript 类型检查（无 emit） |
 | `bun run format` | 使用 Biome 格式化代码 |
@@ -253,6 +263,9 @@ skill-spark outdated
 ## 相关资源
 
 - 仓库地址：https://github.com/variableway/fire-skills
+- [概述与架构](./overview.md)
+- [通用 Skill 安装指南](../install-skills.md)
+- [DevOps Skills 安装](../usage/install-devops-skills.md)
+- [项目架构与 MVP](../projects/architecture-and-mvp.md)
 - Bun 官方文档：https://bun.sh/docs
 - pnpm 官方文档：https://pnpm.io/installation
-- 其他文档：`docs/install-skills.md`（Skill 安装详细指南）、`docs/devops-skills-usage.md`（DevOps Skill 使用说明）

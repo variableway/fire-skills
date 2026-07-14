@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Universal skill manager for AI coding agents - merge of Fire-Skill and Flins",
   "private": true,
-  "packageManager": "pnpm@11.12.0",
+  "packageManager": "pnpm@11.13.0",
   "type": "module",
   "bin": {
     "skill-spark": "./dist/index.js"

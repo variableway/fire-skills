@@ -21,7 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["bun-types"],
+    "types": ["bun", "node"],
     "paths": {
       "@/*": ["./src/*"],
       "@skill-spark/skill-cli": ["./packages/skill-cli/src/index.ts"],

@@ -1,7 +1,7 @@
 import { cpSync, existsSync, lstatSync, readlinkSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { ensureDir, isPathInside } from "./fs.js";
-import type { SkillMappingRecord, TargetEnvironment } from "./types.js";
+import { ensureDir, isPathInside } from "./fs.ts";
+import type { SkillMappingRecord, TargetEnvironment } from "../types.ts";
 
 const TARGET_DIRS: Record<TargetEnvironment, string> = {
   codex: ".codex/skills",

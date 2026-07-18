@@ -26,7 +26,9 @@
       "@/*": ["./src/*"],
       "@skill-spark/skill-cli": ["./packages/skill-cli/src/index.ts"],
       "@skill-spark/skill-core": ["./packages/skill-core/src/index.ts"],
-      "@skill-spark/skill-core/*": ["./packages/skill-core/src/*.ts"],
+      "@skill-spark/skill-core/types": ["./packages/skill-core/src/types.ts"],
+      "@skill-spark/skill-core/schemas": ["./packages/skill-core/src/schemas.ts"],
+      "@skill-spark/skill-core/*": ["./packages/skill-core/src/services/*.ts"],
       "@skill-spark/skill-schemas": ["./packages/skill-schemas/src/index.ts"]
     }
   },

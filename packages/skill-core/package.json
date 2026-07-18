@@ -7,7 +7,9 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*.ts"
+    "./types": "./src/types.ts",
+    "./schemas": "./src/schemas.ts",
+    "./*": "./src/services/*.ts"
   },
   "dependencies": {
     "@clack/prompts": "^1.6.0",

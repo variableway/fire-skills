@@ -2,13 +2,13 @@
 
 import { Command } from "commander";
 import packageJson from "../package.json" with { type: "json" };
-import { type AddOptions, handleAddCommand } from "./commands/skill/add.js";
-import { type AgentAddOptions, runAgentAdd, runAgentList, runAgentRemove, runAgentSchema } from "./commands/agent/index.js";
-import { runDoctor } from "./commands/doctor/index.js";
-import { type InspectOptions, runInspect } from "./commands/skill/inspect.js";
-import { handleListCommand } from "./commands/skill/list.js";
-import { runMap } from "./commands/map-sync/map.js";
-import { runSync, type SyncCommandOptions } from "./commands/map-sync/sync.js";
+import { type AddOptions, handleAddCommand } from "./commands/skill/add.ts";
+import { type AgentAddOptions, runAgentAdd, runAgentList, runAgentRemove, runAgentSchema } from "./commands/agent/index.ts";
+import { runDoctor } from "./commands/doctor/index.ts";
+import { type InspectOptions, runInspect } from "./commands/skill/inspect.ts";
+import { handleListCommand } from "./commands/skill/list.ts";
+import { runMap } from "./commands/map-sync/map.ts";
+import { runSync, type SyncCommandOptions } from "./commands/map-sync/sync.ts";
 import {
   type ProfileAddOptions,
   type ProfileInstallOptions,
@@ -16,12 +16,12 @@ import {
   runProfileInstall,
   runProfileList,
   runProfileShow,
-} from "./commands/profile/index.js";
-import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove.js";
-import { runSearch } from "./commands/search/index.js";
-import { handleOutdatedCommand, handleUpdateCommand } from "./commands/skill/update.js";
-import { runUse, type UseOptions } from "./commands/skill/use.js";
-import { runValidate, type ValidateOptions } from "./commands/skill/validate.js";
+} from "./commands/profile/index.ts";
+import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove.ts";
+import { runSearch } from "./commands/search/index.ts";
+import { handleOutdatedCommand, handleUpdateCommand } from "./commands/skill/update.ts";
+import { runUse, type UseOptions } from "./commands/skill/use.ts";
+import { runValidate, type ValidateOptions } from "./commands/skill/validate.ts";
 
 const logo = `
 `;

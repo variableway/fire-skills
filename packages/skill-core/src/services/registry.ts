@@ -1,4 +1,4 @@
-import type { RegistryInfoResponse, RegistrySearchResponse, SkillListItem } from "./types.js";
+import type { RegistryInfoResponse, RegistrySearchResponse, SkillListItem } from "../types.ts";
 
 const DEFAULT_REGISTRY_URL = "https://skillsdirectory.com/api/registry";
 

@@ -1,0 +1,11 @@
+{
+  "name": "@skill-spark/tool-docx",
+  "version": "0.1.0",
+  "description": "Convert .docx files to Markdown",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "mammoth": "^1.12.0"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "description": "Evaluation set for the frontend skill integration (approach A: shared layer + sibling mode skills vs approach B: single router skill). Three eval families: (1) trigger_evals — does the right skill/mode activate? (2) cost_evals — token load per scenario, declarative file sets the script counts; (3) quality_evals — rubric checks that the shared content covers the key concepts (lightweight; real LLM quality needs an API). Token counting methodology in eval-methodology.md.",
+  "tokenizer": {
+    "library": "gpt-tokenizer",
+    "encoding": "cl100k_base",
+    "approximation": "Claude uses a different BPE; cl100k_base is an approximation. It is accurate enough for the relative A-vs-B-vs-baseline comparison this eval exists to make. Absolute numbers are indicative, not exact.",
+    "fallback": "If gpt-tokenizer is unavailable, the script falls back to chars/4 and tags the result as estimated."
+  },
+  "root": "skills/sdlc",
+
+  "trigger_evals": [
+    {
+      "query": "Build me a landing page for a SaaS analytics tool",
+      "should_trigger": { "A": "frontend-build", "B": "frontend-studio (build mode)" },
+      "notes": "Greenfield + 'build' verb → build mode",
+      "set": "train"
+    },
+    {
+      "query": "This dashboard looks AI-generated, clean it up",
+      "should_trigger": { "A": "frontend-redesign", "B": "frontend-studio (redesign mode)" },
+      "notes": "Existing code + 'looks AI-generated' → redesign mode",
+      "set": "train"
+    },
+    {
+      "query": "Audit App.tsx for AI design tells, don't change anything",
+      "should_trigger": { "A": "frontend-redesign (detect)", "B": "frontend-studio (redesign, detect)" },
+      "notes": "'audit' + 'don't change' → redesign detect mode",
+      "set": "train"
+    },
+    {
+      "query": "Make a hero section with shimmer buttons and aurora background",
+      "should_trigger": { "A": "frontend-build", "B": "frontend-studio (build)" },
+      "notes": "Greenfield component creation → build",
+      "set": "train"
+    },
+    {
+      "query": "De-slop this pricing section, it has gradient text and glassmorphism",
+      "should_trigger": { "A": "frontend-redesign", "B": "frontend-studio (redesign)" },
+      "notes": "Existing code + slop tells → redesign",
+      "set": "train"
+    },
+    {
+      "query": "Convert this PPTX to a web presentation",
+      "should_trigger": { "A": "frontend-slides", "B": "frontend-slides (out of studio scope)" },
+      "notes": "Presentation product → slides skill, not the design cluster",
+      "set": "validation"
+    },
+    {
+      "query": "This sections/workspace directory is a mess, reorganize it",
+      "should_trigger": { "A": "frontend/fe-code-structure", "B": "frontend/fe-code-structure" },
+      "notes": "Structure reorg → code-organization skill, not design",
+      "set": "validation"
+    },
+    {
+      "query": "I have a URL, rebuild that site from scratch",
+      "should_trigger": { "A": "frontend-build", "B": "frontend-studio (build)" },
+      "notes": "URL + 'from scratch' → build (redesign-from-URL sub-flow)",
+      "set": "validation"
+    }
+  ],
+
+  "shared_on_demand": {
+    "description": "The 7 files both approaches load on demand for a Next.js design task (1 stack adapter + 6 references). Counted once even when both modes run in one session.",
+    "files": [
+      "frontend-shared/stacks/nextjs.md",
+      "frontend-shared/references/discovery.md",
+      "frontend-shared/references/design-language.md",
+      "frontend-shared/references/aesthetic-directions.md",
+      "frontend-shared/references/component-sourcing.md",
+      "frontend-shared/references/accessibility-motion.md",
+      "frontend-shared/references/quality-checklist.md"
+    ]
+  },
+
+  "cost_evals": [
+    {
+      "id": "S1-build-landing",
+      "mode": "build",
+      "stack": "nextjs",
+      "description": "Single build task: create a landing page on a Next.js project. Measures the dispatch cost + on-demand shared refs.",
+      "A": {
+        "always_loaded": ["frontend-build/SKILL.md"],
+        "on_demand": "shared_on_demand"
+      },
+      "B": {
+        "always_loaded": ["frontend-studio/SKILL.md", "frontend-studio/modes/build.md"],
+        "on_demand": "shared_on_demand"
+      }
+    },
+    {
+      "id": "S2-redesign-component",
+      "mode": "redesign",
+      "stack": "nextjs",
+      "description": "Single redesign task: de-slop an existing component. Measures dispatch cost + on-demand shared refs.",
+      "A": {
+        "always_loaded": ["frontend-redesign/SKILL.md"],
+        "on_demand": "shared_on_demand"
+      },
+      "B": {
+        "always_loaded": ["frontend-studio/SKILL.md", "frontend-studio/modes/redesign.md"],
+        "on_demand": "shared_on_demand"
+      }
+    },
+    {
+      "id": "S3-build-then-redesign",
+      "mode": "both",
+      "stack": "nextjs",
+      "description": "Both modes in one session: build a surface then audit/rewrite it. Shared refs counted once. This is where B's shared router may pay off (one router vs two mode SKILLs).",
+      "A": {
+        "always_loaded": ["frontend-build/SKILL.md", "frontend-redesign/SKILL.md"],
+        "on_demand": "shared_on_demand"
+      },
+      "B": {
+        "always_loaded": ["frontend-studio/SKILL.md", "frontend-studio/modes/build.md", "frontend-studio/modes/redesign.md"],
+        "on_demand": "shared_on_demand"
+      }
+    },
+    {
+      "id": "S4-dispatch-overhead",
+      "mode": "build",
+      "stack": "nextjs",
+      "description": "Trigger overhead only — what the agent pays just by activating the skill, before loading any reference. Isolates the A-vs-B dispatch delta.",
+      "A": { "always_loaded": ["frontend-build/SKILL.md"], "on_demand": [] },
+      "B": { "always_loaded": ["frontend-studio/SKILL.md", "frontend-studio/modes/build.md"], "on_demand": [] }
+    }
+  ],
+
+  "baseline": {
+    "description": "Pre-integration state: the 6 source design skills fully loaded (SKILL.md + all their reference files) for one design task. Represents the 'before' the integration replaces. taste-skill (a 13-skill collection) is measured separately because it is not 1:1 comparable.",
+    "skills": [
+      { "skill": "frontend-design-engineer", "skill_md": "frontend-design-engineer-skill/frontend-design-engineer/SKILL.md",
+        "refs": ["frontend-design-engineer-skill/frontend-design-engineer/references/visual-directions.md", "frontend-design-engineer-skill/frontend-design-engineer/references/component-catalog.md", "frontend-design-engineer-skill/frontend-design-engineer/references/examples.md"] },
+      { "skill": "frontend-design-masterclass", "skill_md": "frontend-design-masterclass/SKILL.md",
+        "refs": ["frontend-design-masterclass/references/landing-pages.md", "frontend-design-masterclass/references/typography.md", "frontend-design-masterclass/references/color-system.md", "frontend-design-masterclass/references/web-design-themes.md", "frontend-design-masterclass/references/imagery.md", "frontend-design-masterclass/references/data-graphics.md", "frontend-design-masterclass/references/microanimations.md", "frontend-design-masterclass/references/visual-kinetics.md", "frontend-design-masterclass/references/data-visualization.md", "frontend-design-masterclass/references/mermaid-theming.md"] },
+      { "skill": "21st-frontend-design", "skill_md": "21st-frontend-design/SKILL.md",
+        "refs": ["21st-frontend-design/references/backgrounds.md", "21st-frontend-design/references/buttons.md", "21st-frontend-design/references/social-proof.md", "21st-frontend-design/references/pricing.md", "21st-frontend-design/references/features.md", "21st-frontend-design/references/motion.md", "21st-frontend-design/references/tokens.md"] },
+      { "skill": "ui-pro-magic", "skill_md": "ui-pro-magic/SKILL.md",
+        "refs": ["ui-pro-magic/references/prompts.md", "ui-pro-magic/references/stacks.md"] },
+      { "skill": "avoid-ai-design", "skill_md": "avoid-ai-design/SKILL.md",
+        "refs": ["avoid-ai-design/references/ai-tells-catalog.md", "avoid-ai-design/references/aesthetic-directions.md"] },
+      { "skill": "deslopify", "skill_md": "UI-Deslopify-Skill/SKILL.md",
+        "refs": ["UI-Deslopify-Skill/AUDIT-RULES.md", "UI-Deslopify-Skill/PATTERNS.md", "UI-Deslopify-Skill/21ST-DEV-MAP.md", "UI-Deslopify-Skill/IDENTITY-PROFILES.md"] }
+    ]
+  },
+
+  "quality_evals": [
+    {
+      "id": "Q1-no-duplication",
+      "name": "The anti-slop catalog exists in exactly one place",
+      "prompt": "Verify the AI-tell catalog (purple-blue gradient, Inter, rounded-2xl+shadow-lg, glassmorphism, card sickness) is defined once in frontend-shared/references/design-language.md and not duplicated across frontend-build, frontend-redesign, frontend-studio.",
+      "verify": [
+        {"check": "design-language.md contains the P0/P1/P2 catalog", "weight": 40},
+        {"check": "frontend-build/SKILL.md references it by path, does not re-list tells", "weight": 30},
+        {"check": "frontend-redesign/SKILL.md references it by path, does not re-list tells", "weight": 30}
+      ],
+      "rubric": "pass:>=80, warn:>=60, fail:<60"
+    },
+    {
+      "id": "Q2-checklist-unity",
+      "name": "One canonical delivery checklist",
+      "prompt": "Verify quality-checklist.md is the single checklist and the mode skills point to it.",
+      "verify": [
+        {"check": "quality-checklist.md covers visual/interaction/light-dark/layout/a11y/motion/performance", "weight": 50},
+        {"check": "no mode SKILL.md inlines its own full checklist", "weight": 50}
+      ],
+      "rubric": "pass:>=80, warn:>=60, fail:<60"
+    },
+    {
+      "id": "Q3-stack-isolation",
+      "name": "Stack assumptions are adapters, not hardcoded",
+      "prompt": "Verify no mode skill hardcodes a single framework; each points to stacks/*.md and fe-foundation outranks on conflict.",
+      "verify": [
+        {"check": "frontend-build & frontend-redesign & frontend-studio all reference stacks/ via detection table", "weight": 50},
+        {"check": "no skill body assumes SvelteKit-only or Next-only as the sole truth", "weight": 50}
+      ],
+      "rubric": "pass:>=80, warn:>=60, fail:<60"
+    },
+    {
+      "id": "Q4-fair-content",
+      "name": "A and B load the same reference content",
+      "prompt": "Verify A (mode skills) and B (router+modes) point to the same frontend-shared/references files, so the token comparison is a fair test of dispatch structure, not content volume.",
+      "verify": [
+        {"check": "frontend-build/SKILL.md and frontend-studio/modes/build.md reference the same 6 references", "weight": 50},
+        {"check": "frontend-redesign/SKILL.md and frontend-studio/modes/redesign.md reference the same 6 references", "weight": 50}
+      ],
+      "rubric": "pass:>=80, warn:>=60, fail:<60"
+    }
+  ]
+}

@@ -12,6 +12,7 @@
     "@clack/prompts": "^1.6.0",
     "@skill-spark/skill-core": "workspace:*",
     "@skill-spark/skill-schemas": "workspace:*",
+    "@skill-spark/tool-docx": "workspace:*",
     "commander": "^15.0.0",
     "picocolors": "^1.1.1"
   }

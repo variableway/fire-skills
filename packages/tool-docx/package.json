@@ -6,6 +6,6 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "dependencies": {
-    "mammoth": "^1.12.0"
+    "mammoth": "^1.11.0"
   }
 }

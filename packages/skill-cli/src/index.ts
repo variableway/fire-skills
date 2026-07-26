@@ -22,6 +22,7 @@ import { runSearch } from "./commands/search/index.ts";
 import { handleOutdatedCommand, handleUpdateCommand } from "./commands/skill/update.ts";
 import { runUse, type UseOptions } from "./commands/skill/use.ts";
 import { runValidate, type ValidateOptions } from "./commands/skill/validate.ts";
+import { runDocxToMd, type DocxToMdOptions } from "./commands/docx/index.ts";
 
 const logo = `
 `;
@@ -310,6 +311,15 @@ program
   .description("Diagnose skill-spark environment")
   .action(async () => {
     await runDoctor();
+  });
+
+program
+  .command("docx-to-md")
+  .description("Convert a .docx file to Markdown")
+  .requiredOption("-s, --source <path>", "Source .docx file path")
+  .requiredOption("-o, --output <path>", "Output .md file path")
+  .action(async (options: DocxToMdOptions) => {
+    await runDocxToMd(options);
   });
 
 program.parse(process.argv);

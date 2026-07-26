@@ -5,6 +5,7 @@
 | [projects/](./projects/) | 架构、MVP、多 Agent 共享 Context |
 | [skill-spark/](./skill-spark/) | CLI 概述与安装运行 |
 | [usage/](./usage/) | 专题使用指南（如 DevOps skills） |
+| [cli/](./cli/) | CLI 命令使用文档 |
 | [install-skills.md](./install-skills.md) | 通用安装 / 增删 / 更新 |
 | [openwiki-setup.md](./openwiki-setup.md) | OpenWiki 安装、初始化与持续文档维护 |
 | [research/](./research/) | 调研材料（只读参考） |

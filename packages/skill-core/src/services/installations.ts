@@ -169,6 +169,9 @@ export function installInstallable(
 
 export function removeInstalledPath(path: string) {
   try {
+    if (!existsSync(path)) {
+      return { success: false, error: `Path does not exist: ${path}` };
+    }
     rmSync(path, { recursive: true, force: true });
     return { success: true };
   } catch (error) {

@@ -117,7 +117,8 @@ program
   .alias("r")
   .alias("rm")
   .alias("uninstall")
-  .description("Remove installed skills and commands")
+  .description("Remove installed skills. No args removes all. Use -g for global scope.")
+  .option("-g, --global", "Remove from global scope only")
   .option("-f, --force", "Skip confirmation prompt")
   .action(async (skills: string[], options: RemoveOptions) => {
     await handleRemoveCommand(skills, options);

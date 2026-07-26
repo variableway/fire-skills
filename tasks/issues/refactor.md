@@ -37,3 +37,6 @@ skill-cli commands 有很多，需要对这些commands 做一个refactor：
 3. 对每个command 都添加一个prerequisite
 4. 提取通用的Model/types出来，如果命令是在同一个commands下面放一个目录，如果不是需要放到另外一个目录下去
 5. 目前Skill肯定是一个，其他commands 需要做一个完整的检查，然后确认是否需要放到同一个目录下面
+
+## Task 2: Simplify Add Command
+pnpm build   如何把spark-skill 安装到system 里面去呢，同时参数add参数过多了，安装都适用复制方式吧，不去做--no-symlink这种参数了，现有仓库都是使用git管理了，版本问题都问题不大，scope 就是系统和项目就可以，其他不用--slient了，就是都把安装过程全部展示，唯一可能要做的就是是否覆盖这个，有一个提示吧，默认是有提示的，加一个参数强制就可以，请检查当前add 命令参数

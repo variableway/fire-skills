@@ -9,18 +9,8 @@ import { type InspectOptions, runInspect } from "./commands/skill/inspect.ts";
 import { handleListCommand } from "./commands/skill/list.ts";
 import { runMap } from "./commands/map-sync/map.ts";
 import { runSync, type SyncCommandOptions } from "./commands/map-sync/sync.ts";
-import {
-  type ProfileAddOptions,
-  type ProfileInstallOptions,
-  runProfileAdd,
-  runProfileInstall,
-  runProfileList,
-  runProfileShow,
-} from "./commands/profile/index.ts";
 import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove.ts";
 import { runSearch } from "./commands/search/index.ts";
-import { handleOutdatedCommand, handleUpdateCommand } from "./commands/skill/update.ts";
-import { runUse, type UseOptions } from "./commands/skill/use.ts";
 import { runValidate, type ValidateOptions } from "./commands/skill/validate.ts";
 import { runDocxToMd, type DocxToMdOptions } from "./commands/docx/index.ts";
 
@@ -115,39 +105,11 @@ program
   .alias("a")
   .alias("install")
   .alias("i")
-  .description("Install skills from a source. Local installation is the default.")
-  .option("-g, --global", "Install globally into user-level folders")
-  .option("-a, --agent <agents...>", "Target specific agents")
-  .option("-s, --skill <skills...>", "Install specific skills or commands by name")
-  .option("-l, --list", "List available installables in the source without installing")
-  .option("-y, --yes", "Auto-confirm prompts")
-  .option("-f, --force", "Skip confirmations")
-  .option("--silent", "Suppress banner and non-error output")
-  .option("--no-symlink", "Copy files directly instead of using symlinks")
+  .description("Install all skills from a source into detected agent directories")
+  .option("-g, --global", "Install globally into system-level user folders")
+  .option("-f, --force", "Skip confirmation prompt")
   .action(async (source: string, options: AddOptions) => {
     await handleAddCommand(source, options);
-  });
-
-program
-  .command("update [skills...]")
-  .alias("u")
-  .description("Update installed skills and commands to their latest versions")
-  .option("-y, --yes", "Auto-confirm prompts")
-  .option("-f, --force", "Skip confirmations")
-  .option("--silent", "Suppress banner and non-error output")
-  .action(async (skills: string[], options: { yes?: boolean; force?: boolean; silent?: boolean }) => {
-    await handleUpdateCommand(skills, options);
-  });
-
-program
-  .command("outdated [skills...]")
-  .alias("o")
-  .alias("status")
-  .description("Check installation status, updates, and missing files")
-  .option("-v, --verbose", "Show detailed installation paths")
-  .option("--silent", "Suppress banner and non-error output")
-  .action(async (skills: string[], options: { verbose?: boolean; silent?: boolean }) => {
-    await handleOutdatedCommand(skills, options);
   });
 
 program
@@ -156,9 +118,7 @@ program
   .alias("rm")
   .alias("uninstall")
   .description("Remove installed skills and commands")
-  .option("-y, --yes", "Auto-confirm prompts")
-  .option("-f, --force", "Skip confirmations")
-  .option("--silent", "Suppress banner and non-error output")
+  .option("-f, --force", "Skip confirmation prompt")
   .action(async (skills: string[], options: RemoveOptions) => {
     await handleRemoveCommand(skills, options);
   });
@@ -194,49 +154,6 @@ program
   .option("-o, --output <path>", "Write report to file")
   .option("--fail-on <level>", "Exit non-zero on risk level: low, medium, high, critical")
   .action((input: string, options: InspectOptions) => runOrExit(() => runInspect(input, options)));
-
-program
-  .command("use <path-or-source>")
-  .description("Generate a task packet from skills without installing them")
-  .option("--branch <branch>", "Git branch override")
-  .option("-s, --skill <skills...>", "Use specific skills by name")
-  .option("--objective <text>", "Objective to include in the task packet")
-  .option("--agent <name>", "Target host agent label for the task packet")
-  .option("-f, --format <type>", "Output format: text, json, markdown")
-  .option("-o, --output <path>", "Write task packet to file")
-  .action((input: string, options: UseOptions) => runOrExit(() => runUse(input, options)));
-
-const profileCommand = program.command("profile").description("Manage skill profiles for composed installs");
-
-profileCommand
-  .command("add <name>")
-  .description("Create or update a skill profile")
-  .option("--description <text>", "Profile description")
-  .option("--source <source>", "Default source for the listed skills", "skills")
-  .option("--skill <skills...>", "Skills to include")
-  .option("--agent <agents...>", "Default target agents")
-  .option("--force", "Overwrite an existing profile")
-  .action((name: string, options: ProfileAddOptions) => runOrExit(() => runProfileAdd(name, options)));
-
-profileCommand
-  .command("list")
-  .description("List saved profiles")
-  .action(() => runOrExit(() => runProfileList()));
-
-profileCommand
-  .command("show <name>")
-  .description("Print a saved profile as JSON")
-  .action((name: string) => runOrExit(() => runProfileShow(name)));
-
-profileCommand
-  .command("install <name>")
-  .description("Install all skills in a saved profile")
-  .option("-a, --agent <agents...>", "Target agents")
-  .option("--global", "Install globally")
-  .option("-y, --yes", "Auto-confirm prompts", true)
-  .option("-f, --force", "Skip confirmations")
-  .option("--no-symlink", "Copy files directly instead of using symlinks")
-  .action((name: string, options: ProfileInstallOptions) => runOrExit(() => runProfileInstall(name, options)));
 
 program
   .command("map")

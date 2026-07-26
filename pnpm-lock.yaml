@@ -69,6 +69,9 @@ importers:
       '@skill-spark/skill-schemas':
         specifier: workspace:*
         version: link:../skill-schemas
+      '@skill-spark/tool-docx':
+        specifier: workspace:*
+        version: link:../tool-docx
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -106,7 +109,7 @@ importers:
   packages/tool-docx:
     dependencies:
       mammoth:
-        specifier: ^1.12.0
+        specifier: ^1.11.0
         version: 1.12.0
 
 packages:

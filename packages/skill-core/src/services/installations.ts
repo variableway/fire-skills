@@ -1,6 +1,5 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readlinkSync, rmSync, symlinkSync } from "node:fs";
-import { homedir, platform } from "node:os";
-import { dirname, join, relative, resolve } from "node:path";
+import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { dirname, join } from "node:path";
 import {
   type AgentName,
   type AgentScope,
@@ -24,17 +23,11 @@ export interface InstallationResult {
   error?: string;
 }
 
-const flinsHome = join(homedir(), ".skill-spark");
 const excludedSkillFiles = new Set(["README.md", "metadata.json", ".env", ".env.local", ".DS_Store"]);
 const excludedSkillDirectories = new Set([".git", "node_modules", "__pycache__"]);
 
 function toError(error: unknown) {
   return error instanceof Error ? error.message : "Unknown error";
-}
-
-function getStorageRoot(scope: AgentScope, type: InstallableType, cwd: string) {
-  const base = scope === "global" ? join(flinsHome, ".agents") : join(cwd, ".agents");
-  return join(base, type === "skill" ? "skills" : "commands");
 }
 
 function findMatchingEntry(directory: string, name: string, type: InstallableType) {
@@ -102,20 +95,6 @@ function copySkillDirectory(sourcePath: string, targetPath: string) {
   }
 }
 
-function getStoredInstallablePath(installable: Installable, scope: AgentScope, cwd: string) {
-  const root = getStorageRoot(scope, installable.type, cwd);
-  mkdirSync(root, { recursive: true });
-  return installable.type === "skill" ? join(root, installable.name) : join(root, `${installable.name}.md`);
-}
-
-function getSymlinkKind(type: InstallableType) {
-  if (platform() !== "win32") {
-    return undefined;
-  }
-
-  return type === "skill" ? "junction" : "file";
-}
-
 export function findInstallations(name: string, type: InstallableType, scope: AgentScope, cwd: string = process.cwd()) {
   const installations: InstallationRecord[] = [];
 
@@ -152,9 +131,9 @@ export function installInstallable(
   installable: Installable,
   agent: AgentName,
   scope: AgentScope,
-  options: { symlink: boolean; cwd?: string },
+  options?: { cwd?: string },
 ) {
-  const cwd = options.cwd ?? process.cwd();
+  const cwd = options?.cwd ?? process.cwd();
 
   if (installable.type === "command") {
     const directory = resolveAgentCommandsDir(agent, scope, cwd);
@@ -169,24 +148,9 @@ export function installInstallable(
     const targetPath = join(directory, `${installable.name}.md`);
 
     try {
-      if (!options.symlink) {
-        mkdirSync(dirname(targetPath), { recursive: true });
-        rmSync(targetPath, { force: true });
-        cpSync(installable.path, targetPath);
-        return { success: true, path: targetPath };
-      }
-
-      const sourcePath = getStoredInstallablePath(installable, scope, cwd);
-      rmSync(sourcePath, { force: true });
-      cpSync(installable.path, sourcePath);
-
-      if (resolve(sourcePath) === resolve(targetPath)) {
-        return { success: true, path: targetPath };
-      }
-
       mkdirSync(dirname(targetPath), { recursive: true });
-      rmSync(targetPath, { recursive: true, force: true });
-      symlinkSync(relative(dirname(targetPath), sourcePath), targetPath, getSymlinkKind(installable.type));
+      rmSync(targetPath, { force: true });
+      cpSync(installable.path, targetPath);
       return { success: true, path: targetPath };
     } catch (error) {
       return { success: false, path: targetPath, error: toError(error) };
@@ -196,21 +160,7 @@ export function installInstallable(
   const targetPath = join(resolveAgentSkillsDir(agent, scope, cwd), installable.name);
 
   try {
-    if (!options.symlink) {
-      copySkillDirectory(installable.path, targetPath);
-      return { success: true, path: targetPath };
-    }
-
-    const sourcePath = getStoredInstallablePath(installable, scope, cwd);
-    copySkillDirectory(installable.path, sourcePath);
-
-    if (resolve(sourcePath) === resolve(targetPath)) {
-      return { success: true, path: targetPath };
-    }
-
-    mkdirSync(dirname(targetPath), { recursive: true });
-    rmSync(targetPath, { recursive: true, force: true });
-    symlinkSync(relative(dirname(targetPath), sourcePath), targetPath, getSymlinkKind(installable.type));
+    copySkillDirectory(installable.path, targetPath);
     return { success: true, path: targetPath };
   } catch (error) {
     return { success: false, path: targetPath, error: toError(error) };
@@ -219,11 +169,6 @@ export function installInstallable(
 
 export function removeInstalledPath(path: string) {
   try {
-    if (existsSync(path) && lstatSync(path).isSymbolicLink()) {
-      const target = resolve(dirname(path), readlinkSync(path));
-      rmSync(target, { recursive: true, force: true });
-    }
-
     rmSync(path, { recursive: true, force: true });
     return { success: true };
   } catch (error) {

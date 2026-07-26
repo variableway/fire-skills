@@ -113,14 +113,13 @@ export async function runSync(options: SyncCommandOptions): Promise<void> {
       process.exit(1);
     }
 
-    const symlink = options.symlink ?? true;
     const results = [];
 
     for (const skill of skills) {
       let successCount = 0;
 
       for (const agent of targetAgents) {
-        const outcome = installInstallable(skill, agent, scope, { symlink, cwd: root });
+        const outcome = installInstallable(skill, agent, scope, { cwd: root });
         results.push({
           skill: skill.name,
           agent,

@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import * as p from "@clack/prompts";
 import { getAgentNames, resolveAgentCommandsDir, resolveAgentSkillsDir } from "@skill-spark/skill-core/agents";
 import { removeInstalledPath } from "@skill-spark/skill-core/installations";
@@ -8,8 +9,8 @@ import pc from "picocolors";
 export const COMMAND_DESCRIPTION = "Remove installed skills and commands from agent directories";
 export const COMMAND_EXAMPLES = [
   "skill-spark remove my-skill",
-  "skill-spark remove skill:my-skill command:my-cmd --yes",
-  "skill-spark remove my-skill --force --silent",
+  "skill-spark remove skill:my-skill command:my-cmd -f",
+  "skill-spark remove my-skill -f",
 ];
 export const COMMAND_PREREQUISITES = [
   "Skills must be tracked in skills.lock",
@@ -17,37 +18,27 @@ export const COMMAND_PREREQUISITES = [
 ];
 
 export interface RemoveOptions {
-  yes?: boolean;
   force?: boolean;
-  silent?: boolean;
 }
 
 export async function handleRemoveCommand(names: string[], options: RemoveOptions) {
-  showIntro(Boolean(options.silent));
+  showIntro();
 
   try {
     if (names.length === 0) {
       p.log.error("No skills or commands specified.");
-      showOutro(pc.red("Remove failed"), Boolean(options.silent));
+      showOutro(pc.red("Remove failed"));
       process.exit(1);
     }
 
-    const isAutoConfirm = Boolean(options.yes || options.force);
-
     for (const name of names) {
       const [typeName, ...rest] = name.toLowerCase().split(":");
-      const actualName = rest.join(":");
-      const type = typeName === "command" ? "command" : "skill";
+      const actualName = rest.join(":") || typeName;
+      const type = name.includes(":") && typeName === "command" ? "command" : "skill";
 
-      const installedAgents = getAgentNames().filter((agent) => {
-        const skillsDir = resolveAgentSkillsDir(agent, "project");
-        const commandsDir = resolveAgentCommandsDir(agent, "project");
-        return (type === "skill" && skillsDir) || (type === "command" && commandsDir);
-      });
-
-      if (!isAutoConfirm) {
+      if (!options.force) {
         const confirmed = await p.confirm({
-          message: `Remove ${type}:${actualName || name}?`,
+          message: `Remove ${type}:${actualName}?`,
         });
         if (p.isCancel(confirmed) || !confirmed) {
           p.log.info(`Skipped ${name}`);
@@ -55,35 +46,49 @@ export async function handleRemoveCommand(names: string[], options: RemoveOption
         }
       }
 
-      let removed = false;
-      for (const agent of installedAgents) {
-        const directory =
-          type === "skill" ? resolveAgentSkillsDir(agent, "project") : resolveAgentCommandsDir(agent, "project");
+      let projectRemoved = false;
+      let globalRemoved = false;
 
-        if (!directory) continue;
+      for (const scope of ["project", "global"] as const) {
+        for (const agent of getAgentNames()) {
+          const directory =
+            type === "skill"
+              ? resolveAgentSkillsDir(agent, scope)
+              : resolveAgentCommandsDir(agent, scope);
 
-        const path = type === "skill" ? `${directory}/${actualName || name}` : `${directory}/${actualName || name}.md`;
+          if (!directory) continue;
 
-        const result = removeInstalledPath(path);
-        if (result.success) {
-          removed = true;
+          const targetPath =
+            type === "skill"
+              ? join(directory, actualName)
+              : join(directory, `${actualName}.md`);
+
+          const result = removeInstalledPath(targetPath);
+          if (result.success) {
+            if (scope === "project") projectRemoved = true;
+            else globalRemoved = true;
+          }
         }
       }
 
-      removeTrackedItem("project", actualName || name, type);
-      removeTrackedItem("global", actualName || name, type);
+      if (projectRemoved) {
+        removeTrackedItem("project", actualName, type);
+      }
+      if (globalRemoved) {
+        removeTrackedItem("global", actualName, type);
+      }
 
-      if (removed) {
-        p.log.success(pc.green(`Removed ${type}:${actualName || name}`));
+      if (projectRemoved || globalRemoved) {
+        p.log.success(pc.green(`Removed ${type}:${actualName}`));
       } else {
-        p.log.warn(pc.yellow(`Not found: ${type}:${actualName || name}`));
+        p.log.warn(pc.yellow(`Not found: ${type}:${actualName}`));
       }
     }
 
     showOutro(pc.green("Remove complete"));
   } catch (error) {
     p.log.error(getError(error, "Something went wrong."));
-    showOutro(pc.red("Remove failed"), Boolean(options.silent));
+    showOutro(pc.red("Remove failed"));
     process.exit(1);
   }
 }

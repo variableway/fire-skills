@@ -101,9 +101,7 @@ export async function handleUpdateCommand(names: string[], options: UpdateOption
 
         let successCount = 0;
         for (const installation of uniqueInstallations(item.validInstallations)) {
-          const outcome = installInstallable(installable, installation.agent, item.scope, {
-            symlink: true,
-          });
+          const outcome = installInstallable(installable, installation.agent, item.scope);
 
           if (outcome.success) {
             successCount += 1;

@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-07-07T03:53:47.976Z",
+  "generatedAt": "2026-08-02T08:03:53.669Z",
   "root": "skills",
-  "count": 13,
+  "count": 8,
   "skills": [
     {
       "slug": "anysearch",
@@ -46,116 +46,6 @@
           "referenceCount": 0,
           "assetCount": 0,
           "lineCount": 162
-        }
-      }
-    },
-    {
-      "slug": "gh-create-release",
-      "name": "gh-create-release",
-      "description": "Create GitHub releases using the gh CLI tool. Use when the user wants to (1) create a new GitHub release for a tag, (2) draft or publish a release with notes, (3) upload release assets/binaries, (4) create a prerelease, (5) generate release notes automatically, or (6) extract release notes from a CHANGELOG.md file. Covers workflows from simple tag-based releases to complex releases with multiple assets and custom notes.",
-      "category": "devops",
-      "path": "skills/devops/gh-create-release",
-      "inspection": {
-        "riskLevel": "critical",
-        "qualityScore": 100,
-        "portabilityScore": 50,
-        "validationStatus": "valid",
-        "summary": {
-          "hasFrontmatter": true,
-          "hasScripts": true,
-          "hasReferences": true,
-          "scriptCount": 4,
-          "referenceCount": 1,
-          "assetCount": 0,
-          "lineCount": 135
-        }
-      }
-    },
-    {
-      "slug": "git-workflow",
-      "name": "git-workflow",
-      "description": "基于 github-cli-skill 的 GitHub Issue 工作流 Skill。\n输入任务描述 → 创建 Issue body 作为唯一主记录 → Agent 执行任务（含轻量计划/测试）→ 更新 Issue body 并关闭 Issue。\nTRIGGER: When user asks to \"execute task\", \"执行任务\", \"implement task\", \"run task\", \"complete task\",\nreferences tasks from a task file (e.g., \"Task 9\", \"Task 3\"), or says @tasks/issues/ to execute a specific task AND wants GitHub Issue tracking.\nDo not use when the user explicitly asks for local-only/offline workflow; use local-workflow instead.",
-      "category": "devops",
-      "path": "skills/devops/git-workflow",
-      "inspection": {
-        "riskLevel": "critical",
-        "qualityScore": 82,
-        "portabilityScore": 45,
-        "validationStatus": "warning",
-        "summary": {
-          "hasFrontmatter": true,
-          "hasScripts": true,
-          "hasReferences": true,
-          "scriptCount": 7,
-          "referenceCount": 2,
-          "assetCount": 0,
-          "lineCount": 292
-        }
-      }
-    },
-    {
-      "slug": "github-cli-skill",
-      "name": "github-cli",
-      "description": "GitHub CLI operations helper. Use when the user needs gh commands for repository creation, issue listing/viewing/commenting/closing, or small GitHub CLI snippets without running the full git-workflow Issue lifecycle.",
-      "category": "devops",
-      "path": "skills/devops/github-cli-skill",
-      "inspection": {
-        "riskLevel": "critical",
-        "qualityScore": 82,
-        "portabilityScore": 35,
-        "validationStatus": "warning",
-        "summary": {
-          "hasFrontmatter": true,
-          "hasScripts": true,
-          "hasReferences": false,
-          "scriptCount": 3,
-          "referenceCount": 0,
-          "assetCount": 0,
-          "lineCount": 180
-        }
-      }
-    },
-    {
-      "slug": "local-workflow",
-      "name": "local-workflow",
-      "description": "本地任务工作流：读取 task 文件，创建本地追踪记录，AI 实现任务，更新追踪。无需 GitHub Issue，适用于本地开发、离线开发、私有项目或用户明确要求 local/offline/no GitHub 的场景。默认不提交或推送代码；只有用户明确要求或使用 --commit/--push 时才执行 git commit/push。",
-      "category": "devops",
-      "path": "skills/devops/local-workflow",
-      "inspection": {
-        "riskLevel": "critical",
-        "qualityScore": 100,
-        "portabilityScore": 60,
-        "validationStatus": "valid",
-        "summary": {
-          "hasFrontmatter": true,
-          "hasScripts": true,
-          "hasReferences": true,
-          "scriptCount": 4,
-          "referenceCount": 1,
-          "assetCount": 0,
-          "lineCount": 303
-        }
-      }
-    },
-    {
-      "slug": "scanning-for-secrets",
-      "name": "scanning-for-secrets",
-      "description": "Use when about to commit or push code, or when GitHub push protection blocks a push. Scans staged files for accidentally included secrets, tokens, API keys, and credentials.",
-      "category": "devops",
-      "path": "skills/devops/scanning-for-secrets",
-      "inspection": {
-        "riskLevel": "high",
-        "qualityScore": 100,
-        "portabilityScore": 80,
-        "validationStatus": "valid",
-        "summary": {
-          "hasFrontmatter": true,
-          "hasScripts": false,
-          "hasReferences": false,
-          "scriptCount": 0,
-          "referenceCount": 0,
-          "assetCount": 0,
-          "lineCount": 132
         }
       }
     },

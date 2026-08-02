@@ -2,6 +2,11 @@
 
 本指南说明如何使用 `skill-spark` 安装和管理 DevOps 相关的 skills。DevOps skills 提供任务执行工作流、GitHub CLI 辅助、发布管理和安全扫描等功能。
 
+> **来源变更**：DevOps skills 已从 fire-skills 仓库中移除（避免与 devops-skill 仓库重复），
+> 现以 [qdriven/devops-skill](https://github.com/qdriven/devops-skill) 仓库为唯一来源。
+> 下方命令中的 `qdriven/devops-skill` 即为该仓库（skill-spark 支持 `user/repo` 简写）。
+> 支持 `--agent workbuddy` 安装到 WorkBuddy（`~/.workbuddy/skills`）。
+
 ---
 
 ## 目录
@@ -53,26 +58,26 @@
 
 ```bash
 # 全局安装（推荐，所有项目可用）
-./scripts/install.sh skills/devops --system
+./scripts/install.sh qdriven/devops-skill --system
 
 # 仅安装到当前项目
-./scripts/install.sh skills/devops --project
+./scripts/install.sh qdriven/devops-skill --project
 
 # 为指定 Agent 安装（如 codex）
-./scripts/install.sh skills/devops --project --agent codex
+./scripts/install.sh qdriven/devops-skill --project --agent codex
 ```
 
 ### 安装单个 Skill
 
 ```bash
 # 仅安装 git-workflow
-./scripts/install.sh skills/devops --skill git-workflow --system
+./scripts/install.sh qdriven/devops-skill --skill git-workflow --system
 
 # 仅安装 local-workflow
-./scripts/install.sh skills/devops --skill local-workflow --project
+./scripts/install.sh qdriven/devops-skill --skill local-workflow --project
 
 # 仅安装 secret 扫描工具
-./scripts/install.sh skills/devops --skill scanning-for-secrets --system
+./scripts/install.sh qdriven/devops-skill --skill scanning-for-secrets --system
 ```
 
 ---
@@ -85,7 +90,7 @@
 
 ```bash
 # 安装
-./scripts/install.sh skills/devops --skill git-workflow --system
+./scripts/install.sh qdriven/devops-skill --skill git-workflow --system
 
 # 验证
 ls ~/.skill-spark/.agents/skills/git-workflow/
@@ -109,7 +114,7 @@ ls ~/.skill-spark/.agents/skills/git-workflow/
 
 ```bash
 # 安装
-./scripts/install.sh skills/devops --skill local-workflow --system
+./scripts/install.sh qdriven/devops-skill --skill local-workflow --system
 
 # 验证
 ls ~/.skill-spark/.agents/skills/local-workflow/
@@ -133,7 +138,7 @@ ls ~/.skill-spark/.agents/skills/local-workflow/
 
 ```bash
 # 安装
-./scripts/install.sh skills/devops --skill github-cli-skill --system
+./scripts/install.sh qdriven/devops-skill --skill github-cli-skill --system
 
 # 验证
 ls ~/.skill-spark/.agents/skills/github-cli-skill/
@@ -155,7 +160,7 @@ ls ~/.skill-spark/.agents/skills/github-cli-skill/
 
 ```bash
 # 安装
-./scripts/install.sh skills/devops --skill gh-create-release --system
+./scripts/install.sh qdriven/devops-skill --skill gh-create-release --system
 
 # 验证
 ls ~/.skill-spark/.agents/skills/gh-create-release/
@@ -179,7 +184,7 @@ ls ~/.skill-spark/.agents/skills/gh-create-release/
 
 ```bash
 # 安装
-./scripts/install.sh skills/devops --skill scanning-for-secrets --system
+./scripts/install.sh qdriven/devops-skill --skill scanning-for-secrets --system
 
 # 验证
 ls ~/.skill-spark/.agents/skills/scanning-for-secrets/
@@ -230,7 +235,7 @@ Skills 直接复制到目标 Agent 目录：
 
 ```bash
 # 使用复制模式安装
-./scripts/install.sh skills/devops --system --no-symlink
+./scripts/install.sh qdriven/devops-skill --system --no-symlink
 ```
 
 ---
@@ -339,7 +344,7 @@ gh auth login
 
 ```bash
 # 重新安装该 skill
-./scripts/install.sh skills/devops --skill <name> --system --force
+./scripts/install.sh qdriven/devops-skill --skill <name> --system --force
 ```
 
 ---

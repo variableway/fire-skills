@@ -163,13 +163,13 @@ skill-spark --version
 skill-spark search git
 
 # 从本地目录安装 Skill（当前项目）
-skill-spark add skills/devops
+skill-spark add qdriven/devops-skill
 
 # 从本地目录全局安装
-skill-spark add skills/devops --global
+skill-spark add qdriven/devops-skill --global
 
 # 安装指定 Skill 到指定 Agent
-skill-spark add skills/devops --agent codex
+skill-spark add qdriven/devops-skill --agent codex
 
 # 列出已安装的 Skill
 skill-spark list
@@ -193,7 +193,7 @@ skill-spark doctor
 
 ```bash
 # 安装（add 的封装）
-./scripts/install.sh skills/devops --system
+./scripts/install.sh qdriven/devops-skill --system
 
 # 移除（remove 的封装）
 ./scripts/remove.sh git-workflow

@@ -20,10 +20,10 @@ bun run build:exe
 
 ```bash
 # Install (add) skills globally
-./scripts/install.sh skills/devops --system
+./scripts/install.sh qdriven/devops-skill --system
 
 # Install (add) skills to current project for a specific agent
-./scripts/install.sh skills/devops --project --agent codex
+./scripts/install.sh qdriven/devops-skill --project --agent codex
 
 # List installed skills
 skill-spark list
@@ -51,7 +51,7 @@ Wrapper usage:
 
 ### Supported sources
 
-- Local directory: `skills/devops`, `./my-skill-collection`
+- Local directory: `qdriven/devops-skill`, `./my-skill-collection`
 - GitHub shorthand: `user/repo`
 - GitHub URL: `github.com/user/repo`
 - GitLab URL: `gitlab.com/user/repo`
@@ -72,13 +72,13 @@ Wrapper usage:
 
 ```bash
 # Install all installables from local source globally
-./scripts/install.sh skills/devops --system
+./scripts/install.sh qdriven/devops-skill --system
 
 # Install only selected skill from a source
-./scripts/install.sh skills/devops --skill git-workflow --project
+./scripts/install.sh qdriven/devops-skill --skill git-workflow --project
 
 # Install for a specific agent
-./scripts/install.sh skills/devops --project --agent codex
+./scripts/install.sh qdriven/devops-skill --project --agent codex
 
 # Install from GitHub
 ./scripts/install.sh github.com/anthropic/claude-code-skills --system

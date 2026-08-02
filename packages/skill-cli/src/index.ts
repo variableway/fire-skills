@@ -108,6 +108,7 @@ program
   .description("Install all skills from a source into detected agent directories")
   .option("-g, --global", "Install globally into system-level user folders")
   .option("-f, --force", "Skip confirmation prompt")
+  .option("-a, --agent <agents...>", "Install only into the specified agent directories (e.g. workbuddy, claude-code)")
   .action(async (source: string, options: AddOptions) => {
     await handleAddCommand(source, options);
   });

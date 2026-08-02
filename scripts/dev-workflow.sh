@@ -7,7 +7,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-DEVOPS_DIR="$PROJECT_DIR/skills/devops"
+# devops skills now live in their own repo (https://github.com/qdriven/devops-skill).
+# Override the source with DEVOPS_SKILLS_SOURCE (local path, user/repo, or URL).
+DEVOPS_SKILLS_SOURCE="${DEVOPS_SKILLS_SOURCE:-qdriven/devops-skill}"
 
 # Resolve skill-spark binary
 CLI=""
@@ -34,13 +36,14 @@ Commands:
 
 Options:
   --scope system|project   Installation scope (default: project)
-  --agent <name>           Target agent (claude-code, kimi, codex, opencode, trae)
+  --agent <name>           Target agent (claude-code, kimi, codex, opencode, trae, workbuddy)
   --yes                    Auto-confirm prompts
 
 Examples:
   $0 install --scope system --agent codex
+  $0 install --scope system --agent workbuddy
   $0 install --agent codex --yes
-  $0 verify --scope system
+  $0 verify --scope system --agent workbuddy
   $0 update
   $0 remove --scope system --agent codex --yes
   $0 hooks
@@ -85,7 +88,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-SKILLS="git-workflow local-workflow github-cli-skill gh-create-release scanning-for-secrets"
+SKILLS="git-workflow local-workflow github-cli-skill gh-create-release scanning-for-secrets git-worktree git-pr docmd"
 
 run_with_cli() {
     if [ -n "$CLI" ]; then
@@ -110,9 +113,9 @@ resolve_agent_flag() {
     fi
 }
 
-resolve_yes_flag() {
+resolve_force_flag() {
     if [ "$YES" = true ]; then
-        echo "--yes"
+        echo "--force"
     else
         echo ""
     fi
@@ -122,30 +125,20 @@ case "$CMD" in
     install)
         if run_with_cli; then
             # shellcheck disable=SC2086
-            $CLI add skills/devops $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_yes_flag)
+            $CLI add "$DEVOPS_SKILLS_SOURCE" $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_force_flag)
         else
-            echo "skill-spark not found. Build first: bun run build"
-            echo "Falling back to standalone installer..."
-            if [ "$SCOPE" = "system" ]; then
-                SYSTEM_FLAG="--system"
-            else
-                SYSTEM_FLAG="--project"
-            fi
-            AGENT_FLAG=""
-            if [ -n "$AGENT" ]; then
-                AGENT_FLAG="--agent $AGENT"
-            fi
-            # shellcheck disable=SC2086
-            exec "$DEVOPS_DIR/dev-workflow-install.sh" $SYSTEM_FLAG $AGENT_FLAG
+            echo "Error: skill-spark is required. Build it first: bun run build" >&2
+            exit 1
         fi
         ;;
     verify)
         echo "Verifying devops skills installation..."
         FOUND=0
+        TOTAL=$(echo $SKILLS | wc -w | tr -d ' ')
         for skill in $SKILLS; do
             if [ "$SCOPE" = "system" ]; then
-                # Check common global directories
-                for dir in "$HOME/.config/agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.config/opencode/skills" "$HOME/.trae/skills"; do
+                # Check common global directories (incl. workbuddy)
+                for dir in "$HOME/.config/agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.config/opencode/skills" "$HOME/.trae/skills" "$HOME/.workbuddy/skills"; do
                     if [ -e "$dir/$skill" ]; then
                         echo "  [OK] $skill -> $dir/$skill"
                         FOUND=$((FOUND + 1))
@@ -162,19 +155,22 @@ case "$CMD" in
                 elif [ -e "./.trae/skills/$skill" ]; then
                     echo "  [OK] $skill -> ./.trae/skills/$skill"
                     FOUND=$((FOUND + 1))
+                elif [ -e "./.workbuddy/skills/$skill" ]; then
+                    echo "  [OK] $skill -> ./.workbuddy/skills/$skill"
+                    FOUND=$((FOUND + 1))
                 fi
             fi
         done
         echo ""
-        echo "Verified: $FOUND / 5 skills"
-        if [ "$FOUND" -lt 5 ]; then
+        echo "Verified: $FOUND / $TOTAL skills"
+        if [ "$FOUND" -lt "$TOTAL" ]; then
             exit 1
         fi
         ;;
     update)
         if run_with_cli; then
             # shellcheck disable=SC2086
-            $CLI update $SKILLS $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_yes_flag)
+            $CLI update $SKILLS $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_force_flag)
         else
             echo "Error: skill-spark is required for update. Build first: bun run build" >&2
             exit 1
@@ -183,7 +179,7 @@ case "$CMD" in
     remove)
         if run_with_cli; then
             # shellcheck disable=SC2086
-            $CLI remove $SKILLS $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_yes_flag)
+            $CLI remove $SKILLS $(resolve_scope_flag) $(resolve_agent_flag) $(resolve_force_flag)
         else
             echo "Error: skill-spark is required for remove. Build first: bun run build" >&2
             exit 1
@@ -194,7 +190,19 @@ case "$CMD" in
             echo "Error: Not a git repository." >&2
             exit 1
         fi
-        HOOK_SRC="$DEVOPS_DIR/git-workflow/hooks"
+        # git-workflow hooks now ship in the devops-skill repo; locate them via skill-spark or DEVOPS_SKILLS_SOURCE.
+        HOOK_SRC=""
+        if [ -n "$CLI" ]; then
+            # Best-effort: resolve from a local source checkout if available.
+            :
+        fi
+        if [ -z "$HOOK_SRC" ] && [ -d "$DEVOPS_SKILLS_SOURCE/git-workflow/hooks" ]; then
+            HOOK_SRC="$DEVOPS_SKILLS_SOURCE/git-workflow/hooks"
+        fi
+        if [ -z "$HOOK_SRC" ] || [ ! -d "$HOOK_SRC" ]; then
+            echo "Error: git-workflow hooks not found. Clone devops-skill or set DEVOPS_SKILLS_SOURCE." >&2
+            exit 1
+        fi
         for hook in prepare-commit-msg post-commit; do
             if [ -f "$HOOK_SRC/$hook" ]; then
                 cp "$HOOK_SRC/$hook" ".git/hooks/$hook"

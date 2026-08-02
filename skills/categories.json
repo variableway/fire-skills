@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-07-07T03:53:46.257Z",
+  "generatedAt": "2026-08-02T08:03:53.644Z",
   "root": "skills",
   "categories": [
     {
@@ -11,16 +11,6 @@
       "order": 1,
       "path": "skills/base",
       "skillCount": 2,
-      "subcategories": []
-    },
-    {
-      "slug": "devops",
-      "name": "DevOps",
-      "description": "开发工作流相关的 AI Agent Skill 集合。",
-      "icon": "git-branch",
-      "order": 2,
-      "path": "skills/devops",
-      "skillCount": 5,
       "subcategories": []
     },
     {

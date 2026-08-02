@@ -7,6 +7,7 @@ import {
   getSharedDirectoryNotes,
   getUniversalAgents,
   getNonUniversalAgents,
+  normalizeAgentNames,
 } from "@skill-spark/skill-core/agents";
 import { discoverInstallables, type Installable } from "@skill-spark/skill-core/discovery";
 import { installInstallable } from "@skill-spark/skill-core/installations";
@@ -35,6 +36,7 @@ export const COMMAND_PREREQUISITES = [
 export interface AddOptions {
   global?: boolean;
   force?: boolean;
+  agent?: string[];
 }
 
 interface InstallResult {
@@ -71,7 +73,17 @@ async function resolveSourceInput(sourceInput: string) {
   process.exit(1);
 }
 
-function resolveTargets(scope: AgentScope): AgentName[] {
+function resolveTargets(scope: AgentScope, options: AddOptions): AgentName[] {
+  // When --agent is provided, restrict (and validate) targets to those agents.
+  if (options.agent && options.agent.length > 0) {
+    const { agents: requested, invalid } = normalizeAgentNames(options.agent);
+    if (invalid.length > 0) {
+      p.log.error(`Unknown agent: ${invalid.join(", ")}. Run 'skill-spark agent list' to see supported agents.`);
+      process.exit(1);
+    }
+    return requested;
+  }
+
   const installedAgents = detectInstalledAgents();
 
   if (scope === "project") {
@@ -160,7 +172,7 @@ export async function handleAddCommand(sourceInput: string, options: AddOptions)
         `Found ${pc.green(skills.toString())} ${plural(skills, "skill")}${commands > 0 ? ` and ${pc.yellow(commands.toString())} ${plural(commands, "command")}` : ""}`,
       );
 
-      const targets = resolveTargets(scope);
+      const targets = resolveTargets(scope, options);
 
       if (!(await confirmInstall(source.label, scope, installables, targets, options))) {
         return;

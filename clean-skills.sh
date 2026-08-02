@@ -280,6 +280,7 @@ $cwd/.kiro/skills
 $cwd/.kode/skills
 $cwd/.letta/skills
 $cwd/.mcpjam/skills
+$cwd/.workbuddy/skills
 $cwd/skills
 EOF
 }
@@ -328,6 +329,7 @@ $home_dir/.kiro/skills
 $home_dir/.kode/skills
 $home_dir/.letta/skills
 $home_dir/.mcpjam/skills
+$home_dir/.workbuddy/skills
 $config_home/agents/skills
 $config_home/opencode/skills
 $home_dir/.skills
@@ -623,6 +625,9 @@ do_clean_agent() {
             ;;
         codebuddy)
             dirs_to_check+=(".codebuddy/skills" "$HOME/.codebuddy/skills")
+            ;;
+        workbuddy)
+            dirs_to_check+=(".workbuddy/skills" "$HOME/.workbuddy/skills")
             ;;
         goose)
             dirs_to_check+=(".goose/skills" "$HOME/.goose/skills" "${XDG_CONFIG_HOME:-$HOME/.config}/goose/skills")

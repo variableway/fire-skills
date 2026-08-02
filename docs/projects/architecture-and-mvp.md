@@ -88,7 +88,7 @@ packages/skill-cli/src/commands/
 | Category | 路径 | 受众倾向 |
 |----------|------|----------|
 | base | `skills/base` | 全员（anysearch、skill-spark） |
-| devops | `skills/devops` | 开发者工作流 |
+| devops | `qdriven/devops-skill` | 开发者工作流 |
 | meta | `skills/meta` | Skill 作者 |
 | sdlc | `skills/sdlc` | 开发（含 frontend 等子类） |
 | knowledge | `skills/knowledge` | 非纯开发场景也可 |

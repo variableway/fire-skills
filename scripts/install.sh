@@ -15,13 +15,13 @@
 #   --silent              Suppress banner output
 #
 # Examples:
-#   ./scripts/install.sh skills/devops --system
-#   ./scripts/install.sh skills/devops --project --agent codex
+#   ./scripts/install.sh qdriven/devops-skill --system
+#   ./scripts/install.sh qdriven/devops-skill --project --agent codex
 #   ./scripts/install.sh github.com/user/repo --system
-#   ./scripts/install.sh skills/devops --skill git-workflow --system
+#   ./scripts/install.sh qdriven/devops-skill --skill git-workflow --system
 #
 # Source types:
-#   Local directory       skills/devops, ./my-skill
+#   Local directory       qdriven/devops-skill, ./my-skill
 #   GitHub shorthand      user/repo
 #   GitHub URL            github.com/user/repo
 #   GitLab URL            gitlab.com/user/repo
@@ -71,8 +71,8 @@ if [ -z "$SOURCE" ]; then
   echo "Usage: $0 <source> [--system|--project] [--agent <name>]"
   echo ""
   echo "Examples:"
-  echo "  $0 skills/devops --system                    # Install devops globally"
-  echo "  $0 skills/devops --project --agent codex     # Install to project for codex"
+  echo "  $0 qdriven/devops-skill --system                    # Install devops globally"
+  echo "  $0 qdriven/devops-skill --project --agent codex     # Install to project for codex"
   echo "  $0 github.com/user/repo --system             # Install from GitHub"
   echo ""
   echo "Run '$CLI add --help' for more options."

@@ -76,6 +76,13 @@ export const builtInAgents = defineAgents({
     globalSkillsDir: join(home, ".codebuddy/skills"),
     detectInstalled: () => existsSync(join(process.cwd(), ".codebuddy")) || existsSync(join(home, ".codebuddy")),
   },
+  workbuddy: {
+    label: "WorkBuddy",
+    skillsDir: ".workbuddy/skills",
+    globalSkillsDir: join(process.env.WORKBUDDY_HOME?.trim() || join(home, ".workbuddy"), "skills"),
+    detectInstalled: () =>
+      existsSync(process.env.WORKBUDDY_HOME?.trim() || join(home, ".workbuddy")),
+  },
   codex: {
     label: "Codex",
     skillsDir: universalProjectSkillsDir,

@@ -26,7 +26,7 @@ skill-spark sync [options]
 skill-spark sync
 
 # 指定源和目标 Agent
-skill-spark sync -s skills/devops -a claude-code trae
+skill-spark sync -s qdriven/devops-skill -a claude-code trae
 
 # 全局同步特定技能
 skill-spark sync --skill git-workflow --global

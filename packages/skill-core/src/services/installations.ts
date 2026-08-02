@@ -1,4 +1,5 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import {
   type AgentName,
@@ -161,6 +162,10 @@ export function installInstallable(
 
   try {
     copySkillDirectory(installable.path, targetPath);
+    // Normalize intra-skill path references for agents whose skills directory
+    // differs from the universal `.agents/skills` convention used in many skill
+    // sources (e.g. devops-skill). Currently scoped to WorkBuddy.
+    rewriteSkillPathsForAgent(targetPath, agent, scope, cwd);
     return { success: true, path: targetPath };
   } catch (error) {
     return { success: false, path: targetPath, error: toError(error) };
@@ -176,5 +181,68 @@ export function removeInstalledPath(path: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: toError(error) };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Path normalization for agents that use a non-universal skills directory.
+// Many skill sources (e.g. devops-skill) hardcode `.agents/skills/` or
+// `~/.claude/skills/` in their SKILL.md / scripts. When installed into an
+// agent whose skills directory differs (WorkBuddy uses ~/.workbuddy/skills),
+// those references break. This rewrites them to the target agent's directory.
+// ---------------------------------------------------------------------------
+
+const REWRITABLE_TEXT_EXTENSIONS = new Set([".md", ".py", ".sh", ".ps1", ".mjs", ".ts", ".json"]);
+
+function rewriteTextFilesRecursively(dir: string, replacements: Array<[RegExp, string]>) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      rewriteTextFilesRecursively(path, replacements);
+      continue;
+    }
+
+    const dotIndex = entry.name.lastIndexOf(".");
+    const ext = dotIndex >= 0 ? entry.name.slice(dotIndex).toLowerCase() : "";
+    if (!REWRITABLE_TEXT_EXTENSIONS.has(ext)) {
+      continue;
+    }
+
+    try {
+      const original = readFileSync(path, "utf-8");
+      let updated = original;
+      for (const [pattern, replacement] of replacements) {
+        updated = updated.replace(pattern, replacement);
+      }
+      if (updated !== original) {
+        writeFileSync(path, updated, "utf-8");
+      }
+    } catch {
+      // Skip unreadable / binary files.
+    }
+  }
+}
+
+function rewriteSkillPathsForAgent(skillDir: string, agent: AgentName, scope: AgentScope, cwd: string = process.cwd()) {
+  if (agent !== "workbuddy") {
+    return;
+  }
+
+  const targetDir = resolveAgentSkillsDir(agent, scope, cwd);
+  // Use the tilde form for global scope (portable in docs); relative form for project scope.
+  const replacementDir = scope === "global" ? targetDir.replace(homedir(), "~") : ".workbuddy/skills";
+
+  const replacements: Array<[RegExp, string]> = [
+    [/\.agents\/skills\//g, `${replacementDir}/`],
+    [/~\/\.claude\/skills\//g, `${replacementDir}/`],
+    [/~\/\.codex\/skills\//g, `${replacementDir}/`],
+    [/~\/\.trae\/skills\//g, `${replacementDir}/`],
+    [/~\/\.trae-cn\/skills\//g, `${replacementDir}/`],
+  ];
+
+  try {
+    rewriteTextFilesRecursively(skillDir, replacements);
+  } catch {
+    // Path rewriting is best-effort; never fail the install because of it.
   }
 }

@@ -53,7 +53,7 @@ skill-spark add skills/base
 skill-spark add skills/base -g
 
 # 跳过确认，直接安装
-skill-spark add skills/devops -f
+skill-spark add qdriven/devops-skill -f
 
 # 从 GitHub 安装
 skill-spark add org/skills-repo

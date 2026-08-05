@@ -12,6 +12,8 @@ export interface TrackedItem {
   subpath?: string;
   branch: string;
   commit: string;
+  /** Whether the skill has been installed to agent directories. false = registered only. */
+  installed: boolean;
 }
 
 interface ProjectLock {
@@ -34,6 +36,19 @@ function getGlobalLockPath() {
   return join(flinsHome, "skills.lock");
 }
 
+function normalizeLockEntry(item: Record<string, unknown>): TrackedItem {
+  return {
+    name: item.name as string,
+    type: (item.type as SkillType) ?? "skill",
+    scope: (item.scope as "project" | "global") ?? "global",
+    url: item.url as string,
+    subpath: item.subpath as string | undefined,
+    branch: (item.branch as string) ?? "main",
+    commit: (item.commit as string) ?? "",
+    installed: item.installed !== false, // default true for backward compat
+  };
+}
+
 function readProjectLock(cwd: string): ProjectLock {
   const path = getProjectLockPath(cwd);
   if (!existsSync(path)) {
@@ -42,9 +57,13 @@ function readProjectLock(cwd: string): ProjectLock {
   try {
     const content = readFileSync(path, "utf-8");
     const parsed = JSON.parse(content) as ProjectLock;
+    const normalized: Record<string, TrackedItem> = {};
+    for (const [key, item] of Object.entries(parsed.skills ?? {})) {
+      normalized[key] = normalizeLockEntry(item as unknown as Record<string, unknown>);
+    }
     return {
       version: parsed.version ?? "1",
-      skills: parsed.skills ?? {},
+      skills: normalized,
     };
   } catch {
     return { version: "1", skills: {} };
@@ -70,9 +89,13 @@ function readGlobalLock(): GlobalLock {
   try {
     const content = readFileSync(path, "utf-8");
     const parsed = JSON.parse(content) as GlobalLock;
+    const normalized: Record<string, TrackedItem> = {};
+    for (const [key, item] of Object.entries(parsed.skills ?? {})) {
+      normalized[key] = normalizeLockEntry(item as unknown as Record<string, unknown>);
+    }
     return {
       version: parsed.version ?? "1",
-      skills: parsed.skills ?? {},
+      skills: normalized,
     };
   } catch {
     return { version: "1", skills: {} };
@@ -110,18 +133,34 @@ export function listTrackedItems(cwd: string = process.cwd()): TrackedItem[] {
     subpath: item.subpath,
     branch: item.branch,
     commit: item.commit,
+    installed: item.installed,
   }));
 }
 
-export function trackInstall(item: TrackedItem, cwd: string = process.cwd()) {
+export function trackInstall(item: Omit<TrackedItem, "installed">, cwd: string = process.cwd()) {
   const key = `${item.type}:${item.name.toLowerCase()}`;
+  const entry = { ...item, installed: true };
   if (item.scope === "global") {
     const lock = readGlobalLock();
-    lock.skills[key] = item;
+    lock.skills[key] = entry;
     writeGlobalLock(lock);
   } else {
     const lock = readProjectLock(cwd);
-    lock.skills[key] = { ...item, scope: "project" };
+    lock.skills[key] = { ...entry, scope: "project" };
+    writeProjectLock(cwd, lock);
+  }
+}
+
+export function registerTrackedItem(item: Omit<TrackedItem, "installed">, cwd: string = process.cwd()) {
+  const key = `${item.type}:${item.name.toLowerCase()}`;
+  const entry = { ...item, installed: false };
+  if (item.scope === "global") {
+    const lock = readGlobalLock();
+    lock.skills[key] = entry;
+    writeGlobalLock(lock);
+  } else {
+    const lock = readProjectLock(cwd);
+    lock.skills[key] = { ...entry, scope: "project" };
     writeProjectLock(cwd, lock);
   }
 }

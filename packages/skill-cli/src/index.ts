@@ -10,6 +10,8 @@ import { handleListCommand } from "./commands/skill/list.ts";
 import { runMap } from "./commands/map-sync/map.ts";
 import { runSync, type SyncCommandOptions } from "./commands/map-sync/sync.ts";
 import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove.ts";
+import { handleRegisterCommand, type RegisterOptions } from "./commands/skill/register.ts";
+import { handleGenerateAgents, type GenerateAgentsOptions } from "./commands/skill/generate-agents.ts";
 import { runSearch } from "./commands/search/index.ts";
 import { runValidate, type ValidateOptions } from "./commands/skill/validate.ts";
 import { runDocxToMd, type DocxToMdOptions } from "./commands/docx/index.ts";
@@ -118,12 +120,40 @@ program
   .alias("r")
   .alias("rm")
   .alias("uninstall")
-  .description("Remove installed skills. No args removes all. Use -g for global scope.")
-  .option("-g, --global", "Remove from global scope only")
+  .description("Remove installed skills. No args removes all in default scope (global).")
+  .option("-g, --global", "Remove from global scope (~/.skill-spark/skills.lock)")
+  .option("-p, --project", "Remove from project scope (current directory's ./skills.lock)")
+  .option("--path <path>", "Remove from project scope at the specified path (<path>/skills.lock)")
+  .option("--agent <agents...>", "Remove only from specified agents")
   .option("-f, --force", "Skip confirmation prompt")
   .action(async (skills: string[], options: RemoveOptions) => {
     await handleRemoveCommand(skills, options);
   });
+
+program
+  .command("register <source>")
+  .alias("reg")
+  .description("Register an external skill source without installing")
+  .option("-g, --global", "Register as global skill")
+  .option("-f, --force", "Skip confirmation prompt")
+  .option("--branch <branch>", "Git branch override")
+  .action(async (source: string, options: RegisterOptions) => {
+    await handleRegisterCommand(source, options);
+  });
+
+program
+  .command("generate")
+  .description("Generate project files for AI agent integration")
+  .addCommand(
+    new Command("agents-md")
+      .description("Generate AGENTS.md for AI agent skill discovery")
+      .option("-o, --output <path>", "Output file path (default: ./AGENTS.md)")
+      .option("--scope <scope>", "Filter by scope: global, project, all")
+      .option("-f, --force", "Skip confirmation prompt")
+      .action(async (options: GenerateAgentsOptions) => {
+        await handleGenerateAgents(options);
+      }),
+  );
 
 program
   .command("list")

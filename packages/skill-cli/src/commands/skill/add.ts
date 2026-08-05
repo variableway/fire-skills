@@ -15,12 +15,10 @@ import { getError, plural, showIntro, showOutro } from "@skill-spark/skill-core/
 import {
   cleanupSource,
   downloadSource,
-  isDirectoryName,
-  listDirectory,
-  resolveDirectorySource,
 } from "@skill-spark/skill-core/sources";
 import { trackInstall } from "@skill-spark/skill-core/state";
 import pc from "picocolors";
+import { resolveSourceInput } from "./shared/register.js";
 
 export const COMMAND_DESCRIPTION = "Install all skills from a source into detected agent directories";
 export const COMMAND_EXAMPLES = [
@@ -47,30 +45,6 @@ interface InstallResult {
   path: string;
   success: boolean;
   error?: string;
-}
-
-async function resolveSourceInput(sourceInput: string) {
-  if (!isDirectoryName(sourceInput)) {
-    return sourceInput;
-  }
-
-  p.log.info(`Looking up ${pc.cyan(sourceInput)} in the flins directory...`);
-
-  const source = await resolveDirectorySource(sourceInput);
-  if (source) {
-    return source;
-  }
-
-  p.log.error(`Skill ${pc.cyan(sourceInput)} was not found in the flins directory.`);
-  const entries = await listDirectory();
-  if (entries.length > 0) {
-    p.log.info("Available skills:");
-    for (const entry of entries) {
-      p.log.message(`  ${pc.cyan(entry.name)} ${pc.dim(`- ${entry.description}`)}`);
-    }
-  }
-
-  process.exit(1);
 }
 
 function resolveTargets(scope: AgentScope, options: AddOptions): AgentName[] {

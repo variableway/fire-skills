@@ -13,6 +13,8 @@ import { handleRemoveCommand, type RemoveOptions } from "./commands/skill/remove
 import { handleRegisterCommand, type RegisterOptions } from "./commands/skill/register.ts";
 import { handleGenerateAgents, type GenerateAgentsOptions } from "./commands/skill/generate-agents.ts";
 import { runSearch } from "./commands/search/index.ts";
+import { registerRegistryCommands } from "./commands/registry/index.ts";
+import { registerSelfhostCommands } from "./commands/selfhost/index.ts";
 import { runValidate, type ValidateOptions } from "./commands/skill/validate.ts";
 import { runDocxToMd, type DocxToMdOptions } from "./commands/docx/index.ts";
 
@@ -270,5 +272,8 @@ program
   .action(async (options: DocxToMdOptions) => {
     await runDocxToMd(options);
   });
+
+registerRegistryCommands(program, runOrExit);
+registerSelfhostCommands(program, runOrExit);
 
 program.parse(process.argv);

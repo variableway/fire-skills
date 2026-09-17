@@ -1,0 +1,12 @@
+{
+  "default": "lazycat",
+  "profiles": {
+    "lazycat": {
+      "host": "",
+      "share": "share",
+      "user": "",
+      "mountPoint": "~/Desktop/lazycat_disk",
+      "via": "open"
+    }
+  }
+}

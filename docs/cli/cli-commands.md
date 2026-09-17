@@ -35,6 +35,21 @@
 | `agent add <name>` | — | [agent.md](agent.md) |
 | `agent remove <name>` | — | [agent.md](agent.md) |
 
+### 仓库登记与自建网盘
+
+| 命令 | 别名 | 文档 |
+|------|------|------|
+| `registry scan [dirs...]` | — | [registry.md](registry.md) |
+| `registry clone` | — | [registry.md](registry.md) |
+| `registry scan-refs [dirs...]` | — | [registry.md](registry.md) |
+| `registry clone-refs` | — | [registry.md](registry.md) |
+| `selfhost mount` | — | [selfhost.md](selfhost.md) |
+| `selfhost open` | — | [selfhost.md](selfhost.md) |
+| `selfhost umount` | `unmount` | [selfhost.md](selfhost.md) |
+| `selfhost status` | — | [selfhost.md](selfhost.md) |
+| `selfhost path` | — | [selfhost.md](selfhost.md) |
+| `selfhost profiles` | — | [selfhost.md](selfhost.md) |
+
 ### 诊断与工具
 
 | 命令 | 别名 | 文档 |

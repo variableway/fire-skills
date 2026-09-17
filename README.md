@@ -15,8 +15,15 @@ Personal Skill Workspace + universal Skill manager for AI coding agents.
 
 ```bash
 pnpm install
-bun run build          # 或: bun run build:install
+bun run build          # → dist/index.js（node target）
 ./dist/index.js --help
+```
+
+打独立可执行文件（单文件 binary，无需 runtime）：
+
+```bash
+bun run build:exe      # → dist/skill-spark
+bun run build:all      # build + build:exe
 ```
 
 安装 DevOps 技能到 WorkBuddy（从 devops-skill 仓库）：
@@ -103,6 +110,17 @@ skill-spark 可安装到下列 agent 的技能目录（部分）：
 | Trae | `~/.trae/skills` | `.trae/skills` |
 
 运行 `./dist/index.js agent list` 查看全部内置 agent。
+
+## 仓库登记与自建网盘
+
+除技能管理外，skill-spark 还内置了两组运维子命令：
+
+| 子命令 | 作用 | 文档 |
+|-------|------|------|
+| `registry scan` / `clone` / `scan-refs` / `clone-refs` | 扫描 git 仓 → 写入 YAML 登记表；按登记表 clone / pull | [docs/cli/registry.md](docs/cli/registry.md) |
+| `selfhost mount` / `open` / `umount` / `status` / `path` / `profiles` | 挂载或打开自建 SMB 网盘（macOS） | [docs/cli/selfhost.md](docs/cli/selfhost.md) |
+
+两者都靠配置文件定位路径：`registry` 读 `.innate-registry-cli.yaml`，`selfhost` 读 `config.json`（本仓库根目录的 [config.json](config.json) 是模板）。
 
 ## Docs
 

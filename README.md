@@ -1,147 +1,92 @@
-# fire-skills / skill-spark
+# skill-spark（innate-spark-cli）
 
-Personal Skill Workspace + universal Skill manager for AI coding agents.
+`skill-spark` 是一个 **SkillOps CLI**：面向 AI coding agent 的 skill 安装、同步与治理工具（安装 / 移除 / 校验 / 风险检查 / 多 agent 目录映射 / registry 扫描克隆 / 自托管 SMB 挂载等）。
 
-- 仓库主页：<https://github.com/variableway/fire-skills>
-- 通用技能管理 CLI：`skill-spark`（本仓库构建产物）
+本仓库是 `innate-spark` hub 中唯一允许放代码的位置（见 hub 根目录 `AGENTS.md`），以独立 git 仓库形式嵌在 `tools/innate-spark-cli/` 下。
 
-**Use this repo to:**
+## 工程形态：Bun monorepo
 
-1. Keep curated personal / team skills（按分类组织）
-2. Test and iterate on skills
-3. Install and sync skills across agents via **skill-spark** CLI
+- 运行时与包管理均为 **Bun**（`packageManager: bun@1.3.11`），workspace 通过根 `package.json` 的 `workspaces` 字段声明，锁文件为 `bun.lock`。
+- 源码即 TypeScript，直接以 `bun <entry>.ts` 运行，无需预编译；发布产物构建到 `dist/`（已 gitignore）。
 
-## Quick start
+| 包 | 说明 |
+| --- | --- |
+| `packages/skill-cli` | CLI 入口（commander 命令注册、各子命令实现） |
+| `packages/skill-core` | 核心逻辑：skill 发现、来源下载解包、安装、校验、agent 目录映射 |
+| `packages/skill-schemas` | 共享 Zod schema |
+| `packages/tool-docx` | `.docx` → Markdown 转换（mammoth） |
 
-```bash
-pnpm install
-bun run build          # → dist/index.js（node target）
-./dist/index.js --help
-```
+其余目录：`skills/`（本地 skill 源，`base/` + `meta/`）、`docs/`（文档站源，docmd 构建）、`config.json`（selfhost SMB 配置）、`.github/workflows/docs.yml`（GitHub Pages 文档部署）。
 
-打独立可执行文件（单文件 binary，无需 runtime）：
-
-```bash
-bun run build:exe      # → dist/skill-spark
-bun run build:all      # build + build:exe
-```
-
-安装 DevOps 技能到 WorkBuddy（从 devops-skill 仓库）：
+## 开发
 
 ```bash
-./dist/index.js add qdriven/devops-skill --agent workbuddy -g -f
+bun install            # 安装依赖，生成 bun.lock
+
+bun run dev            # 以源码运行 CLI（= bun packages/skill-cli/src/index.ts）
+bun test               # 运行测试
+bun run typecheck      # tsc --noEmit
+bun run build:all      # 构建 dist/index.js（bundle）+ dist/skill-spark（单文件可执行）
+bun run format         # biome format
+bun run check          # biome check
 ```
 
-## Skills
-
-每个 skill 的来源 URL 见下表。`in-tree` 表示该 skill 就在本仓库内维护；
-其余 skill 通过 git subtree 来自 `variableway/<repo>` 独立仓库。
-
-### Core（`skills/base`）
-
-| Skill | 路径 | 来源 |
-|-------|------|------|
-| anysearch | `skills/base/anysearch` | [variableway/skill-anysearch](https://github.com/variableway/skill-anysearch) |
-| skill-spark | `skills/base/skill-spark` | in-tree（[本仓库](https://github.com/variableway/fire-skills)） |
-
-### Meta（`skills/meta`）
-
-| Skill | 路径 | 来源 |
-|-------|------|------|
-| skill-creator | `skills/meta/skill-creator` | [variableway/skill-creator](https://github.com/variableway/skill-creator) |
-
-### Content & Figures & Knowledge
-
-| Skill | 路径 | 来源 |
-|-------|------|------|
-| design | `skills/content/design` | [variableway/skill-design](https://github.com/variableway/skill-design) |
-| thought-distiller | `skills/figures/thought-distiller` | [variableway/skill-thought-distiller](https://github.com/variableway/skill-thought-distiller) |
-| thought-distiller | `skills/knowledge/thought-distiller` | [variableway/skill-thought-distiller](https://github.com/variableway/skill-thought-distiller) |
-
-### SDLC · Frontend（`skills/sdlc-first-party`）
-
-均为 in-tree 维护（[本仓库](https://github.com/variableway/fire-skills)）。
-
-| Skill | 路径 |
-|-------|------|
-| frontend-dev | `skills/sdlc-first-party/frontend/fe-foundation` |
-| frontend-code-structure | `skills/sdlc-first-party/frontend/fe-code-structure` |
-| frontend-build | `skills/sdlc-first-party/frontend-build` |
-| frontend-redesign | `skills/sdlc-first-party/frontend-redesign` |
-| frontend-shared | `skills/sdlc-first-party/frontend-shared` |
-| frontend-studio | `skills/sdlc-first-party/frontend-studio` |
-
-### DevOps（外部仓库）
-
-DevOps skills 不在本仓库内，统一来自独立仓库：
-
-- 来源：<https://github.com/qdriven/devops-skill>
-
-| Skill | 说明 |
-|-------|------|
-| github-cli | GitHub CLI 操作助手 |
-| gh-create-release | 创建 GitHub Release |
-| git-workflow | 基于 GitHub Issue 的工作流 |
-| git-worktree | git worktree 隔离开发 |
-| git-pr | Pull Request 工作流 |
-| local-workflow | 本地离线任务工作流 |
-| docmd | Diátaxis 文档站点脚手架 |
-| scanning-for-secrets | 提交前密钥扫描 |
-
-安装 DevOps 技能：
+在 hub 根目录（`innate-spark/`）使用的惯用方式：
 
 ```bash
-# 安装到 WorkBuddy
-./dist/index.js add qdriven/devops-skill --agent workbuddy -g -f
-# 安装到 codex（全局）
-./dist/index.js add qdriven/devops-skill --agent codex -g -f
+SPARK="bun tools/innate-spark-cli/packages/skill-cli/src/index.ts"
+$SPARK registry scan
 ```
 
-## 支持的 Agent 目标
+或直接使用构建出的单文件二进制 `tools/innate-spark-cli/dist/skill-spark`。
 
-skill-spark 可安装到下列 agent 的技能目录（部分）：
+## CLI 命令总览
 
-| Agent | 全局目录 | 项目目录 |
-|-------|---------|---------|
-| WorkBuddy | `~/.workbuddy/skills` | `.workbuddy/skills` |
-| Claude Code | `~/.claude/skills` | `.claude/skills` |
-| Codex | `~/.codex/skills` | `.agents/skills` |
-| Cursor | `~/.cursor/skills` | `.agents/skills` |
-| Trae | `~/.trae/skills` | `.trae/skills` |
+命令按 `packages/skill-cli/src/index.ts` 实际注册列出；详细用法见 `docs/cli/`（各命令一页）。
 
-运行 `./dist/index.js agent list` 查看全部内置 agent。
+| 命令 | 说明 |
+| --- | --- |
+| `search [query]`（`s`） | 从 registry / 目录搜索 skill，支持交互式浏览、JSON/Markdown 输出 |
+| `find [query]` | 跨本地、registry、目录三源查找（默认全开） |
+| `add <source>`（`a` / `install` / `i`） | 安装一个来源的全部 skill 到检测到的 agent 目录（`-g` 全局、`-a --agent` 指定 agent、`-f` 跳过确认） |
+| `remove [skills...]`（`r` / `rm` / `uninstall`） | 移除已安装 skill；无参数按 scope 全清（global / project / `--path`） |
+| `register <source>`（`reg`） | 仅登记外部 skill 来源，不安装 |
+| `generate agents-md` | 生成 `AGENTS.md` 供 agent 做 skill 发现 |
+| `list`（`l`） | 列出已安装 skill（`~/.skill-spark/skills.lock` 与 `./skills.lock`） |
+| `validate <path-or-source>` | 校验 SKILL.md 结构、元数据、引用与基础文件安全（`--all` / `-s` / `--strict`） |
+| `inspect <path-or-source>` | 规则式风险与质量检查（`--fail-on low|medium|high|critical`） |
+| `map` | 把已安装 skill 映射到目标 agent 目录（gemini / claude / codex / agent / qwen） |
+| `sync` | 从源目录同步 skill 到各 agent 的 skill 目录（默认源 `skills/base`，默认 agent：codex、claude-code、opencode、trae、kimi-cli；默认 symlink，`--no-symlink` 改复制） |
+| `agent list / schema / add / remove` | 管理目标 agent 目录配置（`agents` 别名；自定义配置写 `skill-spark.agents.json` 或 `~/.skill-spark/agents.json`） |
+| `doctor` | 诊断 skill-spark 环境与 agent 目录 |
+| `docx-to-md -s <in.docx> -o <out.md>` | 转换 `.docx` 为 Markdown |
 
-## 仓库登记与自建网盘
+### registry 子命令
 
-除技能管理外，skill-spark 还内置了两组运维子命令：
+扫描 / 克隆 registry YAML 中登记的 git 仓库（hub 侧的配套约定见 hub 根目录 `AGENTS.md` 的 "Registry contract"）。
 
-| 子命令 | 作用 | 文档 |
-|-------|------|------|
-| `registry scan` / `clone` / `scan-refs` / `clone-refs` | 扫描 git 仓 → 写入 YAML 登记表；按登记表 clone / pull | [docs/cli/registry.md](docs/cli/registry.md) |
-| `selfhost mount` / `open` / `umount` / `status` / `path` / `profiles` | 挂载或打开自建 SMB 网盘（macOS） | [docs/cli/selfhost.md](docs/cli/selfhost.md) |
+```bash
+skill-spark registry scan          # 目录内容 → tools/registry/apps.yaml（read → merge → write）
+skill-spark registry scan-refs     # → sibling innate-works/registry.yaml
+skill-spark registry clone         # 按 apps.yaml 克隆 / 拉取
+skill-spark registry clone-refs    # 按 works registry 克隆
+```
 
-两者都靠配置文件定位路径：`registry` 读 `.innate-registry-cli.yaml`，`selfhost` 读 `config.json`（本仓库根目录的 [config.json](config.json) 是模板）。
+布局解析顺序：命令行 `--config` → 环境变量 `REGISTRY_CLI_CONFIG` / `REGISTRY_CLI_HUB_ROOT` / `REGISTRY_CLI_WORKS_ROOT` / `REGISTRY_CLI_WORKS_NAME` / `REGISTRY_CLI_APPS_ROOT` → 从当前目录向上查找 `.innate-registry-cli.yaml`（或 `registry-cli.yaml`）。通用 flag：`--depth`、`--keep-missing`、`--regenerate`（重建并丢弃手工扩展字段）。
 
-## Docs
+### selfhost 子命令（macOS SMB）
 
-| Doc | What |
-|-----|------|
-| [docs/README.md](docs/README.md) | 文档索引 |
-| [docs/skill-spark/overview.md](docs/skill-spark/overview.md) | 架构与模块 |
-| [docs/skill-spark/install-and-run.md](docs/skill-spark/install-and-run.md) | 构建、安装、运行 CLI |
-| [docs/usage/install-devops-skills.md](docs/usage/install-devops-skills.md) | DevOps skills 安装指南 |
-| [docs/install-skills.md](docs/install-skills.md) | 通用 add / remove / update |
-| [docs/projects/architecture-and-mvp.md](docs/projects/architecture-and-mvp.md) | 文档布局、状态、MVP 计划 |
+```bash
+skill-spark selfhost profiles --config config.json
+skill-spark selfhost open    --profile lazycat   # smb://… 直接开 Finder
+skill-spark selfhost mount                        # mount_smbfs 挂载（via=open 时退化为 Finder）
+skill-spark selfhost umount / status / path
+```
 
-## 相关仓库
+配置从最近的 `config.json` 读取（`default` + `profiles`，见仓库根示例）；密码只从 `SELFHOST_CLI_PASSWORD` 环境变量读取，不落盘。
 
-| 仓库 | 说明 |
-|------|------|
-| [variableway/fire-skills](https://github.com/variableway/fire-skills) | 本仓库：skill-spark CLI + 个人 skill 工作区 |
-| [qdriven/devops-skill](https://github.com/qdriven/devops-skill) | DevOps skill 合集（git-workflow / local-workflow / github-cli 等 8 个） |
-| [variableway/skill-anysearch](https://github.com/variableway/skill-anysearch) | anysearch 实时搜索 skill |
-| [variableway/skill-creator](https://github.com/variableway/skill-creator) | skill-creator 元技能 |
-| [variableway/skill-thought-distiller](https://github.com/variableway/skill-thought-distiller) | thought-distiller 名人思想蒸馏器 |
-| [variableway/skill-design](https://github.com/variableway/skill-design) | design skill |
+## 相关文档
 
-技能注册表快照见 `skills/categories.json` 与 `skills/index.json`。
+- 命令详解：`docs/cli/`（`cli-commands.md` 为索引）
+- 文档站：`docmd.config.mjs` + GitHub Pages workflow
+- hub 内定位与工作规则：hub 根目录 `AGENTS.md`

@@ -289,7 +289,7 @@ async function handleInteractiveSearch() {
     }
 
     for (const name of names) {
-      await handleAddCommand(name, { silent: true });
+      await handleAddCommand(name, {});
     }
 
     showOutro(pc.green(`Installed ${names.length} ${plural(names.length, "skill")}.`));

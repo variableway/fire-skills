@@ -1,6 +1,11 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import mammoth from "mammoth";
 
+// mammoth ships convertToMarkdown at runtime but omits it from its typings.
+const convertToMarkdown: typeof mammoth.convertToHtml = (
+  mammoth as unknown as { convertToMarkdown: typeof mammoth.convertToHtml }
+).convertToMarkdown;
+
 export interface DocxToMdResult {
   success: boolean;
   outputPath: string;
@@ -20,7 +25,7 @@ export async function convertDocxToMarkdown(
   try {
     const buffer = readFileSync(sourcePath);
 
-    const result = await mammoth.convertToMarkdown(
+    const result = await convertToMarkdown(
       { buffer },
       {
         // Include default style mappings for better output

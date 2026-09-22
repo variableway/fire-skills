@@ -107,11 +107,7 @@ export async function runProfileInstall(name: string, options: ProfileInstallOpt
     await handleAddCommand(skill.source, {
       agent: agents.length > 0 ? agents : undefined,
       global: options.global,
-      skill: [skill.name],
-      yes: options.yes ?? true,
       force: options.force,
-      symlink: options.symlink,
-      silent: false,
     });
   }
 }

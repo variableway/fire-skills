@@ -147,7 +147,7 @@ async function main() {
   const { query, json, source: onlySource } = parseArgs(process.argv.slice(2));
 
   if (!query) {
-    console.error("Usage: pnpm find-skills <query> [--source <id>] [--json]");
+    console.error("Usage: bun find-skills.mjs <query> [--source <id>] [--json]");
     process.exit(1);
   }
 

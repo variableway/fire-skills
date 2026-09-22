@@ -354,7 +354,7 @@ async function extractTarArchive(skillRoot: string, bytes: Uint8Array) {
         const chunks: Buffer[] = [];
 
         for await (const chunk of stream) {
-          const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+          const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk as Uint8Array | string);
           totalBytes += buffer.length;
           if (totalBytes > maxArchiveBytes) {
             throw new Error(`Archive exceeds ${maxArchiveBytes} bytes after extraction`);

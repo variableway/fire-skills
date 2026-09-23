@@ -50,7 +50,9 @@ program
   .option("--limit <n>", "Results per page (max 100)", (value) => Number.parseInt(value, 10))
   .option("--offset <n>", "Pagination offset", (value) => Number.parseInt(value, 10))
   .option("--sort <value>", "Sort by: votes, recent, stars")
-  .option("--sources <sources...>", "Search sources: registry,directory,local")
+  .option("--sources <sources...>", "Search sources: registry,directory")
+  .option("--dir <path>", "Scan <path> as the directory source (default: current directory)")
+  .option("--depth <n>", "Directory scan depth in levels (default: 2)", (value) => Number.parseInt(value, 10))
   .option("-i, --interactive", "Force interactive TUI browse mode")
   .option("-o, --output <path>", "Write results to file (JSON or markdown)")
   .option("-f, --format <type>", "Output format: json, markdown (default: auto-detect from extension)")
@@ -64,6 +66,8 @@ program
         offset?: number;
         sort?: string;
         sources?: string[];
+        dir?: string;
+        depth?: number;
         interactive?: boolean;
         output?: string;
         format?: string;
@@ -81,7 +85,9 @@ program
   .option("--limit <n>", "Results per page (max 100)", (value) => Number.parseInt(value, 10))
   .option("--offset <n>", "Pagination offset", (value) => Number.parseInt(value, 10))
   .option("--sort <value>", "Sort by: votes, recent, stars")
-  .option("--sources <sources...>", "Search sources: local,registry,directory", ["local", "registry", "directory"])
+  .option("--sources <sources...>", "Search sources: directory,registry", ["directory", "registry"])
+  .option("--dir <path>", "Scan <path> as the directory source (default: current directory)")
+  .option("--depth <n>", "Directory scan depth in levels (default: 2)", (value) => Number.parseInt(value, 10))
   .option("-i, --interactive", "Force interactive TUI browse mode")
   .option("-o, --output <path>", "Write results to file (JSON or markdown)")
   .option("-f, --format <type>", "Output format: json, markdown (default: auto-detect from extension)")
@@ -95,6 +101,8 @@ program
         offset?: number;
         sort?: string;
         sources?: string[];
+        dir?: string;
+        depth?: number;
         interactive?: boolean;
         output?: string;
         format?: string;

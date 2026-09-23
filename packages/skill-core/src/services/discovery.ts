@@ -64,11 +64,12 @@ function parseCommand(path: string) {
 function walk(
   root: string,
   depth: number,
+  maxDepth: number,
   installables: Installable[],
   seenSkills: Set<string>,
   seenCommands: Set<string>,
 ) {
-  if (depth > 5) {
+  if (depth > maxDepth) {
     return;
   }
 
@@ -112,16 +113,25 @@ function walk(
       continue;
     }
 
-    walk(path, depth + 1, installables, seenSkills, seenCommands);
+    walk(path, depth + 1, maxDepth, installables, seenSkills, seenCommands);
   }
 }
 
-export function discoverInstallables(root: string, subpath?: string) {
+export const DEFAULT_DISCOVERY_MAX_DEPTH = 5;
+
+export function discoverInstallables(root: string, subpath?: string, maxDepth?: number) {
   const installables: Installable[] = [];
   const seenSkills = new Set<string>();
   const seenCommands = new Set<string>();
 
-  walk(subpath ? join(root, subpath) : root, 0, installables, seenSkills, seenCommands);
+  walk(
+    subpath ? join(root, subpath) : root,
+    0,
+    maxDepth ?? DEFAULT_DISCOVERY_MAX_DEPTH,
+    installables,
+    seenSkills,
+    seenCommands,
+  );
 
   return installables.sort((left, right) => {
     if (left.type !== right.type) {
